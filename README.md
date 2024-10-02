@@ -27,11 +27,10 @@ LiveGuard는 GPS와 TensorFlow를 활용하여 **군중 밀집도를 실시간�
 ## 프로젝트 구조
 
 - **프론트엔드**
-  - **모바일 애플리케이션**: React Native 사용
-  - **웹 애플리케이션**: React.js 사용
+  - **모바일 애플리케이션**: Android Studio 사용
 
 - **백엔드**
-  - **서버 프레임워크**: FastAPI 사용
+  - **서버 프레임워크**: Django 사용
   - **통신 방식**: RESTful API 및 WebSocket
 
 - **머신러닝**
@@ -52,7 +51,6 @@ LiveGuard는 GPS와 TensorFlow를 활용하여 **군중 밀집도를 실시간�
 ### 전제 조건
 
 - **Python** 3.8 이상
-- **Node.js** 14 이상
 - **Docker** 및 **Docker Compose**
 - **AWS 계정** (또는 다른 클라우드 서비스)
 
@@ -209,7 +207,6 @@ LiveGuard는 GPS와 TensorFlow를 활용하여 **군중 밀집도를 실시간�
 
 - **TensorFlow 공식 문서**: [https://www.tensorflow.org/](https://www.tensorflow.org/)
 - **FastAPI 공식 문서**: [https://fastapi.tiangolo.com/](https://fastapi.tiangolo.com/)
-- **React 공식 문서**: [https://reactjs.org/](https://reactjs.org/)
 - **Docker 공식 문서**: [https://docs.docker.com/](https://docs.docker.com/)
 
 ---
