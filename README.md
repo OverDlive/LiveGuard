@@ -89,7 +89,7 @@ LiveGuard는 GPS와 TensorFlow를 활용하여 **군중 밀집도를 실시간�
 6. **서버 실행**
 
    ```bash
-   uvicorn main:app --reload
+   python3 manage.py runserver
    ```
 
 ### 프론트엔드 설정
