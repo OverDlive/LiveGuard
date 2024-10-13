@@ -1,4 +1,6 @@
+<img src="https://capsule-render.vercel.app/api?type=waving&color=BDBDC8&height=150&section=header" />
 # LiveGuard
+<img src="https://capsule-render.vercel.app/api?type=waving&color=BDBDC8&height=150&section=footer" />
 
 GPS 기반 군중 제어 및 재난 대응 서비스
 
@@ -45,6 +47,79 @@ LiveGuard는 GPS와 TensorFlow를 활용하여 **군중 밀집도를 실시간�
   - **컨테이너화**: Docker 사용
   - **CI/CD**: Jenkins 및 GitLab CI/CD
   - **클라우드 인프라**: AWS 활용
+
+## 파일 구조
+```
+├── LiveGuard_backend
+│   ├── LiveGuard_backend
+│   │   ├── __init__.py
+│   │   ├── __pycache__
+│   │   │   ├── __init__.cpython-312.pyc
+│   │   │   ├── settings.cpython-312.pyc
+│   │   │   ├── urls.cpython-312.pyc
+│   │   │   └── wsgi.cpython-312.pyc
+│   │   ├── asgi.py
+│   │   ├── settings.py
+│   │   ├── urls.py
+│   │   └── wsgi.py
+│   ├── api
+│   │   ├── __init__.py
+│   │   ├── urls.py
+│   │   └── views.py
+│   ├── db.sqlite3
+│   ├── density
+│   │   ├── __init__.py
+│   │   ├── __pycache__
+│   │   │   ├── __init__.cpython-312.pyc
+│   │   │   └── models.cpython-312.pyc
+│   │   ├── models.py
+│   │   ├── serializers.py
+│   │   ├── tasks.py
+│   │   ├── urls.py
+│   │   └── views.py
+│   ├── disaster_response
+│   │   ├── __init__.py
+│   │   ├── serializers.py
+│   │   ├── urls.py
+│   │   └── views.py
+│   ├── manage.py
+│   ├── notifications
+│   │   ├── __init__.py
+│   │   ├── models.py
+│   │   ├── push_service.py
+│   │   ├── urls.py
+│   │   └── views.py
+│   ├── profile
+│   │   ├── __init__.py
+│   │   ├── models.py
+│   │   ├── serializers.py
+│   │   ├── urls.py
+│   │   └── views.py
+│   ├── reports
+│   │   ├── __init__.py
+│   │   ├── models.py
+│   │   ├── serializers.py
+│   │   ├── urls.py
+│   │   └── views.py
+│   ├── requirements.txt
+│   ├── settings
+│   │   ├── __init__.py
+│   │   ├── serializers.py
+│   │   ├── urls.py
+│   │   └── views.py
+│   ├── splash
+│   │   ├── __init__.py
+│   │   ├── serializers.py
+│   │   ├── urls.py
+│   │   └── views.py
+│   ├── static
+│   └── weather_news
+│       ├── __init__.py
+│       ├── serializers.py
+│       ├── urls.py
+│       └── views.py
+└── README.md
+```
 
 ## 설치 및 실행 방법
 
@@ -197,6 +272,10 @@ LiveGuard는 GPS와 TensorFlow를 활용하여 **군중 밀집도를 실시간�
 - **프론트 엔드 및 UI/UX 개발**
   - **이름**: 김동건
   - **역할**: 프론트 엔드 개발, UI/UX 개발
+
+- **프론트 엔드 개발**
+   - **이름**: 김서범
+   - **역할**: 안드로이드 스튜디오 프론트엔드 앱 개발
 
 ## 연락처
 
