@@ -132,8 +132,8 @@ LiveGuard는 GPS와 TensorFlow를 활용하여 **군중 밀집도를 실시간�
 1. **저장소 클론**
 
    ```bash
-   git clone https://github.com/yourusername/safecrowd.git
-   cd safecrowd/backend
+   git clone https://github.com/OverDlive/LiveGuard.git
+   cd LiveGuard/LiveGuard_backend.git
    ```
 
 2. **가상환경 생성 및 활성화**
