@@ -3,4 +3,6 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="some_id">\u00ec\u0083\u0081\u00ec\u009d\u00b8\u00eb\u008f\u0099</string>
+    <string name="some_id2">\u00ed\u0098\u0084\u00ec\u009c\u0084\u00ec\u00b9\u0098</string>
 </resources>
