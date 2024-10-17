@@ -5,4 +5,14 @@
     <string name="title_notifications">Notifications</string>
     <string name="some_id">\u00ec\u0083\u0081\u00ec\u009d\u00b8\u00eb\u008f\u0099</string>
     <string name="some_id2">\u00ed\u0098\u0084\u00ec\u009c\u0084\u00ec\u00b9\u0098</string>
+    <string name="text6">\u00ed\u0098\u0084\u00ec\u009c\u0084\u00ec\u00b9\u0098</string>
+    <string name="text7">\u00eb\u008c\u0080\u00ea\u00b5\u00ac\u00ea\u00b4\u0091\u00ec\u0097\u00ad\u00ec\u008b\u009c\n\u00eb\u008b\u00ac\u00ec\u0084\u009c\u00ea\u00b5\u00ac \u00ec\u009b\u0094\u00ec\u0084\u00b11\u00eb\u008f\u0099</string>
+    <string name="text1">\u00ed\u0099\u0088</string>
+    <string name="text2">\u00ed\u0083\u0080\u00ec\u009e\u0084\u00eb\u009d\u00bc\u00ec\u009d\u00b8</string>
+    <string name="text3">\u00ea\u00b5\u00b0\u00ec\u00a4\u0091\u00eb\u00b0\u0080\u00ec\u00a7\u0091\u00eb\u008f\u0084</string>
+    <string name="text4">\u00eb\u00a9\u0094\u00eb\u0089\u00b4</string>
+    <string name="text5">\u00ec\u00a7\u0080\u00ec\u0097\u00ad\u00ec\u00a0\u0095\u00eb\u00b3\u00b4</string>
+    <string name="text8">\u00eb\u008b\u00ac\u00ec\u0084\u009c\u00ea\u00b5\u00ac</string>
+    <string name="text9">23:13</string>
+    <string name="text10">16\u00c2\u00b0</string>
 </resources>
