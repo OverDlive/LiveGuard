@@ -45,6 +45,9 @@ dependencies {
     implementation(libs.navigation.ui)
     // 네이버 지도 SDK
     implementation("com.naver.maps:map-sdk:3.19.1")
+    implementation("com.google.android.material:material:1.9.0")
+    implementation(libs.preference) // 최신 버전 사용 권장
+    implementation("com.google.android.gms:play-services-location:21.0.1")  // 최신 버전 사용 권장
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
