@@ -11,8 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <!-- Bottom Sheet를 위한 버튼 -->
-
+    <!-- Bottom Sheet를 위한 버튼이였던것 -->
     <!-- 바텀 시트 레이아웃 -->
     <LinearLayout
         android:id="@+id/bottom_sheet"
