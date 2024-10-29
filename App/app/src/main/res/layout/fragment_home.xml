@@ -11,6 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+
+
     <!-- Bottom Sheet를 위한 버튼이였던것 -->
     <!-- 바텀 시트 레이아웃 -->
     <LinearLayout
@@ -18,14 +20,24 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:background="@android:color/white"
+        android:background="@drawable/white_round_top_border_20"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
         android:elevation="8dp"
         app:behavior_peekHeight="300dp">
+        <!-- 터치 차단용 뷰 -->
+        <View
+            android:id="@+id/block_touch_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="#8000FF00"
+            android:visibility="gone" />
+
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="This is a Bottom Sheet"
+            android:gravity="center"
+            android:textColor="@color/black"
             android:textSize="16sp" />
     </LinearLayout>
 
