@@ -27,6 +27,25 @@
             android:layout_height="wrap_content"
             android:text="This is a Bottom Sheet"
             android:textSize="16sp" />
+
+
+        <!-- 추가할 텍스트와 버튼 -->
+        <TextView
+            android:id="@+id/info_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="필요한 정보입니다."
+            android:textSize="16sp"
+            android:padding="16dp" />
+
+        <Button
+            android:id="@+id/navigate_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="정보 보기"
+            android:layout_gravity="center"
+            android:padding="16dp" />
+
     </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
