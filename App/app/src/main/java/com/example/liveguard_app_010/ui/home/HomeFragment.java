@@ -10,11 +10,8 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
 import com.example.liveguard_app_010.R;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import androidx.navigation.fragment.NavHostFragment;
 
 public class HomeFragment extends Fragment {
 
@@ -27,28 +24,6 @@ public class HomeFragment extends Fragment {
 
         // 바텀 시트 초기화
         View bottomSheet = view.findViewById(R.id.bottom_sheet);
-<<<<<<< HEAD
-        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
-
-        // Bottom Sheet의 Peek Height 설정
-        int peekHeight = (int) (getResources().getDisplayMetrics().heightPixels * 0.4); // 40%
-        bottomSheetBehavior.setPeekHeight(peekHeight, true);
-
-        // Bottom Sheet의 초기 상태를 STATE_COLLAPSED로 설정
-        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED); // 접힌 상태
-
-        // 필요한 정보 텍스트 설정
-        TextView infoText = view.findViewById(R.id.info_text);
-        infoText.setText("필요한 정보입니다.");
-
-        // 버튼 클릭 리스너 설정
-        Button navigateButton = view.findViewById(R.id.navigate_button);
-        navigateButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Navigation to fragment_region_info
-                NavHostFragment.findNavController(HomeFragment.this).navigate(R.id.navigation_region_info);
-=======
 
         // 터치 차단용 뷰 초기화
         blockTouchView = view.findViewById(R.id.block_touch_view);
@@ -88,7 +63,6 @@ public class HomeFragment extends Fragment {
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {
                 // 슬라이드 중일 때의 처리 (필요하다면)
->>>>>>> 7b5f042c5ad0fcb641a810edf2f7040c9731368b
             }
         });
 
