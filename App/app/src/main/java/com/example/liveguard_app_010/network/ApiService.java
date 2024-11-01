@@ -7,6 +7,6 @@ import retrofit2.http.GET;
 import retrofit2.http.Path;
 
 public interface ApiService {
-    @GET("timeline/{userId}/")
+    @GET("api/timeline/{userId}/")
     Call<TimelineResponse> getTimeline(@Path("userId") String userId);
 }

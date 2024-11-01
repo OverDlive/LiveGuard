@@ -27,6 +27,7 @@ public class TimelineFragment extends Fragment {
 
     private RecyclerView rvActivities;
     private ActivityAdapter activityAdapter;
+    private ApiService apiService;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -38,21 +39,23 @@ public class TimelineFragment extends Fragment {
         activityAdapter = new ActivityAdapter(null);
         rvActivities.setAdapter(activityAdapter);
 
-        // Retrofit을 이용해 Django 백엔드와 연동
-        ApiService apiService = RetrofitClient.getApiService();
+        // ApiService 초기화
+        apiService = RetrofitClient.getApiService();
 
-        // 타임라인 테스트
-        Call<TimelineResponse> timelineCall = apiService.getTimeline("user123");
+        // 타임라인 데이터 가져오기
+        fetchTimeline("user123");
+
+        return view;
+    }
+
+    private void fetchTimeline(String username) {
+        Call<TimelineResponse> timelineCall = apiService.getTimeline(username);
         timelineCall.enqueue(new Callback<TimelineResponse>() {
             @Override
             public void onResponse(@NonNull Call<TimelineResponse> call, @NonNull Response<TimelineResponse> response) {
                 if (response.isSuccessful()) {
                     TimelineResponse timeline = response.body();
                     if (timeline != null) {
-                        Log.d("TimelineFragment", "UserId: " + timeline.getUserId());
-                        Log.d("TimelineFragment", "Activities: " + timeline.getActivities());
-
-                        // 활동 목록을 어댑터에 설정
                         activityAdapter.setActivityList(timeline.getActivities());
                     }
                 } else {
@@ -65,7 +68,5 @@ public class TimelineFragment extends Fragment {
                 Log.e("TimelineFragment", "Timeline Error: " + t.getMessage());
             }
         });
-
-        return view;
     }
 }
