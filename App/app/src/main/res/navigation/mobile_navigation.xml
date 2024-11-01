@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -34,4 +33,7 @@
         android:name="com.example.liveguard_app_010.ui.settings.SettingsFragment"
         android:label="설정"
         tools:layout="@layout/fragment_settings" />
+
+
+
 </navigation>

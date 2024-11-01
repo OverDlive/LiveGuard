@@ -1,9 +1,7 @@
 package com.example.liveguard_app_010;
 
 import android.os.Bundle;
-
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
@@ -11,8 +9,8 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-
 import com.example.liveguard_app_010.databinding.ActivityMainBinding;
+import com.example.liveguard_app_010.ui.topnavigation.TopNavigationFragment; // TopNavigationFragment 임포트
 
 public class MainActivity extends AppCompatActivity {
 
@@ -25,6 +23,11 @@ public class MainActivity extends AppCompatActivity {
         // ViewBinding 설정
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        // ActionBar 숨기기
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
 
         // BottomNavigationView 초기화
         BottomNavigationView navView = binding.navView;
@@ -41,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         // NavController 초기화
         NavController navController = navHostFragment.getNavController();
 
-        // AppBarConfiguration 설정: 이곳에 네비게이션 바 메뉴 아이템 ID 추가
+        // AppBarConfiguration 설정
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.navigation_home, R.id.navigation_timeline, R.id.navigation_crowd_density,
                 R.id.navigation_region_info, R.id.navigation_settings)
@@ -52,6 +55,12 @@ public class MainActivity extends AppCompatActivity {
 
         // BottomNavigationView와 NavController 연결
         NavigationUI.setupWithNavController(navView, navController);
+
+        // TopNavigationFragment를 MainActivity에 추가
+        TopNavigationFragment topNavigationFragment = new TopNavigationFragment();
+        fragmentManager.beginTransaction()
+                .replace(R.id.top_navigation_container, topNavigationFragment) // top_navigation_container는 activity_main.xml에 추가한 컨테이너 ID
+                .commit();
     }
 
     @Override
