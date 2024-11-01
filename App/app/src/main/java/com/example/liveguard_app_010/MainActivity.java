@@ -10,7 +10,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import com.example.liveguard_app_010.databinding.ActivityMainBinding;
-import com.example.liveguard_app_010.ui.topnavigation.TopNavigationFragment; // TopNavigationFragment 임포트
+import com.example.liveguard_app_010.ui.topnavigation.TopNavigationFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
         // TopNavigationFragment를 MainActivity에 추가
         TopNavigationFragment topNavigationFragment = new TopNavigationFragment();
         fragmentManager.beginTransaction()
-                .replace(R.id.top_navigation_container, topNavigationFragment) // top_navigation_container는 activity_main.xml에 추가한 컨테이너 ID
+                .replace(R.id.top_navigation_container, topNavigationFragment)
                 .commit();
     }
 
