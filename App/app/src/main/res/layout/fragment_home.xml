@@ -1,6 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/coordinator_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -11,27 +13,22 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-
-
-    <!-- Bottom Sheet를 위한 버튼이였던것 -->
     <!-- 바텀 시트 레이아웃 -->
     <LinearLayout
         android:id="@+id/bottom_sheet"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:background="@drawable/white_round_top_border_20"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
         android:elevation="8dp"
+        android:clickable="true"
+        android:focusable="true"
         app:behavior_peekHeight="300dp">
-        <!-- 터치 차단용 뷰 -->
-        <View
-            android:id="@+id/block_touch_view"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:background="#8000FF00"
-            android:visibility="gone" />
 
+        <!-- 바텀 시트의 내용 -->
+
+        <!-- 내용물을 추가하여 Bottom Sheet의 영역을 채움 -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -39,6 +36,14 @@
             android:gravity="center"
             android:textColor="@color/black"
             android:textSize="16sp" />
+
+        <!-- 남은 공간을 채우는 View -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
     </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
