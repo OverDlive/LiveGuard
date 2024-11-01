@@ -1,12 +1,8 @@
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
-from .serializers import DensitySerializer
+from rest_framework import generics
+from django.contrib.auth.models import User
+from .serializers import TimelineSerializer
 
-class DensityCreateView(APIView):
-    def post(self, request):
-        serializer = DensitySerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({'message': '데이터 수신 및 저장 성공'}, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+class TimelineView(generics.RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = TimelineSerializer
+    lookup_field = 'username'  # 또는 'id' 등을 사용할 수 있습니다.

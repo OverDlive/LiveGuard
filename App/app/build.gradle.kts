@@ -48,6 +48,17 @@ dependencies {
     implementation("com.google.android.material:material:1.9.0")
     implementation(libs.preference) // 최신 버전 사용 권장
     implementation("com.google.android.gms:play-services-location:21.0.1")  // 최신 버전 사용 권장
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    // RecyclerView
+    implementation("androidx.recyclerview:recyclerview:1.2.1")
+    // CardView
+    implementation("androidx.cardview:cardview:1.0.0")
+    // Retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    // Gson
+    implementation("com.google.code.gson:gson:2.8.8")
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

@@ -2,8 +2,10 @@
 
 from django.db import models
 
-class Density(models.Model):
-    location = models.CharField(max_length=255)
+class Activity(models.Model):
+    title = models.CharField(max_length=255)
     timestamp = models.DateTimeField(auto_now_add=True)
-    density = models.FloatFiled()
-    # 추가 필드 필요 시 여기에 추가
+    user = models.ForeignKey('auth.User', related_name='activities', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.title

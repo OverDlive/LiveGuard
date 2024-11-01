@@ -1,6 +1,6 @@
 from django.urls import path
-from .views import DensityCreateView
+from .views import TimelineView
 
 urlpatterns = [
-    path('density/', DensityCreateView.as_view(), name='density_create'),
+    path('api/timeline/<str:username>/', TimelineView.as_view(), name='timeline'),
 ]
