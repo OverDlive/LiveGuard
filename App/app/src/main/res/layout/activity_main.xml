@@ -15,6 +15,15 @@
         app:layout_constraintBottom_toTopOf="@+id/nav_host_fragment_activity_main"
         android:elevation="5dp" />
 
+    <!-- Top Navigation Fragment -->
+    <fragment
+        android:id="@+id/fragment_top_navigation"
+        android:name="com.example.liveguard_app_010.ui.topnavigation.TopNavigationFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/nav_host_fragment_activity_main" />
+
     <!-- NavHostFragment -->
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/nav_host_fragment_activity_main"
@@ -30,14 +39,14 @@
         android:id="@+id/nav_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-    android:paddingTop="16dp"
-    android:paddingBottom="16dp"
-    app:menu="@menu/bottom_nav_menu"
-    app:itemIconTint="@color/selector_bottom_navigation"
-    app:itemTextColor="@color/selector_bottom_navigation"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:labelVisibilityMode="labeled" /> <!-- 텍스트 레이블이 항상 보이도록 설정 -->
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        app:menu="@menu/bottom_nav_menu"
+        app:itemIconTint="@color/selector_bottom_navigation"
+        app:itemTextColor="@color/selector_bottom_navigation"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:labelVisibilityMode="labeled" /> <!-- 텍스트 레이블이 항상 보이도록 설정 -->
     <!-- paddingTop과 Bottom을 조정하여 위아래로 크기 변경가능 -->
 </androidx.constraintlayout.widget.ConstraintLayout>
