@@ -34,10 +34,6 @@
         android:label="설정"
         tools:layout="@layout/fragment_settings" />
 
-    <fragment
-        android:id="@+id/add_location_fragment"
-        android:name="com.example.liveguard_app_010.ui.addlocation.AddLocationFragment"
-        android:label="Add Location" />
 
 
 
