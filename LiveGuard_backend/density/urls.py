@@ -1,6 +1,6 @@
 from django.urls import path
-from .views import TimelineView
+from .views import UserTimelineView
 
 urlpatterns = [
-    path('api/timeline/<str:username>/', TimelineView.as_view(), name='timeline'),
+    path('timeline/<str:username>/', UserTimelineView.as_view(), name='user-timeline'),
 ]

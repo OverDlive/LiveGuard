@@ -1,63 +1,57 @@
-// ActivityAdapter.java
 package com.example.liveguard_app_010.ui.timeline;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.liveguard_app_010.R;
-import com.example.liveguard_app_010.models.TimelineResponse.Activity;
+import com.example.liveguard_app_010.models.Timeline;
+
 import java.util.List;
 
-public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.ActivityViewHolder> {
+public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.TimelineViewHolder> {
 
-    private List<Activity> activityList;
+    private List<Timeline> timelineList;
 
-    public ActivityAdapter(List<Activity> activityList) {
-        this.activityList = activityList;
+    public ActivityAdapter(List<Timeline> timelineList) {
+        this.timelineList = timelineList;
     }
 
-    public void setActivityList(List<Activity> activityList) {
-        this.activityList = activityList;
+    public void setActivityList(List<Timeline> timelineList) {
+        this.timelineList = timelineList;
         notifyDataSetChanged();
     }
 
     @NonNull
     @Override
-    public ActivityViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_activity, parent, false);
-        return new ActivityViewHolder(v);
+    public TimelineViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_timeline, parent, false);
+        return new TimelineViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ActivityViewHolder holder, int position) {
-        Activity activity = activityList.get(position);
-        holder.tvTitle.setText(activity.getTitle());
-        holder.tvTimestamp.setText(activity.getTimestamp());
-
-        // 아이템 클릭 이벤트 (선택 사항)
-        holder.itemView.setOnClickListener(view -> {
-            Toast.makeText(view.getContext(), "Clicked: " + activity.getTitle(), Toast.LENGTH_SHORT).show();
-        });
+    public void onBindViewHolder(@NonNull TimelineViewHolder holder, int position) {
+        Timeline timeline = timelineList.get(position);
+        holder.tvContent.setText(timeline.getContent());
+        holder.tvTimestamp.setText(timeline.getCreated_at());
     }
 
     @Override
     public int getItemCount() {
-        return activityList != null ? activityList.size() : 0;
+        return (timelineList != null) ? timelineList.size() : 0;
     }
 
-    public static class ActivityViewHolder extends RecyclerView.ViewHolder {
-        TextView tvTitle, tvTimestamp;
+    static class TimelineViewHolder extends RecyclerView.ViewHolder {
+        TextView tvContent;
+        TextView tvTimestamp;
 
-        public ActivityViewHolder(@NonNull View itemView) {
+        TimelineViewHolder(View itemView) {
             super(itemView);
-            tvTitle = itemView.findViewById(R.id.tvActivityTitle);
-            tvTimestamp = itemView.findViewById(R.id.tvActivityTimestamp);
+            tvContent = itemView.findViewById(R.id.tvContent);
+            tvTimestamp = itemView.findViewById(R.id.tvTimestamp);
         }
     }
 }

@@ -1,11 +1,10 @@
-# 군중 밀집도 데이터
-
 from django.db import models
+from django.contrib.auth.models import User
 
-class Activity(models.Model):
-    title = models.CharField(max_length=255)
-    timestamp = models.DateTimeField(auto_now_add=True)
-    user = models.ForeignKey('auth.User', related_name='activities', on_delete=models.CASCADE)
+class Timeline(models.Model):
+    user = models.ForeignKey(User, related_name='timelines', on_delete=models.CASCADE)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.title
+        return f"{self.user.username} - {self.created_at}"
