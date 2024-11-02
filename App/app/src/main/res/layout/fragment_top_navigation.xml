@@ -23,9 +23,9 @@
         android:contentDescription="Report"
         android:elevation="5dp"
         android:background="@android:color/transparent"
-    app:layout_constraintStart_toStartOf="@id/white_rectangle"
-    app:layout_constraintTop_toTopOf="@id/white_rectangle"
-    app:layout_constraintBottom_toBottomOf="@id/white_rectangle" />
+        app:layout_constraintStart_toStartOf="@id/white_rectangle"
+        app:layout_constraintTop_toTopOf="@id/white_rectangle"
+        app:layout_constraintBottom_toBottomOf="@id/white_rectangle" />
 
     <!-- 지역 추가 버튼 -->
     <ImageButton
@@ -36,8 +36,8 @@
         android:contentDescription="Add Location"
         android:elevation="5dp"
         android:background="@android:color/transparent"
-    app:layout_constraintEnd_toEndOf="@id/white_rectangle"
-    app:layout_constraintTop_toTopOf="@id/white_rectangle"
-    app:layout_constraintBottom_toBottomOf="@id/white_rectangle" />
+        app:layout_constraintEnd_toEndOf="@id/white_rectangle"
+        app:layout_constraintTop_toTopOf="@id/white_rectangle"
+        app:layout_constraintBottom_toBottomOf="@id/white_rectangle" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,6 +1,7 @@
 package com.example.liveguard_app_010;
 
 import android.os.Bundle;
+import android.view.View;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -36,7 +37,6 @@ public class MainActivity extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         NavHostFragment navHostFragment = (NavHostFragment) fragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main);
 
-        // 만약 navHostFragment가 null인 경우, 예외 처리를 추가합니다.
         if (navHostFragment == null) {
             throw new IllegalStateException("NavHostFragment를 찾을 수 없습니다.");
         }
@@ -61,6 +61,33 @@ public class MainActivity extends AppCompatActivity {
         fragmentManager.beginTransaction()
                 .replace(R.id.top_navigation_container, topNavigationFragment)
                 .commit();
+
+        // Fragment 변경 시 TopNavigationFragment의 Visibility 조정
+        navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
+            // 조건문을 사용하여 특정 Fragment에서 상단 및 하단 내비게이션 바 숨기기
+            if (destination.getId() == R.id.navigation_settings) { // SettingsFragment ID 사용
+                binding.topNavigationContainer.setVisibility(View.GONE); // 상단 내비게이션 숨기기
+                binding.navView.setVisibility(View.VISIBLE); // 하단 내비게이션 보이기
+            } else if (destination.getId() == R.id.add_location_fragment) { // AddLocationFragment ID 사용
+                binding.topNavigationContainer.setVisibility(View.GONE); // 상단 내비게이션 숨기기
+                binding.navView.setVisibility(View.GONE); // 하단 내비게이션 숨기기
+            } else {
+                binding.topNavigationContainer.setVisibility(View.VISIBLE); // 상단 내비게이션 보이기
+                binding.navView.setVisibility(View.VISIBLE); // 하단 내비게이션 보이기
+            }
+        });
+    }
+
+    // 네비게이션 바 숨기기
+    public void hideNavigationBars() {
+        binding.topNavigationContainer.setVisibility(View.GONE);
+        binding.navView.setVisibility(View.GONE);
+    }
+
+    // 네비게이션 바 보이기
+    public void showNavigationBars() {
+        binding.topNavigationContainer.setVisibility(View.VISIBLE);
+        binding.navView.setVisibility(View.VISIBLE);
     }
 
     @Override
