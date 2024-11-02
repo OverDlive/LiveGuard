@@ -32,12 +32,16 @@ public class MainActivity extends AppCompatActivity {
         // BottomNavigationView 초기화
         BottomNavigationView navView = binding.navView;
 
-        // NavController 설정
+        // NavHostFragment를 FragmentManager에서 찾아 가져옵니다.
         FragmentManager fragmentManager = getSupportFragmentManager();
         NavHostFragment navHostFragment = (NavHostFragment) fragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main);
+
+        // 만약 navHostFragment가 null인 경우, 예외 처리를 추가합니다.
         if (navHostFragment == null) {
             throw new IllegalStateException("NavHostFragment를 찾을 수 없습니다.");
         }
+
+        // NavController 초기화
         NavController navController = navHostFragment.getNavController();
 
         // AppBarConfiguration 설정
@@ -46,11 +50,13 @@ public class MainActivity extends AppCompatActivity {
                 R.id.navigation_region_info, R.id.navigation_settings)
                 .build();
 
-        // NavigationUI 설정
+        // ActionBar와 NavController 연결
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+
+        // BottomNavigationView와 NavController 연결
         NavigationUI.setupWithNavController(navView, navController);
 
-        // TopNavigationFragment 추가
+        // TopNavigationFragment를 MainActivity에 추가
         TopNavigationFragment topNavigationFragment = new TopNavigationFragment();
         fragmentManager.beginTransaction()
                 .replace(R.id.top_navigation_container, topNavigationFragment)
