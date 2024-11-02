@@ -13,31 +13,33 @@ import com.example.liveguard_app_010.R;
 import com.example.liveguard_app_010.OnSwipeTouchListener;
 
 public class AddLocationFragment extends Fragment {
+
+    @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_add_location, container, false);
 
         // 뒤로가기 버튼 클릭 시 Fragment 닫기
         ImageButton backButton = view.findViewById(R.id.back_button);
-        backButton.setOnClickListener(v -> {
-            requireActivity().getSupportFragmentManager().popBackStack();
-            // 네비게이션 바 다시 보이기
-            ((MainActivity) requireActivity()).showNavigationBars();
-        });
+        backButton.setOnClickListener(v -> closeFragment());
 
-        // OnSwipeTouchListener를 Context만 전달하여 생성
+        // 슬라이드 제스처 감지
         view.setOnTouchListener(new OnSwipeTouchListener(requireContext()) {
-            // 스와이프 감지 동작 구현
             @Override
             public void onSwipeRight() {
-                requireActivity().getSupportFragmentManager().popBackStack();
-                // 네비게이션 바 다시 보이기
-                ((MainActivity) requireActivity()).showNavigationBars();
+                closeFragment(); // 슬라이드 제스처로 Fragment 닫기
             }
         });
 
         return view;
     }
 
+    private void closeFragment() {
+        // 현재 Fragment가 AddLocationFragment인지 확인
+        if (isVisible()) {
+            requireActivity().getSupportFragmentManager().popBackStack();
+            // 네비게이션 바 다시 보이기
+            ((MainActivity) requireActivity()).showNavigationBars();
+        }
+    }
 }
-
