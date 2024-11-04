@@ -1,7 +1,7 @@
 from rest_framework import serializers
-from .models import Density
+from .models import Timeline
 
-class DensitySerializer(serializers.ModelSerializer):
+class TimelineSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Density
-        fields = '__all__'
+        model = Timeline
+        fields = ['id', 'user', 'content', 'created_at']

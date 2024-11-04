@@ -1,12 +1,19 @@
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
-from .serializers import DensitySerializer
+from rest_framework import generics
+from django.contrib.auth.models import User
+from .models import Timeline
+from .serializers import TimelineSerializer
+from rest_framework.permissions import AllowAny
+from rest_framework.exceptions import NotFound
 
-class DensityCreateView(APIView):
-    def post(self, request):
-        serializer = DensitySerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({'message': '데이터 수신 및 저장 성공'}, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+class UserTimelineView(generics.ListAPIView):
+    serializer_class = TimelineSerializer
+    permission_classes = [AllowAny]
+
+    def get_queryset(self):
+        username = self.kwargs.get('username')
+        try:
+            user = User.objects.get(username=username)
+        except User.DoesNotExist:
+            raise NotFound(detail="User not found.")
+
+        return Timeline.objects.filter(user=user)

@@ -1,9 +1,10 @@
-# 군중 밀집도 데이터
-
 from django.db import models
+from django.contrib.auth.models import User
 
-class Density(models.Model):
-    location = models.CharField(max_length=255)
-    timestamp = models.DateTimeField(auto_now_add=True)
-    density = models.FloatFiled()
-    # 추가 필드 필요 시 여기에 추가
+class Timeline(models.Model):
+    user = models.ForeignKey(User, related_name='timelines', on_delete=models.CASCADE)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.created_at}"
