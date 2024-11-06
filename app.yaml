@@ -1,0 +1,16 @@
+runtime: python39
+
+handlers:
+  - url: /static
+    static_dir: static/
+  - url: /.*
+    script: auto
+
+env_variables:
+  DJANGO_SETTINGS_MODULE: LiveGuard_backend.settings
+  SECRET_KEY: 'your-secret-key'  # 실제 비밀 키로 변경
+  DEBUG: 'False'
+
+automatic_scaling:
+  min_instances: 1
+  max_instances: 5
