@@ -15,31 +15,35 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <!-- 신고 버튼 -->
+
+    <!-- 지역 추가 버튼 -->
+
     <ImageButton
         android:id="@+id/report"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_report"
+        android:layout_marginStart="0dp"
+        android:background="@android:color/transparent"
         android:contentDescription="Report"
         android:elevation="5dp"
-        android:background="@android:color/transparent"
+        android:src="@drawable/ic_report"
+        app:layout_constraintBottom_toBottomOf="@id/white_rectangle"
         app:layout_constraintStart_toStartOf="@id/white_rectangle"
         app:layout_constraintTop_toTopOf="@id/white_rectangle"
-        app:layout_constraintBottom_toBottomOf="@id/white_rectangle"
-        android:layout_marginStart="16dp" />
+        app:layout_constraintVertical_bias="0.448" />
 
-    <!-- 지역 추가 버튼 -->
     <ImageButton
         android:id="@+id/locationbutton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_add_location"
+        android:layout_marginEnd="0dp"
+        android:background="@android:color/transparent"
         android:contentDescription="Add Location"
         android:elevation="5dp"
-        android:background="@android:color/transparent"
+        android:src="@drawable/ic_add_location"
+        app:layout_constraintBottom_toBottomOf="@id/white_rectangle"
         app:layout_constraintEnd_toEndOf="@id/white_rectangle"
         app:layout_constraintTop_toTopOf="@id/white_rectangle"
-        app:layout_constraintBottom_toBottomOf="@id/white_rectangle"
-        android:layout_marginEnd="16dp" />
+        app:layout_constraintVertical_bias="0.448" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
