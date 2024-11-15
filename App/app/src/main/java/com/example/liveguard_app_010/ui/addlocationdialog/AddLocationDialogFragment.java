@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
@@ -62,6 +63,10 @@ public class AddLocationDialogFragment extends DialogFragment {
                     .replace(R.id.dialog_container, new Depth1Fragment())
                     .commit();
         }
+
+        // "Close" 버튼 클릭 시 다이얼로그 종료
+        ImageButton closeButton = view.findViewById(R.id.close_button);
+        closeButton.setOnClickListener(v -> dismiss());
 
         return view;
     }

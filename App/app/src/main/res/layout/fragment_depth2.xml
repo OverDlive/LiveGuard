@@ -31,12 +31,12 @@
         android:id="@+id/back_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="이전 단계"
-        android:textSize="18sp"
+        android:layout_gravity="center"
         android:layout_marginTop="16dp"
         android:backgroundTint="@color/colorPrimary"
-        android:textColor="@android:color/white"
         android:padding="16dp"
-        android:layout_gravity="center" />
+        android:text="이전 단계"
+        android:textColor="@android:color/white"
+        android:textSize="18sp" />
 
 </LinearLayout>
