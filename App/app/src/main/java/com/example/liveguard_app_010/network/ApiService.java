@@ -7,8 +7,9 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface ApiService {
-    @GET("api/timeline/{username}/")
-    Call<List<Timeline>> getTimeline(@Path("username") String username);
+    @GET("api/timeline/")
+    Call<List<Timeline>> getTimeline(@Query("username") String username);
 }

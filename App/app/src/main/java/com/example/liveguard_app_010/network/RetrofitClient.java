@@ -9,7 +9,7 @@ public class RetrofitClient {
     public static ApiService getApiService() {
         if (retrofit == null) {
             retrofit = new Retrofit.Builder()
-                    .baseUrl("http://10.0.2.2:8000/")  // 로컬 서버일 경우
+                    .baseUrl("http://34.22.82.134/") // HTTP 프로토콜 사용
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
         }
