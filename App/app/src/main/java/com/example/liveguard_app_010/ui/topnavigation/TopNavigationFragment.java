@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import com.example.liveguard_app_010.R;
-import com.example.liveguard_app_010.ui.dialogs.AddLocationDialogFragment;
+import com.example.liveguard_app_010.ui.addlocationdialog.AddLocationDialogFragment;
 
 public class TopNavigationFragment extends Fragment {
 
