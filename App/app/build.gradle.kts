@@ -14,6 +14,9 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "SK_APP_KEY", "\"6afC5FOosG3XVuVZxtO3K6Y9gKEgVplvqi7OEPt1\"")
+
     }
 
     buildTypes {
@@ -31,35 +34,36 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 }
 
 dependencies {
 
+    // AndroidX 및 기본 라이브러리
     implementation(libs.appcompat)
-    implementation(libs.material)
+    implementation(libs.material) // 또는 "com.google.android.material:material:1.9.0" 중 하나만 사용
     implementation(libs.constraintlayout)
     implementation(libs.lifecycle.livedata.ktx)
     implementation(libs.lifecycle.viewmodel.ktx)
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
-    // 네이버 지도 SDK
-    implementation("com.naver.maps:map-sdk:3.19.1")
-    implementation("com.google.android.material:material:1.9.0")
     implementation(libs.preference) // 최신 버전 사용 권장
     implementation("com.google.android.gms:play-services-location:21.0.1")  // 최신 버전 사용 권장
+
+    // 네이버 지도 SDK
+    implementation("com.naver.maps:map-sdk:3.19.1")
+
+    // Retrofit 및 Gson
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
-    // RecyclerView
-    implementation("androidx.recyclerview:recyclerview:1.2.1")
-    // CardView
-    implementation("androidx.cardview:cardview:1.0.0")
-    // Retrofit
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
-    // Gson
     implementation("com.google.code.gson:gson:2.8.8")
-    implementation("androidx.recyclerview:recyclerview:1.3.0")
+
+    // RecyclerView 및 CardView
+    implementation("androidx.recyclerview:recyclerview:1.3.0") // 최신 버전 하나만 남김
+    implementation("androidx.cardview:cardview:1.0.0")
+
+    // 테스트 라이브러리
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
