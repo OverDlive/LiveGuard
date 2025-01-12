@@ -1,6 +1,8 @@
 package com.example.liveguard_app_010;
 
 import android.os.Bundle;
+
+import com.example.liveguard_app_010.worker.CongestionWorker;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,12 +11,21 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+import androidx.work.Data;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
+
 import com.example.liveguard_app_010.databinding.ActivityMainBinding;
 import com.example.liveguard_app_010.ui.topnavigation.TopNavigationFragment;
+
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
+    private static final String WORK_TAG = "CongestionWork";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +66,8 @@ public class MainActivity extends AppCompatActivity {
         fragmentManager.beginTransaction()
                 .replace(R.id.top_navigation_container, topNavigationFragment)
                 .commit();
+
+        schedulePeriodicWork();
     }
 
     @Override
@@ -63,5 +76,27 @@ public class MainActivity extends AppCompatActivity {
         NavHostFragment navHostFragment = (NavHostFragment) fragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main);
         NavController navController = navHostFragment.getNavController();
         return navController.navigateUp() || super.onSupportNavigateUp();
+    }
+
+    private void schedulePeriodicWork() {
+        // 1. Worker에 전달할 파라미터 (poiId, lat, lon 등)
+        Data inputData = new Data.Builder()
+                .putString("poiId", "1172091")  // 타임스퀘어 예시
+                .putDouble("lat", 37.51723636)
+                .putDouble("lon", 126.90344592)
+                .build();
+
+        // 2. 15분 간격 반복 작업 요청
+        PeriodicWorkRequest workRequest =
+                new PeriodicWorkRequest.Builder(CongestionWorker.class, 15, TimeUnit.MINUTES)
+                        .setInputData(inputData)
+                        .build();
+
+        // 3. WorkManager에 등록
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+                WORK_TAG,
+                ExistingPeriodicWorkPolicy.KEEP,
+                workRequest
+        );
     }
 }

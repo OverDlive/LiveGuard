@@ -48,8 +48,9 @@ dependencies {
     implementation(libs.lifecycle.viewmodel.ktx)
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
-    implementation(libs.preference) // 최신 버전 사용 권장
-    implementation("com.google.android.gms:play-services-location:21.0.1")  // 최신 버전 사용 권장
+    implementation(libs.preference)
+    implementation("com.google.android.gms:play-services-location:21.0.1")
+    implementation("androidx.work:work-runtime-ktx:2.8.1")
 
     // 네이버 지도 SDK
     implementation("com.naver.maps:map-sdk:3.19.1")
