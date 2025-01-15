@@ -15,8 +15,7 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField("String", "SK_APP_KEY", "\"6afC5FOosG3XVuVZxtO3K6Y9gKEgVplvqi7OEPt1\"")
-
+        buildConfigField("String", "SEOUL_APP_KEY", "\"686553535565686437394450516f68\"")
     }
 
     buildTypes {
@@ -63,6 +62,10 @@ dependencies {
     // RecyclerView 및 CardView
     implementation("androidx.recyclerview:recyclerview:1.3.0") // 최신 버전 하나만 남김
     implementation("androidx.cardview:cardview:1.0.0")
+
+    //xml
+    implementation("com.squareup.retrofit2:converter-simplexml:2.9.0")
+    implementation(libs.security.identity.credential)
 
     // 테스트 라이브러리
     testImplementation(libs.junit)

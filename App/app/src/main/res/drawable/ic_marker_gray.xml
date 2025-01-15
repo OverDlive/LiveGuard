@@ -1,0 +1,16 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- 동일한 핀 모양, 색상만 회색으로 변경 -->
+    <path
+        android:pathData="M12,2
+                          C8,2 5,5 5,9
+                          c0,3.71 3.29,6.69 7,11
+                          3.71-4.31 7-7.29 7-11
+                          C19,5 16,2 12,2 Z"
+        android:fillColor="#808080" />
+
+</vector>

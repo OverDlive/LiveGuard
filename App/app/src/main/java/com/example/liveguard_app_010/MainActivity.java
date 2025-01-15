@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import com.example.liveguard_app_010.worker.CongestionWorker;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
@@ -25,7 +26,6 @@ public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
     private static final String WORK_TAG = "CongestionWork";
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,9 +53,12 @@ public class MainActivity extends AppCompatActivity {
 
         // AppBarConfiguration 설정
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_home, R.id.navigation_timeline, R.id.navigation_crowd_density,
-                R.id.navigation_region_info, R.id.navigation_settings)
-                .build();
+                R.id.navigation_home,
+                R.id.navigation_timeline,
+                R.id.navigation_crowd_density,
+                R.id.navigation_region_info,
+                R.id.navigation_settings
+        ).build();
 
         // NavigationUI 설정
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
@@ -67,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
                 .replace(R.id.top_navigation_container, topNavigationFragment)
                 .commit();
 
+        // 주기적 Worker 스케줄링
         schedulePeriodicWork();
     }
 
@@ -78,12 +82,14 @@ public class MainActivity extends AppCompatActivity {
         return navController.navigateUp() || super.onSupportNavigateUp();
     }
 
+    /**
+     * WorkManager를 이용해 15분 간격으로 혼잡도 데이터를 가져오는 작업을 스케줄링
+     */
     private void schedulePeriodicWork() {
-        // 1. Worker에 전달할 파라미터 (poiId, lat, lon 등)
+        // 1. Worker에 전달할 파라미터: 서울시 API에서 사용할 "areaName"
+        //    예: "광화문", "명동" 등
         Data inputData = new Data.Builder()
-                .putString("poiId", "1172091")  // 타임스퀘어 예시
-                .putDouble("lat", 37.51723636)
-                .putDouble("lon", 126.90344592)
+                .putString("areaName", "광화문")
                 .build();
 
         // 2. 15분 간격 반복 작업 요청

@@ -15,7 +15,7 @@ import android.widget.Toast;
 import com.example.liveguard_app_010.BuildConfig;
 import com.example.liveguard_app_010.R;
 import com.example.liveguard_app_010.network.ApiClient;
-import com.example.liveguard_app_010.network.SkOpenApiService;
+import com.example.liveguard_app_010.network.SeoulOpenApiService;
 import com.example.liveguard_app_010.network.model.CongestionResponse;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.naver.maps.geometry.LatLng;
@@ -25,7 +25,8 @@ import com.naver.maps.map.OnMapReadyCallback;
 import com.naver.maps.map.overlay.Marker;
 import com.naver.maps.map.overlay.OverlayImage;
 
-import java.util.List;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -34,43 +35,43 @@ import retrofit2.Response;
 public class HomeFragment extends Fragment {
 
     private BottomSheetBehavior<View> bottomSheetBehavior;
-    private static final String SK_APP_KEY = BuildConfig.SK_APP_KEY; // BuildConfig에서 가져온 API 키
-    private NaverMap naverMap; // onMapReady에서 받은 네이버 맵 객체를 저장
     private static final String TAG = "HomeFragment";
+
+    // build.gradle.kts에서 선언한 서울시 인증키 (예: SEOUL_APP_KEY)
+    private static final String SEOUL_APP_KEY = BuildConfig.SEOUL_APP_KEY;
+
+    private NaverMap naverMap;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        // 1) 바텀 시트 초기화
+        // 바텀 시트 초기화
         View bottomSheet = view.findViewById(R.id.bottom_sheet);
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
 
-        // 2) 화면 높이 가져오기
+        // 화면 높이 가져오기
         DisplayMetrics displayMetrics = new DisplayMetrics();
         requireActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int screenHeight = displayMetrics.heightPixels;
 
-        // 3) 바텀 시트 설정
         bottomSheetBehavior.setPeekHeight(500);
         bottomSheetBehavior.setFitToContents(false);
         bottomSheetBehavior.setHalfExpandedRatio(0.5f);
         bottomSheetBehavior.setExpandedOffset((int) (screenHeight * 0.02f));
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
-        // 4) 바텀 시트 콜백 (필요 시 사용)
-        bottomSheetBehavior.addBottomSheetCallback(
-                new BottomSheetBehavior.BottomSheetCallback() {
-                    @Override
-                    public void onStateChanged(@NonNull View bottomSheet, int newState) {}
-                    @Override
-                    public void onSlide(@NonNull View bottomSheet, float slideOffset) {}
-                }
-        );
+        bottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) { }
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) { }
+        });
 
-        // 5) 지도 Fragment 가져오기
+        // 지도 Fragment
         MapFragment mapFragment = (MapFragment) getChildFragmentManager().findFragmentById(R.id.map_fragment);
         if (mapFragment == null) {
             mapFragment = MapFragment.newInstance();
@@ -79,82 +80,68 @@ public class HomeFragment extends Fragment {
                     .commit();
         }
 
-        // 6) onMapReady 콜백
+        // onMapReady
         mapFragment.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(@NonNull NaverMap map) {
-                // 네이버 지도 객체를 전역 변수로 저장
                 naverMap = map;
-
-                // 지도를 탭하면 바텀시트 닫기
                 naverMap.setOnMapClickListener((pointF, latLng) -> {
                     if (bottomSheetBehavior.getState() != BottomSheetBehavior.STATE_COLLAPSED) {
                         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                     }
                 });
 
-                // 7) API 호출 후, 데이터 받아서 지도 위에 표시
-                // (예: 특정 POI ID로부터 혼잡도 조회)
-                String poiId = "1172091"; // 타임스퀘어 POI ID
-                double lat = 37.51723636;  // 실제 위도
-                double lon = 126.90344592; // 실제 경도
-
-                // 실제 API 호출
-                loadCongestionData(poiId, lat, lon);
+                // 지역명 "광화문·덕수궁" 처럼 특수문자가 있을 수도 있으므로, 인코딩 후 호출
+                loadCongestionData("광화문·덕수궁");
             }
         });
 
         return view;
     }
 
-    public void loadCongestionData(String poiId, double lat, double lon) {
-        SkOpenApiService service = ApiClient.getSkOpenApiService();
+    /**
+     * 서울시 citydata_ppltn API를 통해 특정 지역의 혼잡도 데이터 요청
+     */
+    public void loadCongestionData(String areaName) {
+        // 지역명을 URL 인코딩
+        String encodedAreaName;
+        try {
+            encodedAreaName = URLEncoder.encode(areaName, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            // 인코딩 실패 시 기본값(광화문 등)으로 대체하거나, 요청 중단
+            encodedAreaName = "광화문";
+        }
+
+        // Retrofit Service
+        SeoulOpenApiService service = ApiClient.getSeoulOpenApiService();
+
+        // 도시데이터 API 요청
         Call<CongestionResponse> call = service.getRealTimeCongestion(
-                SK_APP_KEY,
-                poiId,
-                lat,
-                lon
+                SEOUL_APP_KEY,   // 인증키
+                encodedAreaName  // 인코딩된 지역명
         );
 
+        // 비동기 콜백
         call.enqueue(new Callback<CongestionResponse>() {
             @Override
             public void onResponse(Call<CongestionResponse> call, Response<CongestionResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     CongestionResponse data = response.body();
 
-                    // status 코드와 메시지 확인
-                    if (data.getStatus() != null) {
-                        String code = data.getStatus().getCode();        // ex) "00"
-                        String message = data.getStatus().getMessage(); // ex) "success"
-                        int totalCount = data.getStatus().getTotalCount();
+                    CongestionResponse.CityDataPpltn cityData = data.getCitydataPpltn();
+                    if (cityData != null) {
+                        String areaNm = cityData.getAreaNm();
+                        String congestLvl = cityData.getAreaCongestLvl();
+                        Log.d(TAG, "지역명: " + areaNm + ", 혼잡도: " + congestLvl);
 
-                        if ("00".equals(code)) {
-                            // 성공 로직
-                            if (data.getContents() != null) {
-                                CongestionResponse.Contents contents = data.getContents();
-
-                                // poiId, poiName
-                                String poiName = contents.getPoiName();
-
-                                // rltm 리스트
-                                List<CongestionResponse.RltmItem> rltmList = contents.getRltm();
-                                if (rltmList != null && !rltmList.isEmpty()) {
-                                    // 이제 rltmList를 이용해 지도에 마커 표시
-                                    showMarkers(rltmList);
-                                } else {
-                                    Log.e(TAG, "rltm is empty or null");
-                                }
-                            }
-                        } else {
-                            // code != "00"인 경우 => 에러 처리
-                            Log.e(TAG, "API 오류: code=" + code + ", message=" + message);
-                        }
+                        // 지도에 마커 표시
+                        showMarkers(areaNm, congestLvl);
                     } else {
-                        // status 자체가 null
-                        Log.e(TAG, "API 응답에 status가 없음");
+                        Log.e(TAG, "SeoulRtd.citydata_ppltn 태그가 없습니다.");
                     }
                 } else {
-                    Log.e(TAG, "응답 실패: " + response.code() + ", " + response.message());
+                    Log.e(TAG, "응답 실패: code=" + response.code() + ", msg=" + response.message());
                 }
             }
 
@@ -166,33 +153,50 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    private void showMarkers(List<CongestionResponse.RltmItem> rltmList) {
-        // 여기서 rltmList를 돌면서 마커 표시
-        for (CongestionResponse.RltmItem item : rltmList) {
-            double lat = 37.51723636; // 만약 특정 좌표가 있으면..
-            double lon = 126.90344592;
-            // 사실 응답 안에 lat, lon이 없으므로,
-            // poiId가 고정이면 poi의 위치는 고정값을 세팅해야 할 수도 있음
-
-            Marker marker = new Marker();
-            marker.setPosition(new LatLng(lat, lon));
-
-            // 혼잡도 레벨 예시
-            int level = item.getCongestionLevel();
-            switch (level) {
-                case 3: // 예시로 HIGH
-                    marker.setIcon(OverlayImage.fromResource(R.drawable.ic_marker_red));
-                    break;
-                case 2: // MEDIUM
-                    marker.setIcon(OverlayImage.fromResource(R.drawable.ic_marker_yellow));
-                    break;
-                case 1: // LOW
-                default:
-                    marker.setIcon(OverlayImage.fromResource(R.drawable.ic_marker_green));
-                    break;
-            }
-
-            marker.setCaptionText("혼잡도: " + item.getCongestion() + "\nLevel: " + level);
-            marker.setMap(naverMap);
+    /**
+     * 지도에 마커를 표시하는 메서드
+     */
+    private void showMarkers(String areaName, String congestLvl) {
+        if (naverMap == null) {
+            Log.e(TAG, "네이버 맵 객체가 아직 초기화되지 않았습니다.");
+            return;
         }
-    }}
+
+        double lat, lon;
+        if (areaName.contains("광화문")) {
+            lat = 37.575957;
+            lon = 126.977555;
+        } else if (areaName.contains("덕수궁")) {
+            // 임의로 덕수궁 근처 좌표
+            lat = 37.565804;
+            lon = 126.975148;
+        } else {
+            lat = 37.5666102;
+            lon = 126.9783881;
+        }
+
+        Marker marker = new Marker();
+        marker.setPosition(new LatLng(lat, lon));
+
+        if ("여유".equals(congestLvl)) {
+            marker.setIcon(OverlayImage.fromResource(R.drawable.ic_marker_green));
+        } else if ("보통".equals(congestLvl)) {
+            marker.setIcon(OverlayImage.fromResource(R.drawable.ic_marker_yellow));
+        } else if ("약간 붐빔".equals(congestLvl)) {
+            marker.setIcon(OverlayImage.fromResource(R.drawable.ic_marker_orange));
+        } else if ("붐빔".equals(congestLvl)) {
+            marker.setIcon(OverlayImage.fromResource(R.drawable.ic_marker_red));
+        } else {
+            marker.setIcon(OverlayImage.fromResource(R.drawable.ic_marker_gray));
+        }
+
+        marker.setCaptionText(areaName + "\n혼잡도: " + congestLvl);
+        marker.setMap(naverMap);
+
+        // 마커 클릭 시 Toast
+        marker.setOnClickListener(overlay -> {
+            Toast.makeText(getContext(), areaName + " : " + congestLvl, Toast.LENGTH_SHORT).show();
+            return true;
+        });
+    }
+}
