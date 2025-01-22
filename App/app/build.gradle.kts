@@ -60,7 +60,7 @@ dependencies {
     implementation("com.google.code.gson:gson:2.8.8")
 
     // RecyclerView 및 CardView
-    implementation("androidx.recyclerview:recyclerview:1.3.0") // 최신 버전 하나만 남김
+    implementation("androidx.recyclerview:recyclerview:1.3.0")
     implementation("androidx.cardview:cardview:1.0.0")
 
     //xml
