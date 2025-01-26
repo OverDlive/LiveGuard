@@ -31,6 +31,7 @@ import com.naver.maps.map.overlay.OverlayImage;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -46,6 +47,9 @@ public class HomeFragment extends Fragment {
     private static final String SEOUL_APP_KEY = BuildConfig.SEOUL_APP_KEY;
 
     private NaverMap naverMap;
+
+    // 도심권 지점 정보(각각 좌표/이름 따로 표기)
+    private final List<LocationData> downtownLocations = new ArrayList<>();
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -85,6 +89,9 @@ public class HomeFragment extends Fragment {
                     .commit();
         }
 
+        // 도심권 지점(예시)
+        initDowntownLocations();
+
         // onMapReady에서 지도 객체 획득
         mapFragment.getMapAsync(new OnMapReadyCallback() {
             @Override
@@ -106,10 +113,6 @@ public class HomeFragment extends Fragment {
                     marker.setCaptionText(info.regionName);
                     marker.setMap(naverMap);
 
-                    // 마커 초기 스케일/알파 등 애니메이션을 원하는 경우
-
-                    marker.setAlpha(1f);
-
                     // 마커 클릭 리스너 설정
                     marker.setOnClickListener(overlay -> {
                         if (info.type == RegionType.CITY_CENTER) {
@@ -130,10 +133,11 @@ public class HomeFragment extends Fragment {
                             );
                             Log.d(TAG, "도심권 클릭: 카메라 이동 및 확대");
 
-                            // 2. 혼잡도 API 호출
-                            loadCongestionData("광화문·덕수궁");
+                            // 2. 도심권 내 각 지점별 혼잡도 API 호출 → 마커 표시
+                            loadDowntownConsolidated();
+
                         } else {
-                            // 그 외 권역 클릭 시 Toast 메시지 표시
+                            // 그 외 권역 클릭 시 Toast 메시지
                             Toast.makeText(getContext(),
                                     info.regionName + " 클릭됨",
                                     Toast.LENGTH_SHORT
@@ -157,22 +161,44 @@ public class HomeFragment extends Fragment {
     }
 
     /**
-     * 서울시 citydata_ppltn API를 통해 특정 지역의 혼잡도 데이터 요청
+     * 도심권(광화문, 덕수궁, 시청, 종각 등)의 위치/이름 리스트 초기화
      */
-    public void loadCongestionData(String areaName) {
-        // 지역명 URL 인코딩
+    private void initDowntownLocations() {
+        downtownLocations.clear();
+        downtownLocations.add(new LocationData("광화문광장", 37.572417, 126.976865));
+        downtownLocations.add(new LocationData("광화문·덕수궁", 37.565804, 126.975148));
+        downtownLocations.add(new LocationData("서울광장", 37.5662952, 126.9779451));
+        downtownLocations.add(new LocationData("보신각", 37.5701616, 126.9839777));
+        // 필요하다면 더 추가
+    }
+
+    /**
+     * [핵심] 도심권 내 여러 지점 각각에 대해 API 호출/마커 표시
+     *       => 지점별로 별도 API 요청, 혼잡도 표시
+     */
+    private void loadDowntownConsolidated() {
+        for (LocationData loc : downtownLocations) {
+            loadAndShowCongestion(loc.name, loc.lat, loc.lng);
+        }
+    }
+
+    /**
+     * 특정 지점에 대해 citydata_ppltn API 호출 후, 해당 지점 마커 표시
+     */
+    private void loadAndShowCongestion(String subAreaName, double lat, double lng) {
+        // 1. 지역명 URL 인코딩
         String encodedAreaName;
         try {
-            encodedAreaName = URLEncoder.encode(areaName, "UTF-8");
+            encodedAreaName = URLEncoder.encode(subAreaName, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
-            encodedAreaName = "광화문"; // 실패 시 기본값
+            encodedAreaName = subAreaName; // 실패 시 그냥 원본 사용
         }
 
-        // Retrofit Service
+        // 2. Retrofit Service
         SeoulOpenApiService service = ApiClient.getSeoulOpenApiService();
 
-        // 도시데이터 API 요청
+        // 3. 도시데이터 API 요청
         Call<CongestionResponse> call = service.getRealTimeCongestion(
                 SEOUL_APP_KEY,
                 encodedAreaName
@@ -185,14 +211,15 @@ public class HomeFragment extends Fragment {
                     CongestionResponse data = response.body();
                     CongestionResponse.CityDataPpltn cityData = data.getCitydataPpltn();
                     if (cityData != null) {
-                        String areaNm = cityData.getAreaNm();
-                        String congestLvl = cityData.getAreaCongestLvl();
+                        String areaNm = cityData.getAreaNm();           // ex) "광화문"
+                        String congestLvl = cityData.getAreaCongestLvl(); // ex) "여유", "보통" 등
                         Log.d(TAG, "지역명: " + areaNm + ", 혼잡도: " + congestLvl);
 
-                        // 지도에 마커 표시
-                        showMarkers(areaNm, congestLvl);
+                        // 4. 지도에 마커 표시 (지점별 혼잡도)
+                        showMarker(areaNm, congestLvl, lat, lng);
                     } else {
-                        Log.e(TAG, "SeoulRtd.citydata_ppltn 태그가 없습니다.");
+                        // API 본문 중 citydata_ppltn 태그가 없거나 null일 경우
+                        Log.e(TAG, "SeoulRtd.citydata_ppltn 태그가 없습니다. => " + subAreaName);
                     }
                 } else {
                     Log.e(TAG, "응답 실패: code=" + response.code() + ", msg=" + response.message());
@@ -208,31 +235,19 @@ public class HomeFragment extends Fragment {
     }
 
     /**
-     * 지도에 혼잡도 마커를 표시하는 메서드
+     * 지도의 해당 좌표에 마커를 표시하는 메서드 (개별 혼잡도 적용)
      */
-    private void showMarkers(String areaName, String congestLvl) {
+    private void showMarker(String areaName, String congestLvl, double lat, double lng) {
         if (naverMap == null) {
             Log.e(TAG, "네이버 맵 객체가 아직 초기화되지 않았습니다.");
             return;
         }
 
-        // 혼잡도에 따라 마커의 위치를 설정 (실제 좌표는 필요에 따라 조정)
-        double lat, lon;
-        if (areaName.contains("광화문")) {
-            lat = 37.575957;
-            lon = 126.977555;
-        } else if (areaName.contains("덕수궁")) {
-            lat = 37.565804;
-            lon = 126.975148;
-        } else {
-            lat = 37.5666102;
-            lon = 126.9783881;
-        }
-
         Marker marker = new Marker();
-        marker.setPosition(new LatLng(lat, lon));
+        marker.setPosition(new LatLng(lat, lng));
+        marker.setCaptionText(areaName + "\n혼잡도: " + congestLvl);
 
-        // 혼잡도에 따른 마커 아이콘 구분 (리소스 존재해야 함)
+        // 혼잡도에 따른 마커 색상(아이콘) 구분 (리소스 drawable 직접 준비)
         switch (congestLvl) {
             case "여유":
                 marker.setIcon(OverlayImage.fromResource(R.drawable.ic_marker_green));
@@ -251,12 +266,14 @@ public class HomeFragment extends Fragment {
                 break;
         }
 
-        marker.setCaptionText(areaName + "\n혼잡도: " + congestLvl);
         marker.setMap(naverMap);
 
-        // 마커 클릭 시 Toast
+        // 마커 클릭 시 Toast 등 처리
         marker.setOnClickListener(overlay -> {
-            Toast.makeText(getContext(), areaName + " : " + congestLvl, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(),
+                    areaName + " : " + congestLvl,
+                    Toast.LENGTH_SHORT
+            ).show();
             return true;
         });
     }
@@ -279,6 +296,21 @@ public class HomeFragment extends Fragment {
             CameraUpdate cameraUpdate = CameraUpdate.scrollAndZoomTo(endPosition, endZoom)
                     .animate(CameraAnimation.Easing, (int) duration);
             naverMap.moveCamera(cameraUpdate);
+        }
+    }
+
+    /**
+     * 지역 이름/좌표를 묶어서 편리하게 관리하기 위한 간단한 데이터 클래스
+     */
+    private static class LocationData {
+        String name;
+        double lat;
+        double lng;
+
+        LocationData(String name, double lat, double lng) {
+            this.name = name;
+            this.lat = lat;
+            this.lng = lng;
         }
     }
 }
