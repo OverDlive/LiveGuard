@@ -166,9 +166,19 @@ public class HomeFragment extends Fragment {
     private void initDowntownLocations() {
         downtownLocations.clear();
         downtownLocations.add(new LocationData("광화문광장", 37.572417, 126.976865));
-        downtownLocations.add(new LocationData("광화문·덕수궁", 37.565804, 126.975148));
-        downtownLocations.add(new LocationData("서울광장", 37.5662952, 126.9779451));
-        downtownLocations.add(new LocationData("보신각", 37.5701616, 126.9839777));
+        downtownLocations.add(new LocationData("서울광장", 37.565567, 126.978014));
+        downtownLocations.add(new LocationData("보신각", 37.5697599, 126.9836604));
+        downtownLocations.add(new LocationData("서울역", 37.555946, 126.972317));
+        downtownLocations.add(new LocationData("경복궁", 37.579617, 126.977041));
+        downtownLocations.add(new LocationData("청와대", 37.5866076, 126.974811));
+        downtownLocations.add(new LocationData("동대문역", 37.571731, 127.011069));
+        downtownLocations.add(new LocationData("남산공원", 37.5509895, 126.9908991));
+        downtownLocations.add(new LocationData("용산역", 37.5298837, 126.9648019));
+        downtownLocations.add(new LocationData("이태원역", 37.534542, 126.994596));
+        downtownLocations.add(new LocationData("국립중앙박물관·용산가족공원", 37.520918, 126.978484));
+        downtownLocations.add(new LocationData("충정로역", 37.560055, 126.963672));
+        downtownLocations.add(new LocationData("명동 관광특구", 37.55998, 126.9858296));
+        downtownLocations.add(new LocationData("이촌한강공원", 37.5169202, 126.9717022));
         // 필요하다면 더 추가
     }
 
