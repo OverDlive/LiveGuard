@@ -66,6 +66,7 @@ dependencies {
     //xml
     implementation("com.squareup.retrofit2:converter-simplexml:2.9.0")
     implementation(libs.security.identity.credential)
+    implementation(libs.play.services.maps)
 
     // 테스트 라이브러리
     testImplementation(libs.junit)

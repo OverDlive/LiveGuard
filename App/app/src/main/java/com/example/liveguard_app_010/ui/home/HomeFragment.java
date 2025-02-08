@@ -1,10 +1,10 @@
 package com.example.liveguard_app_010.ui.home;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,13 +28,21 @@ import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.OnMapReadyCallback;
 import com.naver.maps.map.overlay.Marker;
 import com.naver.maps.map.overlay.OverlayImage;
+import com.naver.maps.map.overlay.PolygonOverlay;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -50,9 +58,25 @@ public class HomeFragment extends Fragment {
 
     private NaverMap naverMap;
 
-    // 서울시 각 권역별 지점 목록
-    // key: RegionType (또는 권역 이름), value: 해당 권역 내부의 위치 리스트
+    // 서울시 각 권역별 위치 데이터를 저장 (key: RegionType 또는 권역 이름, value: 해당 권역 내 위치 리스트)
     private final Map<RegionType, List<LocationData>> regionLocationMap = new HashMap<>();
+
+    // 1. 미리 정의한 5권역 분류 기준 (예시)
+    private static final Set<String> CITY_CENTER = new HashSet<>(Arrays.asList("종로구", "중구", "용산구"));
+    private static final Set<String> NORTH_EAST = new HashSet<>(Arrays.asList("성동구", "광진구", "동대문구", "중랑구", "강북구", "노원구", "도봉구", "성북구"));
+    private static final Set<String> SOUTH_EAST = new HashSet<>(Arrays.asList("강남구", "서초구", "송파구", "강동구"));
+    private static final Set<String> NORTH_WEST = new HashSet<>(Arrays.asList("은평구", "서대문구", "마포구"));
+    private static final Set<String> SOUTH_WEST = new HashSet<>(Arrays.asList("강서구", "구로구", "영등포구", "금천구", "양천구", "관악구", "동작구"));
+
+    // 3. 행정구역 이름에 따른 권역 결정 함수
+    private String getRegionForDistrict(String district) {
+        if (CITY_CENTER.contains(district)) return "도심권";
+        if (NORTH_EAST.contains(district)) return "동북권";
+        if (SOUTH_EAST.contains(district)) return "동남권";
+        if (NORTH_WEST.contains(district)) return "서북권";
+        if (SOUTH_WEST.contains(district)) return "서남권";
+        return null;
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -108,7 +132,7 @@ public class HomeFragment extends Fragment {
                     }
                 });
 
-                // 서울시 5대 권역 데이터를 가져와서 마커로 추가
+                // 서울시 5대 권역 마커 추가
                 List<RegionManager.RegionInfo> regionInfos = RegionManager.getSeoulRegions();
                 for (RegionManager.RegionInfo info : regionInfos) {
                     Marker marker = new Marker();
@@ -116,14 +140,11 @@ public class HomeFragment extends Fragment {
                     marker.setCaptionText(info.regionName);
                     marker.setMap(naverMap);
 
-                    // 마커 클릭 리스너 설정
+                    // 마커 클릭 시 카메라 이동 및 해당 권역의 혼잡도 마커 로드
                     marker.setOnClickListener(overlay -> {
-                        // 특정 권역 클릭 시
                         switch (info.type) {
                             case CITY_CENTER:
-                                // 도심권
                                 animateToMarker(marker, 13f);
-                                // 도심권 지점 혼잡도 표시
                                 loadRegionMarkers(RegionType.CITY_CENTER);
                                 break;
                             case NORTH_WEST:
@@ -143,15 +164,21 @@ public class HomeFragment extends Fragment {
                                 loadRegionMarkers(RegionType.SOUTH_WEST);
                                 break;
                             default:
-                                Toast.makeText(getContext(),
-                                        info.regionName + " 클릭됨",
-                                        Toast.LENGTH_SHORT
-                                ).show();
+                                Toast.makeText(getContext(), info.regionName + " 클릭됨", Toast.LENGTH_SHORT).show();
                                 Log.d(TAG, info.regionName + " 클릭됨");
                                 break;
                         }
                         return true;
                     });
+                }
+
+                // --- 서울시 5권역의 경계를 GeoJSON 데이터를 기반으로 폴리곤 오버레이로 표시 ---
+                try {
+                    JSONObject seoulGeoJson = RegionManager.getSeoulGeoJsonData(getContext());
+                    displaySeoulRegions(seoulGeoJson);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Log.e(TAG, "GeoJSON 파싱 오류: " + e.getMessage());
                 }
 
                 // 초기 지도 위치 설정 (서울시청 근방)
@@ -166,13 +193,83 @@ public class HomeFragment extends Fragment {
         return view;
     }
 
+    // 2. GeoJSON 파싱 후, 각 권역별 PolygonOverlay 생성 함수
+    private void displaySeoulRegions(JSONObject geoJsonData) throws JSONException {
+        Map<String, List<PolygonOverlay>> regionOverlays = new HashMap<>();
+        // 각 권역에 대해 빈 리스트 생성
+        regionOverlays.put("도심권", new ArrayList<>());
+        regionOverlays.put("동북권", new ArrayList<>());
+        regionOverlays.put("동남권", new ArrayList<>());
+        regionOverlays.put("서북권", new ArrayList<>());
+        regionOverlays.put("서남권", new ArrayList<>());
+
+        // GeoJSON의 features 배열을 반복
+        JSONArray features = geoJsonData.getJSONArray("features");
+        for (int i = 0; i < features.length(); i++) {
+            JSONObject feature = features.getJSONObject(i);
+            JSONObject properties = feature.getJSONObject("properties");
+            String districtName = properties.getString("sggnm");  // 예: "종로구", "중구" 등
+            JSONObject geometry = feature.getJSONObject("geometry");
+
+            // 해당 행정구역이 속할 권역 결정
+            String region = getRegionForDistrict(districtName);
+            if (region == null) continue;  // 분류되지 않은 경우 건너뜀
+
+            // geometry의 좌표 배열 추출 (여기서는 MultiPolygon 타입을 가정)
+            JSONArray multiPolygons = geometry.getJSONArray("coordinates");
+            for (int j = 0; j < multiPolygons.length(); j++) {
+                JSONArray polygonGroup = multiPolygons.getJSONArray(j);
+                // 보통 첫 번째 ring가 외곽선
+                JSONArray outerRing = polygonGroup.getJSONArray(0);
+                List<LatLng> coords = new ArrayList<>();
+                for (int k = 0; k < outerRing.length(); k++) {
+                    JSONArray point = outerRing.getJSONArray(k);
+                    double lon = point.getDouble(0);
+                    double lat = point.getDouble(1);
+                    coords.add(new LatLng(lat, lon));  // LatLng(위도, 경도)
+                }
+                // PolygonOverlay 생성 및 스타일 적용
+                PolygonOverlay overlay = new PolygonOverlay();
+                overlay.setCoords(coords);
+                // 권역별 스타일 지정 (예시)
+                switch (region) {
+                    case "도심권":
+                        overlay.setColor(Color.argb(80, 255, 255, 255));
+                        overlay.setOutlineColor(Color.BLUE);
+                        overlay.setOutlineWidth(5);
+                        break;
+                    case "동북권":
+                        overlay.setColor(Color.argb(80, 255, 255, 255));
+                        overlay.setOutlineColor(Color.MAGENTA);
+                        overlay.setOutlineWidth(5);
+                        break;
+                    case "동남권":
+                        overlay.setColor(Color.argb(80, 255, 255, 255));
+                        overlay.setOutlineColor(Color.RED);
+                        overlay.setOutlineWidth(5);
+                        break;
+                    case "서북권":
+                        overlay.setColor(Color.argb(80, 255, 255, 255));
+                        overlay.setOutlineColor(Color.GREEN);
+                        overlay.setOutlineWidth(5);
+                        break;
+                    case "서남권":
+                        overlay.setColor(Color.argb(80, 255, 255, 255));
+                        overlay.setOutlineColor(Color.YELLOW);
+                        overlay.setOutlineWidth(5);
+                        break;
+                }
+                overlay.setMap(naverMap);
+                regionOverlays.get(region).add(overlay);
+            }
+        }
+    }
+
     /**
-     * 초기 권역별 위치 데이터를 담아두는 메서드.
-     * 도심권(CITY_CENTER)은 기존처럼 downtownLocations 참고.
-     * 예시로 NORTH_WEST, SOUTH_EAST 등에 몇 개 추가.
+     * 각 권역별 위치 데이터를 초기화하는 메서드
      */
     private void initRegionLocations() {
-        // 도심권
+        // 도심권 (CITY_CENTER)
         List<LocationData> downtownLocations = new ArrayList<>();
         downtownLocations.add(new LocationData("광화문광장", 37.572417, 126.976865));
         downtownLocations.add(new LocationData("서울광장", 37.565567, 126.978014));
@@ -241,7 +338,7 @@ public class HomeFragment extends Fragment {
     }
 
     /**
-     * 특정 권역(RegionType)에 해당하는 위치 데이터를 순회하며 혼잡도 API를 호출해 마커를 표시.
+     * 특정 권역(RegionType)의 위치 데이터를 순회하며 혼잡도 API를 호출하여 마커를 표시
      */
     private void loadRegionMarkers(RegionType regionType) {
         List<LocationData> locations = regionLocationMap.get(regionType);
@@ -255,27 +352,19 @@ public class HomeFragment extends Fragment {
     }
 
     /**
-     * 특정 지점에 대해 citydata_ppltn API 호출 후, 해당 지점 마커 표시
+     * 특정 지점에 대해 citydata_ppltn API 호출 후 혼잡도 마커를 표시
      */
     private void loadAndShowCongestion(String subAreaName, double lat, double lng) {
-        // 1. 지역명 URL 인코딩
         String encodedAreaName;
         try {
             encodedAreaName = URLEncoder.encode(subAreaName, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
-            encodedAreaName = subAreaName; // 실패 시 그냥 원본 사용
+            encodedAreaName = subAreaName;
         }
 
-        // 2. Retrofit Service
         SeoulOpenApiService service = ApiClient.getSeoulOpenApiService();
-
-        // 3. 도시데이터 API 요청
-        Call<CongestionResponse> call = service.getRealTimeCongestion(
-                SEOUL_APP_KEY,
-                encodedAreaName
-        );
-
+        Call<CongestionResponse> call = service.getRealTimeCongestion(SEOUL_APP_KEY, encodedAreaName);
         call.enqueue(new Callback<CongestionResponse>() {
             @Override
             public void onResponse(Call<CongestionResponse> call, Response<CongestionResponse> response) {
@@ -283,21 +372,17 @@ public class HomeFragment extends Fragment {
                     CongestionResponse data = response.body();
                     CongestionResponse.CityDataPpltn cityData = data.getCitydataPpltn();
                     if (cityData != null) {
-                        String areaNm = cityData.getAreaNm();           // ex) "광화문"
-                        String congestLvl = cityData.getAreaCongestLvl(); // ex) "여유", "보통" 등
+                        String areaNm = cityData.getAreaNm();
+                        String congestLvl = cityData.getAreaCongestLvl();
                         Log.d(TAG, "지역명: " + areaNm + ", 혼잡도: " + congestLvl);
-
-                        // 지도에 마커 표시
                         showMarker(areaNm, congestLvl, lat, lng);
                     } else {
-                        // API 본문 중 citydata_ppltn 태그가 없거나 null일 경우
                         Log.e(TAG, "SeoulRtd.citydata_ppltn 태그가 없습니다. => " + subAreaName);
                     }
                 } else {
                     Log.e(TAG, "응답 실패: code=" + response.code() + ", msg=" + response.message());
                 }
             }
-
             @Override
             public void onFailure(Call<CongestionResponse> call, Throwable t) {
                 t.printStackTrace();
@@ -307,7 +392,7 @@ public class HomeFragment extends Fragment {
     }
 
     /**
-     * 지도의 해당 좌표에 마커를 표시하는 메서드 (개별 혼잡도 적용)
+     * 지도에 해당 위치에 혼잡도 정보를 포함한 마커를 표시
      */
     private void showMarker(String areaName, String congestLvl, double lat, double lng) {
         if (naverMap == null) {
@@ -319,7 +404,7 @@ public class HomeFragment extends Fragment {
         marker.setPosition(new LatLng(lat, lng));
         marker.setCaptionText(areaName + "\n혼잡도: " + congestLvl);
 
-        // 혼잡도에 따른 마커 색상(아이콘) 구분
+        // 혼잡도에 따른 마커 아이콘 지정
         switch (congestLvl) {
             case "여유":
                 marker.setIcon(OverlayImage.fromResource(R.drawable.ic_marker_green));
@@ -340,18 +425,14 @@ public class HomeFragment extends Fragment {
 
         marker.setMap(naverMap);
 
-        // 마커 클릭 시 Toast 등 처리
         marker.setOnClickListener(overlay -> {
-            Toast.makeText(getContext(),
-                    areaName + " : " + congestLvl,
-                    Toast.LENGTH_SHORT
-            ).show();
+            Toast.makeText(getContext(), areaName + " : " + congestLvl, Toast.LENGTH_SHORT).show();
             return true;
         });
     }
 
     /**
-     * 특정 마커로 카메라 애니메이션 이동 & 확대.
+     * 특정 마커 위치로 카메라를 애니메이션하며 이동 및 확대
      */
     private void animateToMarker(Marker marker, float zoomLevel) {
         LatLng startPosition = naverMap.getCameraPosition().target;
@@ -375,15 +456,13 @@ public class HomeFragment extends Fragment {
      * 카메라 애니메이션 헬퍼 (커스텀)
      */
     private static class CameraAnimationHelper {
-        public static void animateCamera(
-                @NonNull NaverMap naverMap,
-                @NonNull LatLng startPosition,
-                @NonNull LatLng endPosition,
-                float startZoom,
-                float endZoom,
-                long duration
-        ) {
-            // 스크롤/줌을 동시에 애니메이션하기 위해
+        public static void animateCamera(@NonNull NaverMap naverMap,
+                                         @NonNull LatLng startPosition,
+                                         @NonNull LatLng endPosition,
+                                         float startZoom,
+                                         float endZoom,
+                                         long duration) {
+            // 스크롤 및 줌 애니메이션 적용
             CameraUpdate cameraUpdate = CameraUpdate.scrollAndZoomTo(endPosition, endZoom)
                     .animate(CameraAnimation.Easing, (int) duration);
             naverMap.moveCamera(cameraUpdate);
@@ -391,7 +470,7 @@ public class HomeFragment extends Fragment {
     }
 
     /**
-     * 지역 이름/좌표를 묶어서 편리하게 관리하기 위한 간단한 데이터 클래스
+     * 지역명과 좌표를 저장하기 위한 간단한 데이터 클래스
      */
     private static class LocationData {
         String name;

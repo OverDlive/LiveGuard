@@ -1,5 +1,14 @@
 package com.example.liveguard_app_010.region;
 
+import android.content.Context;
+
+import com.example.liveguard_app_010.R;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,5 +83,20 @@ public class RegionManager {
         ));
 
         return list;
+    }
+
+    public static JSONObject getSeoulGeoJsonData(Context context) {
+        try {
+            InputStream is = context.getResources().openRawResource(R.raw.seoul_districts);
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            String json = new String(buffer, "UTF-8");
+            return new JSONObject(json);
+        } catch (IOException | JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }
