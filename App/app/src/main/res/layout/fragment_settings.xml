@@ -1,21 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="20dp">
 
-    <!-- Settings 화면의 내용 추가 예시 -->
-    <TextView
-        android:id="@+id/settings_text"
+    <Button
+        android:id="@+id/naverLoginButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Settings"
-        android:textSize="24sp"
-        android:layout_gravity="center_horizontal"
-        android:padding="16dp" />
+        android:text="네이버 로그인" />
 
-    <!-- 추가로 설정 메뉴에 필요한 다른 UI 요소들 배치 -->
-    <!-- 예시로 Switch, 버튼 등 설정 항목 추가 가능 -->
+    <Button
+        android:id="@+id/naverLogoutButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="로그아웃"
+        android:layout_marginTop="10dp"/>
 
+    <TextView
+        android:id="@+id/userInfoTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="로그인 정보를 여기에 표시합니다."
+        android:layout_marginTop="20dp"/>
 </LinearLayout>

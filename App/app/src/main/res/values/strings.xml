@@ -15,4 +15,6 @@
     <string name="text8">\u00eb\u008b\u00ac\u00ec\u0084\u009c\u00ea\u00b5\u00ac</string>
     <string name="text9">23:13</string>
     <string name="text10">16\u00c2\u00b0</string>
+    <string name="naver_client_id">_asIKswnxW1LbrjJiIZ_</string>
+    <string name="naver_client_secret">A6KL69lMFb</string>
 </resources>
