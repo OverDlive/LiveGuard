@@ -28,6 +28,12 @@ public class OnboardingActivity extends AppCompatActivity {
 
         onboardingManager = new OnboardingManager(this);
 
+        // ✅ 온보딩이 이미 표시된 경우, 로그인 화면으로 이동
+        if (onboardingManager.isOnboardingShown()) {
+            moveToLogin();
+            return;
+        }
+
         viewPager = findViewById(R.id.viewPager);
         homeButton = findViewById(R.id.btn_home);
 
@@ -37,14 +43,19 @@ public class OnboardingActivity extends AppCompatActivity {
                 R.layout.onboarding_page_3
         );
 
-        OnboardingAdapter onboardingAdapter = new OnboardingAdapter(onboardingScreens);
+        // ✅ 오류 해결: OnboardingAdapter 생성 시 context 추가
+        OnboardingAdapter onboardingAdapter = new OnboardingAdapter(this, onboardingScreens);
         viewPager.setAdapter(onboardingAdapter);
 
         homeButton.setOnClickListener(v -> {
-            onboardingManager.setOnboardingShown(); // ✅ 온보딩 완료 상태 저장
-            Intent intent = new Intent(OnboardingActivity.this, LoginActivity.class);
-            startActivity(intent);
-            finish(); // ✅ 현재 액티비티 종료
+            onboardingManager.setOnboardingShown(true); // ✅ 온보딩 완료 저장
+            moveToLogin();
         });
+    }
+
+    private void moveToLogin() {
+        Intent intent = new Intent(OnboardingActivity.this, LoginActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

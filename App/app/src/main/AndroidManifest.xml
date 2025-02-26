@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
@@ -11,76 +10,77 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <application
-        android:allowBackup="true"
-        android:networkSecurityConfig="@xml/network_security_config"
-        android:dataExtractionRules="@xml/data_extraction_rules"
-        android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
+        android:name=".LiveGuardApplication"
+    android:allowBackup="true"
+    android:networkSecurityConfig="@xml/network_security_config"
+    android:dataExtractionRules="@xml/data_extraction_rules"
+    android:fullBackupContent="@xml/backup_rules"
+    android:icon="@mipmap/ic_launcher"
+    android:label="@string/app_name"
+    android:roundIcon="@mipmap/ic_launcher_round"
+    android:supportsRtl="true"
+    android:theme="@style/Theme.LiveGuard_App_010"
+    android:usesCleartextTraffic="true"
+    tools:targetApi="31">
+
+    <!-- 앱 실행 시 권한 설정 화면부터 시작 -->
+    <activity
+        android:name=".ui.permission.PermissionActivity"
+        android:exported="true"
+        android:theme="@style/Theme.LiveGuard_App_010">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN"/>
+            <category android:name="android.intent.category.LAUNCHER"/>
+        </intent-filter>
+    </activity>
+
+    <!-- 온보딩 화면 -->
+    <activity
+        android:name=".ui.onboarding.OnboardingActivity"
+        android:exported="true"
+        android:theme="@style/Theme.LiveGuard_App_010"/>
+
+    <!-- 로그인 화면 -->
+    <activity
+        android:name=".ui.login.LoginActivity"
+        android:exported="true"
+        android:theme="@style/Theme.LiveGuard_App_010"/>
+
+    <!-- 이용약관 동의 화면 -->
+    <activity
+        android:name=".ui.login.TermsActivity"
+        android:exported="true"
+        android:theme="@style/Theme.LiveGuard_App_010"/>
+
+    <!-- 네이버 로그인 실행 화면 -->
+    <activity
+        android:name=".ui.login.NaverLoginActivity"
+        android:exported="true"
+        android:theme="@style/Theme.LiveGuard_App_010"/>
+
+    <!-- 메인 화면 -->
+    <activity
+        android:name=".MainActivity"
+        android:exported="true"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true"
-        android:theme="@style/Theme.LiveGuard_App_010"
-        android:usesCleartextTraffic="true"
-        tools:targetApi="31">
+        android:theme="@style/Theme.LiveGuard_App_010">
+    </activity>
 
-        <!-- 앱 실행 시 권한 설정 화면부터 시작 -->
-        <activity
-            android:name=".ui.permission.PermissionActivity"
-            android:exported="true"
-            android:theme="@style/Theme.LiveGuard_App_010">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
-        </activity>
+    <!-- 네이버 지도 API Client ID -->
+    <meta-data
+        android:name="com.naver.maps.map.CLIENT_ID"
+        android:value="0s1oum6tqy" />
 
-        <!-- 온보딩 화면 -->
-        <activity
-            android:name=".ui.onboarding.OnboardingActivity"
-            android:exported="true"
-            android:theme="@style/Theme.LiveGuard_App_010"/>
+    <!-- 네이버 로그인 Client ID -->
+    <meta-data
+        android:name="com.naver.sdk.clientId"
+        android:value="@string/naver_client_id" />
 
-        <!-- 로그인 화면 -->
-        <activity
-            android:name=".ui.login.LoginActivity"
-            android:exported="true"
-            android:theme="@style/Theme.LiveGuard_App_010"/>
+    <!-- 네이버 로그인 Client Secret -->
+    <meta-data
+        android:name="com.naver.sdk.clientSecret"
+        android:value="@string/naver_client_secret" />
 
-        <!-- 이용약관 동의 화면 -->
-        <activity
-            android:name=".ui.login.TermsActivity"
-            android:exported="true"
-            android:theme="@style/Theme.LiveGuard_App_010"/>
+</application>
 
-        <!-- 네이버 로그인 실행 화면 -->
-        <activity
-            android:name=".ui.login.NaverLoginActivity"
-            android:exported="true"
-            android:theme="@style/Theme.LiveGuard_App_010"/>
-
-        <!-- 메인 화면 -->
-        <activity
-            android:name=".MainActivity"
-            android:exported="true"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.LiveGuard_App_010">
-        </activity>
-
-        <!-- 네이버 지도 API Client ID -->
-        <meta-data
-            android:name="com.naver.maps.map.CLIENT_ID"
-            android:value="0s1oum6tqy" />
-
-        <!-- 네이버 로그인 Client ID -->
-        <meta-data
-            android:name="com.naver.sdk.clientId"
-            android:value="_asIKswnxW1LbrjJiIZ_"/>
-
-        <!-- 네이버 로그인 Client Secret -->
-        <meta-data
-            android:name="com.naver.sdk.clientSecret"
-            android:value="A6KL69lMFb"/>
-
-    </application>
-
-</manifest>
+    </manifest>

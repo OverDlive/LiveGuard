@@ -7,22 +7,17 @@
     android:padding="20dp">
 
     <Button
-        android:id="@+id/naverLoginButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="네이버 로그인" />
-
-    <Button
         android:id="@+id/naverLogoutButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="로그아웃"
-        android:layout_marginTop="10dp"/>
+        android:layout_marginBottom="20dp"/>
 
-    <TextView
-        android:id="@+id/userInfoTextView"
+    <Button
+        android:id="@+id/devResetButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="로그인 정보를 여기에 표시합니다."
-        android:layout_marginTop="20dp"/>
+        android:text="앱 초기화 (테스트용)"
+        android:backgroundTint="@android:color/holo_red_light"
+        android:textColor="@android:color/white"/>
 </LinearLayout>

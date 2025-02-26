@@ -1,11 +1,12 @@
 package com.example.liveguard_app_010;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.example.liveguard_app_010.worker.CongestionWorker;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
@@ -19,6 +20,8 @@ import androidx.work.WorkManager;
 
 import com.example.liveguard_app_010.databinding.ActivityMainBinding;
 import com.example.liveguard_app_010.ui.topnavigation.TopNavigationFragment;
+import com.example.liveguard_app_010.ui.login.LoginActivity;
+import com.example.liveguard_app_010.ui.utils.LoginManager;
 
 import java.util.concurrent.TimeUnit;
 
@@ -26,10 +29,21 @@ public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
     private static final String WORK_TAG = "CongestionWork";
+    private LoginManager loginManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        loginManager = new LoginManager(this);
+
+        // ✅ 로그인 상태 확인
+        if (!loginManager.isLoggedIn()) {
+            Log.d("MainActivity", "로그인 상태가 유효하지 않음 → 로그인 화면으로 이동");
+            moveToLogin();
+            return;
+        }
+
+        Log.d("MainActivity", "로그인 유지됨 → MainActivity 실행");
 
         // ViewBinding 설정
         binding = ActivityMainBinding.inflate(getLayoutInflater());
@@ -74,31 +88,28 @@ public class MainActivity extends AppCompatActivity {
         schedulePeriodicWork();
     }
 
-    @Override
-    public boolean onSupportNavigateUp() {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        NavHostFragment navHostFragment = (NavHostFragment) fragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main);
-        NavController navController = navHostFragment.getNavController();
-        return navController.navigateUp() || super.onSupportNavigateUp();
+    // ✅ 로그인되지 않은 경우 로그인 화면으로 이동
+    private void moveToLogin() {
+        Log.d("MainActivity", "로그인 화면으로 이동");
+        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); // 이전 액티비티 스택 제거
+        startActivity(intent);
+        finish();
     }
 
     /**
      * WorkManager를 이용해 15분 간격으로 혼잡도 데이터를 가져오는 작업을 스케줄링
      */
     private void schedulePeriodicWork() {
-        // 1. Worker에 전달할 파라미터: 서울시 API에서 사용할 "areaName"
-        //    예: "광화문", "명동" 등
         Data inputData = new Data.Builder()
                 .putString("areaName", "광화문")
                 .build();
 
-        // 2. 15분 간격 반복 작업 요청
         PeriodicWorkRequest workRequest =
                 new PeriodicWorkRequest.Builder(CongestionWorker.class, 15, TimeUnit.MINUTES)
                         .setInputData(inputData)
                         .build();
 
-        // 3. WorkManager에 등록
         WorkManager.getInstance(this).enqueueUniquePeriodicWork(
                 WORK_TAG,
                 ExistingPeriodicWorkPolicy.KEEP,

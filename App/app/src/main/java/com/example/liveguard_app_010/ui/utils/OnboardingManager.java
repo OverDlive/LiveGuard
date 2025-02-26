@@ -19,8 +19,9 @@ public class OnboardingManager {
         return sharedPreferences.getBoolean(KEY_ONBOARDING_SHOWN, false);
     }
 
-    public void setOnboardingShown() {
-        editor.putBoolean(KEY_ONBOARDING_SHOWN, true);
+    // ✅ 온보딩 상태를 초기화할 수 있도록 수정
+    public void setOnboardingShown(boolean value) {
+        editor.putBoolean(KEY_ONBOARDING_SHOWN, value);
         editor.apply();
     }
 }
