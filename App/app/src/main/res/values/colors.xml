@@ -9,5 +9,8 @@
     <color name="white">#FFFFFFFF</color>
     <color name="colorPrimary">#6200EE</color>
     <color name="colorGray">#808080</color>
+    <color name="primary">#6200EE</color>  <!-- 기본 색상 -->
+    <color name="gray">#BDBDBD</color>  <!-- 연한 회색 -->
+
 
 </resources>
