@@ -1,51 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="20dp">
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="@color/white">
 
-    <!-- "모두 동의하기" 체크박스 -->
-    <CheckBox
-        android:id="@+id/checkBoxAll"
+    <!-- 뒤로 가기 버튼 -->
+    <ImageView
+        android:id="@+id/btn_back"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/ic_back"
+        android:contentDescription="뒤로 가기"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- 제목 -->
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="모두 동의하기"
-        android:textSize="16sp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        android:text="LIVE GUARD"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/blue"/>
 
-    <!-- 개별 약관 동의 체크박스 (필수) -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="서비스 이용에 동의해 주세요"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textColor="@color/text_primary"
+        android:layout_marginTop="8dp"/>
+
+    <!-- 모두 동의하기 -->
+    <LinearLayout
+        android:id="@+id/btn_agree_all"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_checkbox"
+        android:orientation="horizontal"
+        android:padding="12dp"
+        android:layout_marginTop="16dp">
+
+        <CheckBox
+            android:id="@+id/checkBoxAll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="모두 동의하기"
+            android:textSize="16sp"
+            android:textColor="@color/text_primary"/>
+    </LinearLayout>
+
+    <!-- 개별 동의 항목 -->
     <CheckBox
         android:id="@+id/checkBox1"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="(필수) 서비스 이용 약관 동의"
-        android:textSize="14sp"
-        app:layout_constraintTop_toBottomOf="@id/checkBoxAll"
-        app:layout_constraintStart_toStartOf="parent"/>
+        android:text="서비스 이용약관 (필수)"
+        android:textSize="16sp"
+        android:textColor="@color/text_primary"
+        android:buttonTint="@color/blue"
+        android:layout_marginTop="16dp"/>
 
     <CheckBox
         android:id="@+id/checkBox2"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="(필수) 개인정보 처리 방침 동의"
-        android:textSize="14sp"
-        app:layout_constraintTop_toBottomOf="@id/checkBox1"
-        app:layout_constraintStart_toStartOf="parent"/>
+        android:text="개인정보처리방침 (필수)"
+        android:textSize="16sp"
+        android:textColor="@color/text_primary"
+        android:buttonTint="@color/blue"
+        android:layout_marginTop="8dp"/>
 
-    <!-- "네이버 로그인" 버튼 -->
+    <!-- 네이버 로그인 버튼 -->
     <Button
         android:id="@+id/btn_agree"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="네이버 로그인"
+        android:backgroundTint="@color/blue"
+        android:text="네이버 계정으로 계속하기"
+        android:textColor="@color/white"
         android:textSize="16sp"
-        android:backgroundTint="@color/primary"
-        android:padding="12dp"
-        android:textColor="@android:color/white"
-        app:layout_constraintTop_toBottomOf="@id/checkBox2"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_marginTop="24dp"/>
+</LinearLayout>
