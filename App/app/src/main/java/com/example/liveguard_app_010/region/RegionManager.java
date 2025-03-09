@@ -99,4 +99,28 @@ public class RegionManager {
             return null;
         }
     }
+
+    public static String getRegionForDistrict(String districtName) {
+        // 도심권: 종로, 중구, 용산
+        if (districtName.contains("종로") || districtName.contains("중구") || districtName.contains("용산")) {
+            return "도심권";
+        }
+        // 동북권: 동대문, 성북, 강북, 도봉, 노원
+        else if (districtName.contains("동대문") || districtName.contains("성북") || districtName.contains("강북") || districtName.contains("도봉") || districtName.contains("노원") || districtName.contains("성동") || districtName.contains("광진") || districtName.contains("중랑")) {
+            return "동북권";
+        }
+        // 서북권: 은평, 서대문, 마포
+        else if (districtName.contains("은평") || districtName.contains("서대문") || districtName.contains("마포")) {
+            return "서북권";
+        }
+        // 서남권: 영등포, 구로, 금천, 동작, 관악
+        else if (districtName.contains("영등포") || districtName.contains("구로") || districtName.contains("금천") || districtName.contains("동작") || districtName.contains("관악") || districtName.contains("양천") || districtName.contains("강서")) {
+            return "서남권";
+        }
+        // 동남권: 강남, 송파, 서초, 강동
+        else if (districtName.contains("강남") || districtName.contains("송파") || districtName.contains("서초") || districtName.contains("강동")) {
+            return "동남권";
+        }
+        return null;
+    }
 }
