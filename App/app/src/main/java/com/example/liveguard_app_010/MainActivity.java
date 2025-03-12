@@ -19,7 +19,6 @@ import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
 import com.example.liveguard_app_010.databinding.ActivityMainBinding;
-import com.example.liveguard_app_010.ui.topnavigation.TopNavigationFragment;
 import com.example.liveguard_app_010.ui.login.LoginActivity;
 import com.example.liveguard_app_010.ui.utils.LoginManager;
 
@@ -78,11 +77,8 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
 
-        // TopNavigationFragment 추가
-        TopNavigationFragment topNavigationFragment = new TopNavigationFragment();
-        fragmentManager.beginTransaction()
-                .replace(R.id.top_navigation_container, topNavigationFragment)
-                .commit();
+        // ✅ TopNavigationFragment 제거 완료 (관련 코드 삭제)
+        // 기존에 있던 top_navigation_container 관련 코드 제거됨
 
         // 주기적 Worker 스케줄링
         schedulePeriodicWork();
