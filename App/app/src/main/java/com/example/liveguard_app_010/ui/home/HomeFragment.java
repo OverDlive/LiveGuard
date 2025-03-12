@@ -26,6 +26,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import android.content.Intent; // Intent 관련 오류 해결
+import android.widget.EditText;  // EditText 관련 오류 해결
+import android.widget.ImageView;  // ImageView 관련 오류 해결
+import com.example.liveguard_app_010.ui.search.SearchActivity;
+
 
 public class HomeFragment extends Fragment {
 
@@ -42,6 +47,16 @@ public class HomeFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_home, container, false);
+
+        // ✅ 검색창 & 버튼 추가
+        EditText searchBar = view.findViewById(R.id.search_bar);
+        ImageView searchButton = view.findViewById(R.id.search_button);
+
+        // 검색 버튼 클릭 시 SearchActivity 실행
+        searchButton.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), SearchActivity.class);
+            startActivity(intent);
+        });
 
         // BottomSheet 초기화
         View bottomSheet = view.findViewById(R.id.bottom_sheet);
