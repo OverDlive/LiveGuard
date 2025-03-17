@@ -20,8 +20,16 @@ public interface SeoulOpenApiService {
      * @param areaName 조회할 지역명 ("광화문", "명동" 등)
      * @return         혼잡도 데이터 응답
      */
+    // 혼잡도
     @GET("{apiKey}/xml/citydata_ppltn/1/5/{areaName}")
     Call<CongestionResponse> getRealTimeCongestion(
+            @Path("apiKey") String apiKey,
+            @Path("areaName") String areaName
+    );
+
+    // 지역별 공연/영화 정보
+    @GET("{apiKey}/xml/LOCALDATA_031302_{areaName}")
+    Call<CongestionResponse> getPerformanceMovieData(
             @Path("apiKey") String apiKey,
             @Path("areaName") String areaName
     );
