@@ -26,11 +26,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import android.content.Intent; // Intent 관련 오류 해결
-import android.widget.EditText;  // EditText 관련 오류 해결
 import android.widget.ImageView;  // ImageView 관련 오류 해결
-import com.example.liveguard_app_010.ui.search.SearchActivity;
-
+import com.example.liveguard_app_010.ui.feature.FeatureFragment;
 
 public class HomeFragment extends Fragment {
 
@@ -41,21 +38,28 @@ public class HomeFragment extends Fragment {
     // 지역별 위치 데이터 관리
     private final Map<RegionManager.RegionType, List<LocationData>> regionLocationMap = new HashMap<>();
 
+
+    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
+        return view;
+    }
 
-        // ✅ 검색창 & 버튼 추가
-        EditText searchBar = view.findViewById(R.id.search_bar);
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        // 🔘 검색 버튼 클릭 시 기능 페이지 (`FeatureFragment`) 추가
         ImageView searchButton = view.findViewById(R.id.search_button);
-
-        // 검색 버튼 클릭 시 SearchActivity 실행
         searchButton.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), SearchActivity.class);
-            startActivity(intent);
+            FeatureFragment featureFragment = new FeatureFragment();
+            requireActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                    .add(android.R.id.content, featureFragment)  // HomeFragment 위에 추가
+                    .addToBackStack(null)
+                    .commit();
         });
 
         // BottomSheet 초기화
@@ -63,7 +67,12 @@ public class HomeFragment extends Fragment {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         requireActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int screenHeight = displayMetrics.heightPixels;
-        bottomSheetBehavior = BottomSheetHelper.initBottomSheet(bottomSheet, 500, 0.5f, (int) (screenHeight * 0.02f));
+      //바텀시트관련 로그
+        if (bottomSheet != null) {
+            bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+        } else {
+            Log.e("HomeFragment", "bottom_sheet ID를 찾을 수 없음!");
+        }
 
         // 지도 Fragment 설정
         MapFragment mapFragment = (MapFragment) getChildFragmentManager().findFragmentById(R.id.map_fragment);
@@ -108,7 +117,6 @@ public class HomeFragment extends Fragment {
             Log.d("HomeFragment", "초기 지도 위치 설정");
         });
 
-        return view;
     }
 
     /**
