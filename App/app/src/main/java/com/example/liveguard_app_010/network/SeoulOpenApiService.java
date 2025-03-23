@@ -36,19 +36,19 @@ public interface SeoulOpenApiService {
 
     // 박물관, 미술관
     @GET("{apiKey}/xml/LOCALDATA_030705/1/5/")
-    Call<CongestionResponse> getPerformanceMovieData(
+    Call<CongestionResponse> getMuseumData(
             @Path("apiKey") String apiKey
     );
 
     // 한옥 체험
     @GET("{apiKey}/xml/LOCALDATA_031106/1/5/")
-    Call<CongestionResponse> getPerformanceMovieData2(
+    Call<CongestionResponse> getHanokData(
             @Path("apiKey") String apiKey
     );
 
     // 청소년 수련시설
     @GET("{api}/xml/LampScpgmtb/1/5/")
-    Call<CongestionResponse> getPerformanceMovieData3(
+    Call<CongestionResponse> getYouthTrainingFacilityData(
             @Path("api") String api
     );
 }
