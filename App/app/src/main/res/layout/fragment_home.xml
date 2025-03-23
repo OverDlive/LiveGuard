@@ -58,6 +58,12 @@
         app:behavior_peekHeight="@dimen/bottom_sheet_peek_height">
 
         <!-- 내용은 비워둡니다. Java 코드에서 동적으로 추가됩니다 -->
+        <TextView
+            android:id="@+id/bottom_sheet_placeholder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Bottom Sheet Content Placeholder"
+            android:padding="16dp" />
 
     </LinearLayout>
 
