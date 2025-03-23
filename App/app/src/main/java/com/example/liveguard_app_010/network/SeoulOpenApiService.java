@@ -33,4 +33,22 @@ public interface SeoulOpenApiService {
             @Path("apiKey") String apiKey,
             @Path("areaName") String areaName
     );
+
+    // 박물관, 미술관
+    @GET("{apiKey}/xml/LOCALDATA_030705/1/5/")
+    Call<CongestionResponse> getPerformanceMovieData(
+            @Path("apiKey") String apiKey
+    );
+
+    // 한옥 체험
+    @GET("{apiKey}/xml/LOCALDATA_031106/1/5/")
+    Call<CongestionResponse> getPerformanceMovieData2(
+            @Path("apiKey") String apiKey
+    );
+
+    // 청소년 수련시설
+    @GET("{api}/xml/LampScpgmtb/1/5/")
+    Call<CongestionResponse> getPerformanceMovieData3(
+            @Path("api") String api
+    );
 }
