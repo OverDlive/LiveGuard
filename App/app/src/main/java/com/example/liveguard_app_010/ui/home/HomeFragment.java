@@ -1,11 +1,11 @@
 package com.example.liveguard_app_010.ui.home;
 
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,6 +13,8 @@ import androidx.fragment.app.Fragment;
 
 import com.example.liveguard_app_010.R;
 import com.example.liveguard_app_010.region.RegionManager;
+import com.example.liveguard_app_010.ui.feature.FeatureFragment;
+import com.example.liveguard_app_010.ui.home.BottomSheetHelper;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.naver.maps.map.CameraUpdate;
 import com.naver.maps.map.MapFragment;
@@ -26,8 +28,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import android.widget.ImageView;  // ImageView 관련 오류 해결
-import com.example.liveguard_app_010.ui.feature.FeatureFragment;
 
 public class HomeFragment extends Fragment {
 
@@ -38,41 +38,32 @@ public class HomeFragment extends Fragment {
     // 지역별 위치 데이터 관리
     private final Map<RegionManager.RegionType, List<LocationData>> regionLocationMap = new HashMap<>();
 
-
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
-        return view;
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        // fragment_home.xml 레이아웃 사용
+        return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // 🔘 검색 버튼 클릭 시 기능 페이지 (`FeatureFragment`) 추가
+        // 검색 버튼 클릭 시 기능 페이지 (FeatureFragment) 추가
         ImageView searchButton = view.findViewById(R.id.search_button);
         searchButton.setOnClickListener(v -> {
             FeatureFragment featureFragment = new FeatureFragment();
             requireActivity().getSupportFragmentManager()
                     .beginTransaction()
                     .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-                    .add(android.R.id.content, featureFragment)  // HomeFragment 위에 추가
+                    .add(android.R.id.content, featureFragment)
                     .addToBackStack(null)
                     .commit();
         });
 
-        // BottomSheet 초기화
-        View bottomSheet = view.findViewById(R.id.bottom_sheet);
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        requireActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int screenHeight = displayMetrics.heightPixels;
-      //바텀시트관련 로그
-        if (bottomSheet != null) {
-            bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
-        } else {
-            Log.e("HomeFragment", "bottom_sheet ID를 찾을 수 없음!");
-        }
+        // BottomSheet 초기화 using BottomSheetHelper
+        bottomSheetBehavior = BottomSheetHelper.initBottomSheet(requireActivity(), view);
 
         // 지도 Fragment 설정
         MapFragment mapFragment = (MapFragment) getChildFragmentManager().findFragmentById(R.id.map_fragment);
@@ -83,7 +74,7 @@ public class HomeFragment extends Fragment {
 
         // 지역별 위치 데이터 초기화
         initRegionLocations();
-        // CongestionManager에 지역 데이터 전달
+        // (예시) CongestionManager에 지역 데이터 전달
         CongestionManager.setRegionLocationMap(regionLocationMap);
 
         mapFragment.getMapAsync(map -> {
@@ -116,7 +107,6 @@ public class HomeFragment extends Fragment {
             naverMap.moveCamera(initialUpdate);
             Log.d("HomeFragment", "초기 지도 위치 설정");
         });
-
     }
 
     /**
