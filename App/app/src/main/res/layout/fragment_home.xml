@@ -65,6 +65,12 @@
             android:text="Bottom Sheet Content Placeholder"
             android:padding="16dp" />
 
+        <!-- 🟢 빈 공간을 채워줄 View (유지) -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
     </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
