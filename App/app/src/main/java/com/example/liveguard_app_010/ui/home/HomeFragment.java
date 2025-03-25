@@ -6,11 +6,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,7 +13,6 @@ import androidx.fragment.app.Fragment;
 
 import com.example.liveguard_app_010.R;
 import com.example.liveguard_app_010.region.RegionManager;
-import com.example.liveguard_app_010.ui.feature.FeatureFragment;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.naver.maps.map.CameraUpdate;
 import com.naver.maps.map.MapFragment;
@@ -32,6 +26,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import android.widget.ImageView;  // ImageView 관련 오류 해결
+import com.example.liveguard_app_010.ui.feature.FeatureFragment;
 
 public class HomeFragment extends Fragment {
 
@@ -42,15 +38,6 @@ public class HomeFragment extends Fragment {
     // 지역별 위치 데이터 관리
     private final Map<RegionManager.RegionType, List<LocationData>> regionLocationMap = new HashMap<>();
 
-    // 바텀시트 데이터 표시를 위한 뷰 변수들
-    private TextView textMalePercentage;
-    private TextView textFemalePercentage;
-    private TextView textAgeDistribution;
-    private ProgressBar progressCongestion;
-    private TextView textCongestionLevel;
-
-    // 현재 선택된 지역 이름
-    private String currentRegionName = "";
 
     @Nullable
     @Override
@@ -80,23 +67,9 @@ public class HomeFragment extends Fragment {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         requireActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int screenHeight = displayMetrics.heightPixels;
-
-        // 바텀시트관련 로그
+      //바텀시트관련 로그
         if (bottomSheet != null) {
             bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
-
-            // 바텀시트 콘텐츠 추가
-            View bottomSheetContent = getLayoutInflater().inflate(R.layout.bottom_sheet_content, null);
-            ((ViewGroup) bottomSheet).addView(bottomSheetContent);
-
-            // 바텀시트 데이터 뷰 초기화
-            initDataViews(bottomSheetContent);
-
-            // 상세 정보 버튼 리스너 설정
-            setupDetailButtons(bottomSheetContent);
-
-            // 초기 데이터 로딩
-            loadRegionData("서울 전체");
         } else {
             Log.e("HomeFragment", "bottom_sheet ID를 찾을 수 없음!");
         }
@@ -129,15 +102,6 @@ public class HomeFragment extends Fragment {
             List<RegionManager.RegionInfo> regionInfos = RegionManager.getSeoulRegions();
             mapManager.addRegionMarkers(regionInfos, bottomSheetBehavior);
 
-            // 마커 클릭 이벤트 리스너 설정 (지역 데이터 로딩)
-            mapManager.setOnMarkerClickListener(regionName -> {
-                loadRegionData(regionName);
-                // 바텀시트가 접혀있으면 확장
-                if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
-                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HALF_EXPANDED);
-                }
-            });
-
             // GeoJSON 데이터를 통한 서울시 경계 표시
             try {
                 JSONObject seoulGeoJson = RegionManager.getSeoulGeoJsonData(getContext());
@@ -152,171 +116,7 @@ public class HomeFragment extends Fragment {
             naverMap.moveCamera(initialUpdate);
             Log.d("HomeFragment", "초기 지도 위치 설정");
         });
-    }
 
-    /**
-     * 바텀시트의 데이터 표시 뷰를 초기화합니다.
-     */
-    private void initDataViews(View bottomSheetContent) {
-        // 성별 정보 뷰
-        textMalePercentage = bottomSheetContent.findViewById(R.id.text_male_percentage);
-        textFemalePercentage = bottomSheetContent.findViewById(R.id.text_female_percentage);
-
-        // 세대 정보 뷰
-        textAgeDistribution = bottomSheetContent.findViewById(R.id.text_age_distribution);
-
-        // 혼잡도 정보 뷰
-        progressCongestion = bottomSheetContent.findViewById(R.id.progress_congestion);
-        textCongestionLevel = bottomSheetContent.findViewById(R.id.text_congestion_level);
-    }
-
-    /**
-     * 상세 정보 버튼에 클릭 리스너를 설정합니다.
-     */
-    private void setupDetailButtons(View bottomSheetContent) {
-        // 성별 정보 상세 버튼
-        Button btnDetailGender = bottomSheetContent.findViewById(R.id.btn_detail_gender);
-        btnDetailGender.setOnClickListener(v -> showGenderDetails());
-
-        // 세대 정보 상세 버튼
-        Button btnDetailAge = bottomSheetContent.findViewById(R.id.btn_detail_age);
-        btnDetailAge.setOnClickListener(v -> showAgeDetails());
-
-        // 혼잡도 정보 상세 버튼
-        Button btnDetailCongestion = bottomSheetContent.findViewById(R.id.btn_detail_congestion);
-        btnDetailCongestion.setOnClickListener(v -> showCongestionDetails());
-    }
-
-    /**
-     * 지역에 따른 데이터를 로드합니다.
-     * @param regionName 지역 이름
-     */
-    private void loadRegionData(String regionName) {
-        currentRegionName = regionName;
-        Log.d("HomeFragment", "지역 데이터 로드: " + regionName);
-
-        // 여기서 지역에 따른 API 파싱 데이터를 가져와 표시
-        // 예시 코드 (실제 API 데이터 사용으로 대체 필요)
-
-        // 성별 데이터 업데이트
-        // 실제 구현 시 아래 코드 대신 API 파싱 결과를 사용
-        int malePercentage, femalePercentage;
-
-        // 지역에 따라 다른 샘플 데이터 사용 (실제 구현 시 API 데이터로 대체)
-        switch (regionName) {
-            case "도심권":
-                malePercentage = 48;
-                femalePercentage = 52;
-                updateGenderData(malePercentage, femalePercentage);
-                updateAgeData("20대(28%), 30대(22%), 40대(18%), 50대(32%)");
-                updateCongestionData(75);
-                break;
-            case "동남권":
-                malePercentage = 46;
-                femalePercentage = 54;
-                updateGenderData(malePercentage, femalePercentage);
-                updateAgeData("20대(33%), 30대(27%), 40대(15%), 50대(25%)");
-                updateCongestionData(65);
-                break;
-            case "서남권":
-                malePercentage = 47;
-                femalePercentage = 53;
-                updateGenderData(malePercentage, femalePercentage);
-                updateAgeData("20대(25%), 30대(30%), 40대(20%), 50대(25%)");
-                updateCongestionData(45);
-                break;
-            case "서북권":
-                malePercentage = 51;
-                femalePercentage = 49;
-                updateGenderData(malePercentage, femalePercentage);
-                updateAgeData("20대(35%), 30대(25%), 40대(15%), 50대(25%)");
-                updateCongestionData(55);
-                break;
-            case "동북권":
-                malePercentage = 49;
-                femalePercentage = 51;
-                updateGenderData(malePercentage, femalePercentage);
-                updateAgeData("20대(20%), 30대(25%), 40대(22%), 50대(33%)");
-                updateCongestionData(35);
-                break;
-            default: // 서울 전체 또는 기타 지역
-                malePercentage = 49;
-                femalePercentage = 51;
-                updateGenderData(malePercentage, femalePercentage);
-                updateAgeData("20대(30%), 30대(25%), 40대(20%), 50대(25%)");
-                updateCongestionData(60);
-                break;
-        }
-    }
-
-    /**
-     * 성별 데이터를 업데이트합니다.
-     */
-    private void updateGenderData(int malePercentage, int femalePercentage) {
-        if (textMalePercentage != null && textFemalePercentage != null) {
-            textMalePercentage.setText("남성: " + malePercentage + "%");
-            textFemalePercentage.setText("여성: " + femalePercentage + "%");
-        }
-    }
-
-    /**
-     * 세대 데이터를 업데이트합니다.
-     */
-    private void updateAgeData(String ageDistributionData) {
-        if (textAgeDistribution != null) {
-            textAgeDistribution.setText(ageDistributionData);
-        }
-    }
-
-    /**
-     * 혼잡도 데이터를 업데이트합니다.
-     */
-    private void updateCongestionData(int congestionLevel) {
-        if (progressCongestion != null && textCongestionLevel != null) {
-            progressCongestion.setProgress(congestionLevel);
-
-            String congestionText;
-            int congestionColor;
-
-            if (congestionLevel < 40) {
-                congestionText = "여유";
-                congestionColor = R.color.green_low;
-            } else if (congestionLevel < 70) {
-                congestionText = "혼잡";
-                congestionColor = R.color.orange_congestion;
-            } else {
-                congestionText = "매우 혼잡";
-                congestionColor = R.color.red_high;
-            }
-
-            textCongestionLevel.setText(congestionText + " (" + congestionLevel + "%)");
-            textCongestionLevel.setTextColor(getResources().getColor(congestionColor));
-            progressCongestion.setProgressTintList(getResources().getColorStateList(congestionColor));
-        }
-    }
-
-    /**
-     * 성별 정보 상세 보기 화면으로 이동합니다.
-     */
-    private void showGenderDetails() {
-        Toast.makeText(getContext(), currentRegionName + " 성별 정보 상세", Toast.LENGTH_SHORT).show();
-        // 상세 화면으로 이동하는 코드 추가 (필요 시)
-    }
-
-    /**
-     * 세대 정보 상세 보기 화면으로 이동합니다.
-     */
-    private void showAgeDetails() {
-        Toast.makeText(getContext(), currentRegionName + " 세대 정보 상세", Toast.LENGTH_SHORT).show();
-        // 상세 화면으로 이동하는 코드 추가 (필요 시)
-    }
-
-    /**
-     * 혼잡도 정보 상세 보기 화면으로 이동합니다.
-     */
-    private void showCongestionDetails() {
-        Toast.makeText(getContext(), currentRegionName + " 혼잡도 정보 상세", Toast.LENGTH_SHORT).show();
-        // 상세 화면으로 이동하는 코드 추가 (필요 시)
     }
 
     /**

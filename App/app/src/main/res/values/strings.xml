@@ -17,16 +17,4 @@
     <string name="text10">16\u00c2\u00b0</string>
     <string name="naver_client_id">_asIKswnxW1LbrjJiIZ_</string>
     <string name="naver_client_secret">A6KL69lMFb</string>
-    <!-- 바텀시트 관련 문자열 -->
-    <string name="area_info_title">지역 정보</string>
-
-    <!-- 카드 타이틀 -->
-    <string name="gender_distribution">성별 분포</string>
-    <string name="age_distribution">세대 분포</string>
-    <string name="congestion_level">혼잡도</string>
-
-    <!-- 버튼 및 기타 -->
-    <string name="view_details">상세 정보</string>
-    <string name="male">남성</string>
-    <string name="female">여성</string>
 </resources>

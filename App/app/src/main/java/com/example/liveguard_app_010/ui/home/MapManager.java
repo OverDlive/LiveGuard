@@ -2,7 +2,6 @@ package com.example.liveguard_app_010.ui.home;
 
 import android.graphics.Color;
 import android.view.View;
-import android.util.Log;
 
 import com.example.liveguard_app_010.region.RegionManager;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -23,27 +22,8 @@ import java.util.Map;
 public class MapManager {
     private NaverMap naverMap;
 
-    // [추가] 마커 클릭 이벤트를 처리하기 위한 리스너 인터페이스 정의
-    private OnMarkerClickListener markerClickListener;
-
     public MapManager(NaverMap naverMap) {
         this.naverMap = naverMap;
-    }
-
-    /**
-     * [추가] 마커 클릭 리스너 인터페이스
-     * 지도 마커 클릭 시 바텀시트에 해당 지역 데이터를 로드하기 위한 콜백
-     */
-    public interface OnMarkerClickListener {
-        void onMarkerClick(String regionName);
-    }
-
-    /**
-     * [추가] 마커 클릭 리스너 설정
-     * HomeFragment에서 이 메서드를 호출하여 마커 클릭 이벤트 처리를 등록
-     */
-    public void setOnMarkerClickListener(OnMarkerClickListener listener) {
-        this.markerClickListener = listener;
     }
 
     /**
@@ -61,19 +41,6 @@ public class MapManager {
                 animateToMarker(marker, 13f);
                 // 해당 권역의 혼잡도 마커 로드 (CongestionManager에서 처리)
                 CongestionManager.loadRegionMarkers(info.type);
-
-                // 마커 클릭 리스너가 설정되어 있으면 호출 (바텀시트 데이터 로드)
-                if (markerClickListener != null) {
-                    Log.d("MapManager", "마커 클릭: " + info.regionName);
-                    markerClickListener.onMarkerClick(info.regionName);
-
-                    // 바텀시트가 접혀있으면 확장
-                    if (bottomSheetBehavior != null &&
-                            bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
-                        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HALF_EXPANDED);
-                    }
-                }
-
                 return true;
             });
         }

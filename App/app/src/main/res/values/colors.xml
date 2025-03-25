@@ -35,15 +35,4 @@
     <color name="background_light">#F9F9F9</color>  <!-- 앱 전체 배경색 -->
     <color name="background_dark">#121212</color>  <!-- 다크 모드 배경색 -->
     <color name="divider">#EEEEEE</color>  <!-- 구분선 색 -->
-    <!-- 성별 관련 색상 -->
-    <color name="blue_male">#2196F3</color>
-    <color name="pink_female">#E91E63</color>
-
-    <!-- 혼잡도 관련 색상 -->
-    <color name="green_low">#4CAF50</color>
-    <color name="orange_congestion">#FF9800</color>
-    <color name="red_high">#F44336</color>
-
-    <!-- 기타 색상 -->
-    <color name="dark_gray">#555555</color>
 </resources>

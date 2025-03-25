@@ -55,9 +55,21 @@
         android:elevation="8dp"
         android:clickable="true"
         android:focusable="true"
-        app:behavior_peekHeight="@dimen/bottom_sheet_peek_height">
+        app:behavior_peekHeight="300dp">
 
-        <!-- 내용은 비워둡니다. Java 코드에서 동적으로 추가됩니다 -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="This is a Bottom Sheet"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <!-- 🟢 빈 공간을 채워줄 View (유지) -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
 
     </LinearLayout>
 
