@@ -1,21 +1,29 @@
 package com.example.liveguard_app_010.ui.tour;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.example.liveguard_app_010.R;
+import com.example.liveguard_app_010.ui.feature.FeatureFragment;
 
 public class TourOnboardingFragment extends Fragment {
 
     private ViewPager2 viewPager;
 
     public TourOnboardingFragment() {}
+
+    public ViewPager2 getViewPager() {
+        return viewPager;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -26,12 +34,23 @@ public class TourOnboardingFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         viewPager = view.findViewById(R.id.viewPager);
+        viewPager.setAdapter(new TourPagerAdapter(this));
 
-        TourPagerAdapter adapter = new TourPagerAdapter(this);
-        viewPager.setAdapter(adapter);
-    }
+        // ❌ 닫기 버튼
+        Button btnClose = view.findViewById(R.id.btn_close_onboarding);
+        if (btnClose != null) {
+            btnClose.setOnClickListener(v -> {
+                Log.d("TourOnboarding", "❌ 닫기 버튼 클릭됨");
 
-    public ViewPager2 getViewPager() {
-        return viewPager;
+                // FeatureFragment로 교체
+                requireActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.nav_host_fragment_activity_main, new FeatureFragment())
+                        .addToBackStack(null)
+                        .commit();
+            });
+        } else {
+            Log.e("TourOnboarding", "btn_close_onboarding not found in layout");
+        }
     }
 }

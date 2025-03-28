@@ -13,25 +13,34 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.example.liveguard_app_010.R;
-import com.example.liveguard_app_010.ui.tour.TourIntroFragment;
+import com.example.liveguard_app_010.ui.tour.TourOnboardingFragment;
 
 public class FeatureFragment extends Fragment {
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_feature, container, false);
 
-        // ❌ 닫기 버튼
+        // ❌ X 버튼 클릭 시 프래그먼트 닫기
         ImageView closeFeature = view.findViewById(R.id.close_feature);
-        closeFeature.setOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStack());
+        closeFeature.setOnClickListener(v -> requireActivity()
+                .getSupportFragmentManager()
+                .popBackStack());
 
-        // ✅ 관광지 버튼 (버튼1) 눌렀을 때 TourIntroFragment로 전환
-        Button btn1 = view.findViewById(R.id.btn_1);
-        btn1.setOnClickListener(v -> {
-            TourIntroFragment tourIntroFragment = new TourIntroFragment();
-            FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.nav_host_fragment_activity_main, tourIntroFragment);
-            transaction.addToBackStack(null); // ← 뒤로가기 가능하게
+        // 관광지 버튼 클릭 시 온보딩 화면 추가
+        Button tourismBtn = view.findViewById(R.id.btn_1);
+        tourismBtn.setOnClickListener(v -> {
+            FragmentTransaction transaction = requireActivity()
+                    .getSupportFragmentManager()
+                    .beginTransaction();
+            transaction.setCustomAnimations(
+                    android.R.anim.slide_in_left, android.R.anim.slide_out_right,
+                    android.R.anim.slide_in_left, android.R.anim.slide_out_right
+            );
+            transaction.add(android.R.id.content, new TourOnboardingFragment());
+            transaction.addToBackStack(null);
             transaction.commit();
         });
 

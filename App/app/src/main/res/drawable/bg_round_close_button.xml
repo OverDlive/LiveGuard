@@ -1,0 +1,5 @@
+<!-- res/drawable/bg_round_close_button.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <solid android:color="#66000000"/> <!-- 반투명 검정 -->
+</shape>

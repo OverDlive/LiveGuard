@@ -34,37 +34,6 @@
         android:label="설정"
         tools:layout="@layout/fragment_settings" />
 
-    <fragment
-        android:id="@+id/tourIntroFragment"
-        android:name="com.example.liveguard_app_010.ui.tour.TourIntroFragment"
-        android:label="관광지 소개"
-        tools:layout="@layout/fragment_tour_intro" />
-
-    <fragment
-        android:id="@+id/tourResultFragment"
-        android:name="com.example.liveguard_app_010.ui.result.TourResultFragment"
-        android:label="추천 결과"
-        tools:layout="@layout/fragment_tour_result"/>
-
-    <fragment
-        android:id="@+id/tourChoiceFinalFragment"
-        android:name="com.example.liveguard_app_010.ui.tour.TourChoiceFinalFragment"
-        android:label="Tour Choice Final" >
-        <action
-            android:id="@+id/action_tourChoiceFinalFragment_to_tourResultFragment"
-            app:destination="@id/tourResultFragment" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/featureFragment"
-        android:name="com.example.liveguard_app_010.ui.feature.FeatureFragment"
-        android:label="기능 선택"
-        tools:layout="@layout/fragment_feature">
-
-        <action
-            android:id="@+id/action_featureFragment_to_tourIntroFragment"
-            app:destination="@id/tourIntroFragment" />
-    </fragment>
 
 
 </navigation>
