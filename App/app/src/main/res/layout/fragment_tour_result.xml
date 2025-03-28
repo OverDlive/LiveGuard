@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/tour_result_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Naver Map Fragment -->
+    <fragment
+        android:id="@+id/naver_map_fragment"
+        android:name="com.naver.maps.map.MapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <!-- Bottom Sheet -->
+    <LinearLayout
+        android:id="@+id/result_bottom_sheet"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_gravity="bottom"
+        android:orientation="vertical"
+        android:background="@drawable/white_round_top_border_20"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/result_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="추천 결과"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <!-- 여기에 원하는 정보 표시하는 뷰들 추가 -->
+
+    </LinearLayout>
+
+</FrameLayout>
