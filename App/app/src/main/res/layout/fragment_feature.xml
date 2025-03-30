@@ -25,13 +25,13 @@
         android:layout_gravity="center"
         android:padding="16dp">
 
-        <Button android:id="@+id/btn_1" android:text="버튼 1" />
-        <Button android:id="@+id/btn_2" android:text="버튼 2" />
-        <Button android:id="@+id/btn_3" android:text="버튼 3" />
-        <Button android:id="@+id/btn_4" android:text="버튼 4" />
-        <Button android:id="@+id/btn_5" android:text="버튼 5" />
-        <Button android:id="@+id/btn_6" android:text="버튼 6" />
-        <Button android:id="@+id/btn_7" android:text="버튼 7" />
-        <Button android:id="@+id/btn_8" android:text="버튼 8" />
+        <Button android:id="@+id/btn_1" android:text="관광지" />
+        <Button android:id="@+id/btn_2" android:text="맛집" />
+        <Button android:id="@+id/btn_3" android:text="쇼핑" />
+        <Button android:id="@+id/btn_4" android:text="운동" />
+        <Button android:id="@+id/btn_5" android:text="공연/영화" />
+        <Button android:id="@+id/btn_6" android:text="전시" />
+        <Button android:id="@+id/btn_7" android:text="체험활동" />
+        <Button android:id="@+id/btn_8" android:text="추천" />
     </GridLayout>
 </FrameLayout>

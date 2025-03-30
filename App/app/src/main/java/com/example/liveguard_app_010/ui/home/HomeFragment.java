@@ -62,14 +62,11 @@ public class HomeFragment extends Fragment {
                     .commit();
         });
 
-        // BottomSheet 초기화
+        // 기존 코드 제거 후 아래 코드로 대체
         View bottomSheet = view.findViewById(R.id.bottom_sheet);
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        requireActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int screenHeight = displayMetrics.heightPixels;
-      //바텀시트관련 로그
         if (bottomSheet != null) {
-            bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+            bottomSheetBehavior = com.example.liveguard_app_010.ui.home.BottomSheetHelper
+                    .setupBottomSheet(bottomSheet, requireActivity(), view);
         } else {
             Log.e("HomeFragment", "bottom_sheet ID를 찾을 수 없음!");
         }
