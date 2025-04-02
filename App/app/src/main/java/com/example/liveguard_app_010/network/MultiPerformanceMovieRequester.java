@@ -1,11 +1,13 @@
 package com.example.liveguard_app_010.network;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 import com.example.liveguard_app_010.BuildConfig;
-import com.example.liveguard_app_010.network.model.CongestionResponse;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
@@ -17,10 +19,56 @@ public class MultiPerformanceMovieRequester {
 
     private static final String SEOUL_APP_KEY = BuildConfig.SEOUL_APP_KEY;
 
-    public static void main(String[] args) {
-        // ApiClient에서 서울시 Open API 서비스 인스턴스 가져오기
-        SeoulOpenApiService service = ApiClient.getSeoulOpenApiService();
+    public interface RequestCallback {
+        void onResponse(String xml);
+        void onFailure(Exception e);
+    }
 
+    public void request(String requestUrl, RequestCallback callback) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                HttpURLConnection connection = null;
+                try {
+                    URL url = new URL(requestUrl);
+                    connection = (HttpURLConnection) url.openConnection();
+                    connection.setRequestMethod("GET");
+                    connection.connect();
+                    int responseCode = connection.getResponseCode();
+                    if (responseCode == HttpURLConnection.HTTP_OK) {
+                        InputStream is = connection.getInputStream();
+                        String xml = convertStreamToString(is);
+                        callback.onResponse(xml);
+                    } else {
+                        callback.onFailure(new Exception("Response code: " + responseCode));
+                    }
+                } catch (Exception e) {
+                    callback.onFailure(e);
+                } finally {
+                    if (connection != null) {
+                        connection.disconnect();
+                    }
+                }
+            }
+        }).start();
+    }
+
+    private String convertStreamToString(InputStream is) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+        StringBuilder sb = new StringBuilder();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            sb.append(line);
+        }
+        return sb.toString();
+    }
+
+    // 다른 클래스에서 단 한 번의 함수 호출로 API 요청을 할 수 있도록 하는 정적 메서드
+    public static void callApi(String requestUrl, RequestCallback callback) {
+        new MultiPerformanceMovieRequester().request(requestUrl, callback);
+    }
+
+    public static void main(String[] args) {
         // 지역명과 해당 엔드포인트를 구성할 코드 매핑
         Map<String, String> regionMap = new HashMap<>();
         regionMap.put("강남구", "GN");
@@ -46,27 +94,25 @@ public class MultiPerformanceMovieRequester {
 
         // 비동기 요청 완료를 기다리기 위한 CountDownLatch
         CountDownLatch latch = new CountDownLatch(regionMap.size());
+        MultiPerformanceMovieRequester requester = new MultiPerformanceMovieRequester();
 
         // 각 지역에 대해 API 요청 실행
         for (Map.Entry<String, String> entry : regionMap.entrySet()) {
             String regionName = entry.getKey();
             String areaName = entry.getValue();
 
-            Call<CongestionResponse> call = service.getPerformanceMovieData(SEOUL_APP_KEY, areaName);
-            call.enqueue(new Callback<CongestionResponse>() {
+            // Construct the request URL; adjust URL pattern as needed
+            String requestUrl = "http://api.seoul.go.kr/performance/movie?key=" + SEOUL_APP_KEY + "&area=" + areaName;
+            requester.request(requestUrl, new RequestCallback() {
                 @Override
-                public void onResponse(Call<CongestionResponse> call, Response<CongestionResponse> response) {
-                    if (response.isSuccessful() && response.body() != null) {
-                        System.out.println(regionName + " 응답: " + response.body());
-                    } else {
-                        System.out.println(regionName + " 요청 실패: " + response.message());
-                    }
+                public void onResponse(String xml) {
+                    System.out.println(regionName + " 응답: " + xml);
                     latch.countDown();
                 }
 
                 @Override
-                public void onFailure(Call<CongestionResponse> call, Throwable t) {
-                    System.out.println(regionName + " 요청 에러: " + t.getMessage());
+                public void onFailure(Exception e) {
+                    System.out.println(regionName + " 요청 에러: " + e.getMessage());
                     latch.countDown();
                 }
             });
