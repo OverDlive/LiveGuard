@@ -4,23 +4,24 @@
 
 ## 파일 구조
 
-   ```bash
+```bash
 project/ 
 ├── app.py # Flask 및 YOLO 분석 코드 
 ├── requirements.txt # 필요한 파이썬 패키지 목록 
 ├── README.md # 프로젝트 설명 및 실행 방법 
 └── templates/ 
 └── index.html # 웹 스트리밍용 HTML 템플릿
-   ```
+```
 
 
 ## 환경 설정
 
 1. **Anaconda 가상환경 생성 및 활성화**
 
-   ```bash
-   conda create -n density_env python=3.9
-   conda activate density_env
+```bash
+conda create -n density_env python=3.9
+conda activate density_env
+```
 
 2. 필수 패키지 설치
 
@@ -28,7 +29,38 @@ project/
    ```bash
 pip install -r requirements.txt
    ```
-3. 모델 파일 준비
+
+참고:
+
+Python 3.7 이상이면 dataclasses 패키지는 필요 없습니다.
+
+모델 파일 yolov8n.pt는 프로젝트 루트나 적절한 경로에 위치시켜 주세요.
+
+또는 개별적으로 설치하려면:
+
+   ```bash
+pip install opencv-python flask ultralytics yt-dlp
+   ```
+
+3. YOLO 모델 다운로드
+
+Ultralytics의 YOLOv8은 기본적으로 모델 파일이 없으면 
+자동으로 다운로드하도록 설계되어 있습니다. 
+즉, 코드에서 아래와 같이 모델을 불러오기만 하면 
+내부적으로 yolov8n.pt 파일이 다운로드됩니다.
+
+   ```bash
+from ultralytics import YOLO
+model = YOLO("yolov8n.pt")
+   ```
+
+또는
+
+YOLO 모델 파일인 yolov8n.pt를 Ultralytics GitHub Releases 
+페이지 또는 Ultralytics 공식 사이트에서 다운로드하세요.
+다운로드한 파일을 프로젝트 루트 디렉토리에 저장합니다
+
+4. 모델 파일 준비
 
 YOLO 모델 파일 (yolov8n.pt)을 프로젝트 루트에 위치시키거나, 
 코드 내 MODEL_PATH 변수를 해당 파일 경로로 수정합니다.
