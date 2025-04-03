@@ -1,0 +1,12 @@
+opencv-python
+flask
+ultralytics
+yt-dlp
+dataclasses; python_version < "3.7"
+
+
+참고:
+
+Python 3.7 이상이면 dataclasses 패키지는 필요 없습니다.
+
+모델 파일 yolov8n.pt는 프로젝트 루트나 적절한 경로에 위치시켜 주세요.

@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>YOLO 실시간 분석 영상</title>
+</head>
+<body>
+    <h1>YOLO 실시간 분석 영상</h1>
+    <!-- /video_feed 경로로부터 스트리밍되는 영상 표시 -->
+    <img src="{{ url_for('video_feed') }}" width="1280" height="720">
+</body>
+</html>
