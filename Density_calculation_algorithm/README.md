@@ -4,13 +4,14 @@
 
 ## 파일 구조
 
+   ```bash
 project/ 
 ├── app.py # Flask 및 YOLO 분석 코드 
 ├── requirements.txt # 필요한 파이썬 패키지 목록 
 ├── README.md # 프로젝트 설명 및 실행 방법 
 └── templates/ 
 └── index.html # 웹 스트리밍용 HTML 템플릿
-
+   ```
 
 
 ## 환경 설정
@@ -24,22 +25,27 @@ project/
 2. 필수 패키지 설치
 
 가상환경 내에서 프로젝트 폴더에 있는 requirements.txt 파일을 이용해 패키지를 설치합니다.
-
+   ```bash
 pip install -r requirements.txt
-
+   ```
 3. 모델 파일 준비
 
-YOLO 모델 파일 (yolov8n.pt)을 프로젝트 루트에 위치시키거나, 코드 내 MODEL_PATH 변수를 해당 파일 경로로 수정합니다.
+YOLO 모델 파일 (yolov8n.pt)을 프로젝트 루트에 위치시키거나, 
+코드 내 MODEL_PATH 변수를 해당 파일 경로로 수정합니다.
 
 실행 방법
 
 1. 프로젝트 루트 디렉토리로 이동합니다.
-
+   
+```bash
 cd project
+   ```
 
 2. Flask 서버 실행
 
+```bash
 python app.py
+```
 
 3. 웹 브라우저에서 http://localhost:5000 에 접속하면 실시간 분석 영상이 표시됩니다.
 
@@ -65,8 +71,9 @@ git commit -m "Initial commit: YOLO 실시간 분석 웹 스트리밍 프로젝�
 git branch -M main
 git remote add origin https://github.com/your_username/your_repository.git
 git push -u origin main
+```
 
-
-이제 GitHub에 업로드된 프로젝트를 통해 다른 사람도 환경 설정 및 실행 방법을 참고하여 코드를 실행할 수 있습니다.
+이제 GitHub에 업로드된 프로젝트를 통해 다른 사람도 
+환경 설정 및 실행 방법을 참고하여 코드를 실행할 수 있습니다.
 
 
