@@ -51,4 +51,16 @@ public interface SeoulOpenApiService {
     Call<CongestionResponse> getYouthTrainingFacilityData(
             @Path("api") String api
     );
+
+    // 관광지 정보
+    @GET("{apiKey}/xml/TbVwAttractions/1/5/")
+    Call<CongestionResponse> getTouristAttractions(
+            @Path("apiKey") String apiKey
+    );
+
+    // 쇼핑 정보
+    @GET("{apiKey}/xml/TbVwShopping/1/5/")
+    Call<CongestionResponse> getShoppingData(
+            @Path("apiKey") String apiKey
+    );
 }
