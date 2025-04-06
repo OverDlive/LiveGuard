@@ -145,8 +145,8 @@ public class HomeFragment extends Fragment {
                             areaName = areaName.split("\n")[0];
                         }
 
-                        // 바텀시트 펼치고 지역 정보 로드
                         bottomSheetManager.loadAreaData(areaName);
+                        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                         return true;
                     }
                 }
