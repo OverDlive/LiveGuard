@@ -1,7 +1,6 @@
 package com.example.liveguard_app_010.ui.home;
 
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +17,8 @@ import com.naver.maps.map.CameraUpdate;
 import com.naver.maps.map.MapFragment;
 import com.naver.maps.map.NaverMap;
 import com.naver.maps.geometry.LatLng;
+import com.naver.maps.map.overlay.Marker;
+import com.naver.maps.map.overlay.Overlay;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,7 +27,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import android.widget.ImageView;  // ImageView 관련 오류 해결
+import android.widget.ImageView;
 import com.example.liveguard_app_010.ui.feature.FeatureFragment;
 
 public class HomeFragment extends Fragment {
@@ -34,6 +35,7 @@ public class HomeFragment extends Fragment {
     private BottomSheetBehavior<View> bottomSheetBehavior;
     private NaverMap naverMap;
     private MapManager mapManager;
+    private BottomSheetManager bottomSheetManager;
 
     // 지역별 위치 데이터 관리
     private final Map<RegionManager.RegionType, List<LocationData>> regionLocationMap = new HashMap<>();
@@ -62,11 +64,13 @@ public class HomeFragment extends Fragment {
                     .commit();
         });
 
-        // 기존 코드 제거 후 아래 코드로 대체
+        // 바텀시트 설정
         View bottomSheet = view.findViewById(R.id.bottom_sheet);
         if (bottomSheet != null) {
-            bottomSheetBehavior = com.example.liveguard_app_010.ui.home.BottomSheetHelper
-                    .setupBottomSheet(bottomSheet, requireActivity(), view);
+            bottomSheetBehavior = BottomSheetHelper.setupBottomSheet(bottomSheet, requireActivity(), view);
+
+            // 바텀시트 관리자 초기화
+            bottomSheetManager = new BottomSheetManager(requireActivity(), bottomSheet, bottomSheetBehavior);
         } else {
             Log.e("HomeFragment", "bottom_sheet ID를 찾을 수 없음!");
         }
@@ -88,12 +92,17 @@ public class HomeFragment extends Fragment {
             MarkerManager.init(naverMap, requireContext());
             mapManager = new MapManager(naverMap);
 
-            // 지도 클릭 시 BottomSheet 접기
+            // 지도 클릭 시 BottomSheet 접기 및 서울 전체 정보로 초기화
             naverMap.setOnMapClickListener((pointF, latLng) -> {
                 if (bottomSheetBehavior.getState() != BottomSheetBehavior.STATE_COLLAPSED) {
                     bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                 }
+                // 서울 전체 정보로 초기화
+                bottomSheetManager.loadSeoulAverage();
             });
+
+            // 마커 클릭 이벤트 리스너 설정
+            setMarkerClickListener();
 
             // 서울시 5대 권역 마커 추가
             List<RegionManager.RegionInfo> regionInfos = RegionManager.getSeoulRegions();
@@ -112,8 +121,38 @@ public class HomeFragment extends Fragment {
             CameraUpdate initialUpdate = CameraUpdate.scrollAndZoomTo(new LatLng(37.5666102, 126.9783881), 10);
             naverMap.moveCamera(initialUpdate);
             Log.d("HomeFragment", "초기 지도 위치 설정");
-        });
 
+            // 서울 전체 정보 로드
+            bottomSheetManager.loadSeoulAverage();
+        });
+    }
+
+    /**
+     * 마커 클릭 리스너 설정
+     * 마커가 클릭되면 해당 지역의 상세 정보를 바텀시트에 표시
+     */
+    private void setMarkerClickListener() {
+        // MarkerManager의 마커 클릭 리스너 수정
+        MarkerManager.setOnMarkerClickListener(new Overlay.OnClickListener() {
+            @Override
+            public boolean onClick(@NonNull Overlay overlay) {
+                if (overlay instanceof Marker) {
+                    Marker marker = (Marker) overlay;
+                    String areaName = marker.getCaptionText();
+                    if (areaName != null && !areaName.isEmpty()) {
+                        // 혼잡도 메시지 제거 (예: "혼잡도: 여유" -> "광화문")
+                        if (areaName.contains("\n")) {
+                            areaName = areaName.split("\n")[0];
+                        }
+
+                        // 바텀시트 펼치고 지역 정보 로드
+                        bottomSheetManager.loadAreaData(areaName);
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
     }
 
     /**

@@ -44,7 +44,7 @@
         android:layout_height="match_parent"
         app:layout_constraintTop_toBottomOf="@id/search_container" />
 
-    <!-- 🏠 기존 바텀 시트 유지 -->
+    <!-- 바텀시트 -->
     <LinearLayout
         android:id="@+id/bottom_sheet"
         android:layout_width="match_parent"
@@ -55,17 +55,377 @@
         android:elevation="8dp"
         android:clickable="true"
         android:focusable="true"
+        android:padding="16dp"
         app:behavior_peekHeight="300dp">
 
+        <!-- 바텀시트 상단 핸들 -->
+        <View
+            android:layout_width="40dp"
+            android:layout_height="5dp"
+            android:background="@color/light_gray"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="16dp" />
+
+        <!-- 지역 이름 -->
+        <TextView
+            android:id="@+id/tv_region_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="서울 전체"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_primary"
+            android:layout_marginBottom="8dp" />
+
+        <!-- 혼잡도 상태 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:id="@+id/tv_congestion_level"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="혼잡도: "
+                android:textSize="16sp"
+                android:textColor="@color/text_primary" />
+
+            <TextView
+                android:id="@+id/tv_congestion_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="여유"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/blue" />
+        </LinearLayout>
+
+        <!-- 카드 섹션: 통계 -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="2dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="통계 정보"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="8dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="추정 인구"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/tv_population"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0~0명"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/text_primary" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="남성/여성 비율"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/tv_gender_ratio"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0% / 0%"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/text_primary" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/light_gray"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="업데이트 시간"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/tv_update_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="--:--"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/text_primary" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="기온"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/tv_temperature"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="--°C"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/text_primary" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- 연령별 그래프 타이틀 -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="This is a Bottom Sheet"
-            android:gravity="center"
-            android:textColor="@color/black"
-            android:textSize="16sp" />
+            android:text="연령별 분포"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
 
-        <!-- 🟢 빈 공간을 채워줄 View (유지) -->
+        <!-- 연령별 분포 그래프 (가로 막대 그래프) -->
+        <LinearLayout
+            android:id="@+id/age_distribution_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="16dp">
+
+            <!-- 10대 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="4dp">
+
+                <TextView
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content"
+                    android:text="10대"
+                    android:textSize="12sp" />
+
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="16dp"
+                    android:layout_weight="1">
+
+                    <View
+                        android:id="@+id/progress_10s"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/blue" />
+
+                    <TextView
+                        android:id="@+id/tv_percent_10s"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0%"
+                        android:textSize="12sp"
+                        android:textColor="@color/text_primary"
+                        android:layout_marginStart="8dp" />
+                </FrameLayout>
+            </LinearLayout>
+
+            <!-- 20대 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="4dp">
+
+                <TextView
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content"
+                    android:text="20대"
+                    android:textSize="12sp" />
+
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="16dp"
+                    android:layout_weight="1">
+
+                    <View
+                        android:id="@+id/progress_20s"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/blue" />
+
+                    <TextView
+                        android:id="@+id/tv_percent_20s"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0%"
+                        android:textSize="12sp"
+                        android:textColor="@color/text_primary"
+                        android:layout_marginStart="8dp" />
+                </FrameLayout>
+            </LinearLayout>
+
+            <!-- 30대 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="4dp">
+
+                <TextView
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content"
+                    android:text="30대"
+                    android:textSize="12sp" />
+
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="16dp"
+                    android:layout_weight="1">
+
+                    <View
+                        android:id="@+id/progress_30s"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/blue" />
+
+                    <TextView
+                        android:id="@+id/tv_percent_30s"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0%"
+                        android:textSize="12sp"
+                        android:textColor="@color/text_primary"
+                        android:layout_marginStart="8dp" />
+                </FrameLayout>
+            </LinearLayout>
+
+            <!-- 40대 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="4dp">
+
+                <TextView
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content"
+                    android:text="40대"
+                    android:textSize="12sp" />
+
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="16dp"
+                    android:layout_weight="1">
+
+                    <View
+                        android:id="@+id/progress_40s"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/blue" />
+
+                    <TextView
+                        android:id="@+id/tv_percent_40s"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0%"
+                        android:textSize="12sp"
+                        android:textColor="@color/text_primary"
+                        android:layout_marginStart="8dp" />
+                </FrameLayout>
+            </LinearLayout>
+
+            <!-- 50대 이상 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content"
+                    android:text="50대+"
+                    android:textSize="12sp" />
+
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="16dp"
+                    android:layout_weight="1">
+
+                    <View
+                        android:id="@+id/progress_50plus"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/blue" />
+
+                    <TextView
+                        android:id="@+id/tv_percent_50plus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0%"
+                        android:textSize="12sp"
+                        android:textColor="@color/text_primary"
+                        android:layout_marginStart="8dp" />
+                </FrameLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- 공간을 채워줄 빈 뷰 -->
         <View
             android:layout_width="match_parent"
             android:layout_height="0dp"
