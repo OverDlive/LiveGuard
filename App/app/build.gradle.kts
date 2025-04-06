@@ -65,6 +65,8 @@ dependencies {
     // WorkManager
     implementation("androidx.work:work-runtime-ktx:2.8.1")
 
+    implementation("com.squareup.retrofit2:converter-scalars:2.9.0")
+
     // 네이버 지도 SDK
     implementation("com.naver.maps:map-sdk:3.19.1")
 

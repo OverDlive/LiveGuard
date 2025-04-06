@@ -54,7 +54,7 @@ public interface SeoulOpenApiService {
 
     // 관광지 정보
     @GET("{apiKey}/xml/TbVwAttractions/1/5/")
-    Call<CongestionResponse> getTouristAttractions(
+    Call<TouristAttractionData> getTouristAttractions(
             @Path("apiKey") String apiKey
     );
 
