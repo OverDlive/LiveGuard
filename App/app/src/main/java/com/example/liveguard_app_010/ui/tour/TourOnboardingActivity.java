@@ -10,8 +10,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.liveguard_app_010.R;
+import com.example.liveguard_app_010.network.MuseumDataApiCaller;
 import com.example.liveguard_app_010.network.TouristAttractionData;
 import com.example.liveguard_app_010.network.TouristAttractionsApiCaller;
+import com.example.liveguard_app_010.network.model.MuseumData;
 import com.example.liveguard_app_010.ui.result.TourResultActivity;
 
 import java.util.Arrays;
@@ -100,23 +102,40 @@ public class TourOnboardingActivity extends AppCompatActivity {
     }
 
     private void moveToResult() {
-        Intent intent = new Intent(this, TourResultActivity.class);
-        startActivity(intent);
-        // 관광지 api 호출
-        TouristAttractionsApiCaller ToureistAttractionsApiCaller = new TouristAttractionsApiCaller();
-        ToureistAttractionsApiCaller.fetchTouristAttractions(new TouristAttractionsApiCaller.DataCallback() {
+        MuseumDataApiCaller apiCaller = new MuseumDataApiCaller();
+        apiCaller.fetchMuseumData(new MuseumDataApiCaller.DataCallback() {
+            @Override
+            public void onSuccess(MuseumData museumData) {
+                // API 호출 성공: Logcat 또는 UI 업데이트 등을 진행
+                Log.d("MuseumDataApiCaller", "API call succeeded. Response: " + museumData.toString());
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                // API 호출 실패: 에러 처리
+                Log.e("MuseumDataApiCaller", "API call failed: " + e.getMessage());
+            }
+        });
+
+        // 관광지 API 호출
+        TouristAttractionsApiCaller touristAttractionsApiCaller = new TouristAttractionsApiCaller();
+        touristAttractionsApiCaller.fetchTouristAttractions(new TouristAttractionsApiCaller.DataCallback() {
             @Override
             public void onSuccess(TouristAttractionData data) {
                 // Log success message with data details
-                Log.d("TourChoiceFinalFragment", "API call succeeded. Data: " + data.toString());
+                Log.d("TourChoiceFinalFragment", "Tourist API call succeeded. Data: " + data.toString());
             }
 
             @Override
             public void onFailure(Exception e) {
                 // Log error message
-                Log.e("TourChoiceFinalFragment", "API call failed: " + e.getMessage());
+                Log.e("TourChoiceFinalFragment", "Tourist API call failed: " + e.getMessage());
             }
         });
+
+        // 결과 화면으로 이동
+        Intent intent = new Intent(TourOnboardingActivity.this, TourResultActivity.class);
+        startActivity(intent);
         finish();
     }
 }

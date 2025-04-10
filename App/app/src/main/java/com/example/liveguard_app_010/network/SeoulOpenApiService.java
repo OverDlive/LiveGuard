@@ -36,7 +36,7 @@ public interface SeoulOpenApiService {
 
     // 박물관, 미술관
     @GET("{apiKey}/xml/LOCALDATA_030705/1/5/")
-    Call<CongestionResponse> getMuseumData(
+    Call<String> getMuseumData(
             @Path("apiKey") String apiKey
     );
 
