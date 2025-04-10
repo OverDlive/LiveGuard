@@ -2,6 +2,7 @@ package com.example.liveguard_app_010.ui.tour;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 
 import androidx.annotation.Nullable;
@@ -9,6 +10,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.liveguard_app_010.R;
+import com.example.liveguard_app_010.network.TouristAttractionData;
+import com.example.liveguard_app_010.network.TouristAttractionsApiCaller;
 import com.example.liveguard_app_010.ui.result.TourResultActivity;
 
 import java.util.Arrays;
@@ -99,6 +102,21 @@ public class TourOnboardingActivity extends AppCompatActivity {
     private void moveToResult() {
         Intent intent = new Intent(this, TourResultActivity.class);
         startActivity(intent);
+        // 관광지 api 호출
+        TouristAttractionsApiCaller ToureistAttractionsApiCaller = new TouristAttractionsApiCaller();
+        ToureistAttractionsApiCaller.fetchTouristAttractions(new TouristAttractionsApiCaller.DataCallback() {
+            @Override
+            public void onSuccess(TouristAttractionData data) {
+                // Log success message with data details
+                Log.d("TourChoiceFinalFragment", "API call succeeded. Data: " + data.toString());
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                // Log error message
+                Log.e("TourChoiceFinalFragment", "API call failed: " + e.getMessage());
+            }
+        });
         finish();
     }
 }
