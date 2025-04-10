@@ -1,31 +1,40 @@
 package com.example.liveguard_app_010.ui.result;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Button;
-import android.view.View;              // ✅ 추가
-import android.view.ViewGroup;        // ✅ 추가
-import android.view.LayoutInflater;   // ✅ 추가
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.liveguard_app_010.MainActivity;
 import com.example.liveguard_app_010.R;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.naver.maps.geometry.LatLng;
+import com.naver.maps.geometry.LatLngBounds;
+import com.naver.maps.map.CameraUpdate;
 import com.naver.maps.map.MapView;
 import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.OnMapReadyCallback;
 import com.naver.maps.map.overlay.Marker;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
+import java.util.Map;
 
 public class TourResultActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private MapView mapView;
-    private RecyclerView recyclerView;
-    private Button closeButton;
+    private View bottomSheet;
+    private TextView titleText;
+    private TextView descriptionText;
+    private BottomSheetBehavior<View> bottomSheetBehavior;
+
+    private final List<PlaceInfo> placeInfoList = new ArrayList<>(); // 💡 장소 데이터 리스트
+    private final Map<Marker, PlaceInfo> markerPlaceInfoMap = new HashMap<>(); // 💡 마커 - 장소 매핑
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,107 +42,92 @@ public class TourResultActivity extends AppCompatActivity implements OnMapReadyC
         setContentView(R.layout.activity_tour_result);
 
         mapView = findViewById(R.id.mapView);
-        recyclerView = findViewById(R.id.recommendation_list);
-        closeButton = findViewById(R.id.btn_close_result);
+        bottomSheet = findViewById(R.id.bottom_sheet);
+        titleText = findViewById(R.id.info_title);
+        descriptionText = findViewById(R.id.info_description);
+        Button btnClose = findViewById(R.id.btn_close_result);
 
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        bottomSheetBehavior.setPeekHeight(0);
 
-        closeButton.setOnClickListener(v -> finish()); // 닫기 버튼 누르면 종료
-    }
-
-    @Override
-    public void onMapReady(NaverMap naverMap) {
-        // 예시 마커 추가 (서울 시청)
-        Marker marker = new Marker();
-        marker.setPosition(new LatLng(37.5665, 126.9780));
-        marker.setMap(naverMap);
-
-        // 마커 클릭 시 추천 리스트 보여주기
-        marker.setOnClickListener(overlay -> {
-            showRecommendationList();
-            return true;
+        btnClose.setOnClickListener(v -> {
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            finish();
         });
+
+        initDummyData(); // 🔥 더미 데이터 세팅
     }
 
-    private void showRecommendationList() {
-        List<String> data = Arrays.asList(
-                "추천 1: 서울타워",
-                "추천 2: 경복궁",
-                "추천 3: 남산한옥마을"
-        );
-        recyclerView.setAdapter(new SimpleListAdapter(data));
+    private void initDummyData() {
+        placeInfoList.add(new PlaceInfo("서울 시청", "서울특별시의 중심에 위치한 정부 건물입니다.", 37.5665, 126.9780));
+        placeInfoList.add(new PlaceInfo("남산타워", "서울의 멋진 야경을 볼 수 있는 타워입니다.", 37.5512, 126.9882));
+        placeInfoList.add(new PlaceInfo("경복궁", "조선 왕조의 정궁으로 아름다운 고궁입니다.", 37.5796, 126.9770));
     }
 
-    static class SimpleListAdapter extends RecyclerView.Adapter<SimpleListAdapter.ViewHolder> {
-        private final List<String> items;
+    @Override
+    public void onMapReady(@NonNull NaverMap naverMap) {
+        addMarkersToMap(naverMap, placeInfoList);
+        moveCameraToMarkers(naverMap);
+    }
 
-        SimpleListAdapter(List<String> items) {
-            this.items = items;
-        }
+    private void addMarkersToMap(NaverMap naverMap, List<PlaceInfo> places) {
+        for (PlaceInfo place : places) {
+            Marker marker = new Marker();
+            marker.setPosition(new LatLng(place.latitude, place.longitude));
+            marker.setMap(naverMap);
 
-        static class ViewHolder extends RecyclerView.ViewHolder {
-            final android.widget.TextView textView;
-            ViewHolder(View itemView) {
-                super(itemView);
-                textView = itemView.findViewById(android.R.id.text1);
-            }
-        }
+            markerPlaceInfoMap.put(marker, place);
 
-        @Override
-        public ViewHolder onCreateViewHolder(android.view.ViewGroup parent, int viewType) {
-            android.view.View view = android.view.LayoutInflater.from(parent.getContext())
-                    .inflate(android.R.layout.simple_list_item_1, parent, false);
-            return new ViewHolder(view);
-        }
-
-        @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
-            holder.textView.setText(items.get(position));
-        }
-
-        @Override
-        public int getItemCount() {
-            return items.size();
+            marker.setOnClickListener(overlay -> {
+                showPlaceInfo(place);
+                return true;
+            });
         }
     }
 
-    // MapView 생명주기 처리
-    @Override
-    public void onStart() {
-        super.onStart();
-        mapView.onStart();
+    private void moveCameraToMarkers(NaverMap naverMap) {
+        if (markerPlaceInfoMap.isEmpty()) return;
+
+        LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
+        for (Marker marker : markerPlaceInfoMap.keySet()) {
+            boundsBuilder.include(marker.getPosition());
+        }
+
+        LatLngBounds bounds = boundsBuilder.build();
+        naverMap.moveCamera(CameraUpdate.fitBounds(bounds, 100)); // 패딩값 100
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        mapView.onResume();
+    private void showPlaceInfo(PlaceInfo placeInfo) {
+        titleText.setText(placeInfo.title);
+        descriptionText.setText(placeInfo.description);
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        mapView.onPause();
+    private static class PlaceInfo {
+        String title;
+        String description;
+        double latitude;
+        double longitude;
+
+        PlaceInfo(String title, String description, double latitude, double longitude) {
+            this.title = title;
+            this.description = description;
+            this.latitude = latitude;
+            this.longitude = longitude;
+        }
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        mapView.onStop();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mapView.onDestroy();
-    }
-
-    @Override
-    public void onLowMemory() {
-        super.onLowMemory();
-        mapView.onLowMemory();
-    }
+    // MapView 생명주기
+    @Override protected void onStart() { super.onStart(); mapView.onStart(); }
+    @Override protected void onResume() { super.onResume(); mapView.onResume(); }
+    @Override protected void onPause() { mapView.onPause(); super.onPause(); }
+    @Override protected void onStop() { mapView.onStop(); super.onStop(); }
+    @Override protected void onDestroy() { mapView.onDestroy(); super.onDestroy(); }
+    @Override public void onLowMemory() { super.onLowMemory(); mapView.onLowMemory(); }
 }
