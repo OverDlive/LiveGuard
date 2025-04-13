@@ -10,10 +10,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.liveguard_app_010.R;
+import com.example.liveguard_app_010.network.HanokDataApiCaller;
 import com.example.liveguard_app_010.network.MuseumDataApiCaller;
 import com.example.liveguard_app_010.network.TouristAttractionData;
 import com.example.liveguard_app_010.network.TouristAttractionsApiCaller;
+import com.example.liveguard_app_010.network.YouthTrainingFacilityApiCaller;
 import com.example.liveguard_app_010.network.model.MuseumData;
+import com.example.liveguard_app_010.network.model.CongestionResponse;
+import com.example.liveguard_app_010.network.model.YouthTrainingFacilityResponse;
 import com.example.liveguard_app_010.ui.result.TourResultActivity;
 
 import java.util.Arrays;
@@ -102,11 +106,12 @@ public class TourOnboardingActivity extends AppCompatActivity {
     }
 
     private void moveToResult() {
-        MuseumDataApiCaller apiCaller = new MuseumDataApiCaller();
-        apiCaller.fetchMuseumData(new MuseumDataApiCaller.DataCallback() {
+        // 박물관/미술관 데이터 API 호출
+        MuseumDataApiCaller museumApiCaller = new MuseumDataApiCaller();
+        museumApiCaller.fetchMuseumData(new MuseumDataApiCaller.DataCallback() {
             @Override
             public void onSuccess(MuseumData museumData) {
-                // API 호출 성공: Logcat 또는 UI 업데이트 등을 진행
+                // API 호출 성공: Logcat 또는 UI 업데이트 진행
                 Log.d("MuseumDataApiCaller", "API call succeeded. Response: " + museumData.toString());
             }
 
@@ -130,6 +135,38 @@ public class TourOnboardingActivity extends AppCompatActivity {
             public void onFailure(Exception e) {
                 // Log error message
                 Log.e("TourChoiceFinalFragment", "Tourist API call failed: " + e.getMessage());
+            }
+        });
+
+        // 한옥 체험 API 호출
+        HanokDataApiCaller hanokDataApiCaller = new HanokDataApiCaller();
+        hanokDataApiCaller.fetchHanokData(new HanokDataApiCaller.DataCallback() {
+            @Override
+            public void onSuccess(CongestionResponse response) {
+                // API 호출 성공: Logcat 또는 UI 업데이트 진행
+                Log.d("HanokDataApiCaller", "Hanok API call succeeded. Response: " + response.toString());
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                // API 호출 실패: 에러 처리
+                Log.e("HanokDataApiCaller", "Hanok API call failed: " + e.getMessage());
+            }
+        });
+
+        // 청소년 수련시설 API 호출
+        YouthTrainingFacilityApiCaller youthApiCaller = new YouthTrainingFacilityApiCaller();
+        youthApiCaller.fetchYouthTrainingFacilityData(new YouthTrainingFacilityApiCaller.DataCallback() {
+            @Override
+            public void onSuccess(YouthTrainingFacilityResponse response) {
+                // API 호출 성공: Logcat 또는 UI 업데이트 진행
+                Log.d("YouthFacilityApiCaller", "Youth Facility API call succeeded. Response: " + response.toString());
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                // API 호출 실패: 에러 처리
+                Log.e("YouthFacilityApiCaller", "Youth Facility API call failed: " + e.getMessage());
             }
         });
 
