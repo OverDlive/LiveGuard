@@ -1,6 +1,7 @@
 package com.example.liveguard_app_010.network;
 
 import com.example.liveguard_app_010.network.model.CongestionResponse;
+import com.example.liveguard_app_010.network.model.HanokExperienceResponse;
 import com.example.liveguard_app_010.network.model.YouthTrainingFacilityResponse;
 
 import retrofit2.Call;
@@ -43,14 +44,14 @@ public interface SeoulOpenApiService {
 
     // 한옥 체험(수정 필요)
     @GET("{apiKey}/xml/LOCALDATA_031106/1/5/")
-    Call<CongestionResponse> getHanokData(
+    Call<HanokExperienceResponse> getHanokData(
             @Path("apiKey") String apiKey
     );
 
     // 청소년 수련시설(완)
-    @GET("{api}/xml/LampScpgmtb/1/5/")
+    @GET("{apiKey}/xml/LampScpgmtb/1/5/")
     Call<YouthTrainingFacilityResponse> getYouthTrainingFacilityData(
-            @Path("api") String api
+            @Path("apiKey") String apiKey
     );
 
     // 관광지 정보(수정 필요)

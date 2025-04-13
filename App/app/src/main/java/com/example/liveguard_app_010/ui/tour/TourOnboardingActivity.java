@@ -15,6 +15,7 @@ import com.example.liveguard_app_010.network.MuseumDataApiCaller;
 import com.example.liveguard_app_010.network.TouristAttractionData;
 import com.example.liveguard_app_010.network.TouristAttractionsApiCaller;
 import com.example.liveguard_app_010.network.YouthTrainingFacilityApiCaller;
+import com.example.liveguard_app_010.network.model.HanokExperienceResponse;
 import com.example.liveguard_app_010.network.model.MuseumData;
 import com.example.liveguard_app_010.network.model.CongestionResponse;
 import com.example.liveguard_app_010.network.model.YouthTrainingFacilityResponse;
@@ -142,7 +143,7 @@ public class TourOnboardingActivity extends AppCompatActivity {
         HanokDataApiCaller hanokDataApiCaller = new HanokDataApiCaller();
         hanokDataApiCaller.fetchHanokData(new HanokDataApiCaller.DataCallback() {
             @Override
-            public void onSuccess(CongestionResponse response) {
+            public void onSuccess(HanokExperienceResponse response) {
                 // API 호출 성공: Logcat 또는 UI 업데이트 진행
                 Log.d("HanokDataApiCaller", "Hanok API call succeeded. Response: " + response.toString());
             }

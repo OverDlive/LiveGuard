@@ -1,10 +1,10 @@
-package com.example.liveguard_app_010.network;
+package com.example.liveguard_app_010.network.model;
 
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
 
 @Root(name = "row", strict = false)
-public class HanokData {
+public class HanokExperienceData {
 
     @Element(name = "OPNSFTEAMCODE", required = false)
     private String opnsfTeamCode;
@@ -24,11 +24,11 @@ public class HanokData {
     @Element(name = "BPLCNM", required = false)
     private String bplcNm;
 
-    @Element(name = "OPENYMD", required = false)
-    private String openYmd;
+    @Element(name = "LASTMODTS", required = false)
+    private String lastModTs;
 
-    @Element(name = "CULPHYEDCOBNM", required = false)
-    private String culphyEdcObNm;
+    // 필요한 경우 나머지 태그에 대한 필드를 추가할 수 있습니다.
+    // 예) X, Y, CLOSE_YN 등
 
     public String getOpnsfTeamCode() {
         return opnsfTeamCode;
@@ -78,33 +78,24 @@ public class HanokData {
         this.bplcNm = bplcNm;
     }
 
-    public String getOpenYmd() {
-        return openYmd;
+    public String getLastModTs() {
+        return lastModTs;
     }
 
-    public void setOpenYmd(String openYmd) {
-        this.openYmd = openYmd;
-    }
-
-    public String getCulphyEdcObNm() {
-        return culphyEdcObNm;
-    }
-
-    public void setCulphyEdcObNm(String culphyEdcObNm) {
-        this.culphyEdcObNm = culphyEdcObNm;
+    public void setLastModTs(String lastModTs) {
+        this.lastModTs = lastModTs;
     }
 
     @Override
     public String toString() {
-        return "HanokData{" +
+        return "HanokExperienceData{" +
                 "opnsfTeamCode='" + opnsfTeamCode + '\'' +
                 ", mgtNo='" + mgtNo + '\'' +
                 ", apvPermYmd='" + apvPermYmd + '\'' +
                 ", siteWhlAddr='" + siteWhlAddr + '\'' +
                 ", rdnWhlAddr='" + rdnWhlAddr + '\'' +
                 ", bplcNm='" + bplcNm + '\'' +
-                ", openYmd='" + openYmd + '\'' +
-                ", culphyEdcObNm='" + culphyEdcObNm + '\'' +
+                ", lastModTs='" + lastModTs + '\'' +
                 '}';
     }
 }
