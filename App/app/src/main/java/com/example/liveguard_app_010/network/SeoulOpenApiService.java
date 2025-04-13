@@ -2,6 +2,7 @@ package com.example.liveguard_app_010.network;
 
 import com.example.liveguard_app_010.network.model.CongestionResponse;
 import com.example.liveguard_app_010.network.model.HanokExperienceResponse;
+import com.example.liveguard_app_010.network.model.MuseumDataResponse;
 import com.example.liveguard_app_010.network.model.YouthTrainingFacilityResponse;
 
 import retrofit2.Call;
@@ -36,13 +37,13 @@ public interface SeoulOpenApiService {
             @Path("areaName") String areaName
     );
 
-    // 박물관, 미술관(수정 필요)
+    // 박물관, 미술관(완)
     @GET("{apiKey}/xml/LOCALDATA_030705/1/5/")
-    Call<String> getMuseumData(
+    Call<MuseumDataResponse> getMuseumData(
             @Path("apiKey") String apiKey
     );
 
-    // 한옥 체험(수정 필요)
+    // 한옥 체험(완)
     @GET("{apiKey}/xml/LOCALDATA_031106/1/5/")
     Call<HanokExperienceResponse> getHanokData(
             @Path("apiKey") String apiKey
