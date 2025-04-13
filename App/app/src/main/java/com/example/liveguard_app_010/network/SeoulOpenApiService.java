@@ -1,6 +1,9 @@
 package com.example.liveguard_app_010.network;
 
 import com.example.liveguard_app_010.network.model.CongestionResponse;
+import com.example.liveguard_app_010.network.model.HanokExperienceResponse;
+import com.example.liveguard_app_010.network.model.MuseumDataResponse;
+import com.example.liveguard_app_010.network.model.YouthTrainingFacilityResponse;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -34,25 +37,25 @@ public interface SeoulOpenApiService {
             @Path("areaName") String areaName
     );
 
-    // 박물관, 미술관
+    // 박물관, 미술관(완)
     @GET("{apiKey}/xml/LOCALDATA_030705/1/5/")
-    Call<CongestionResponse> getMuseumData(
+    Call<MuseumDataResponse> getMuseumData(
             @Path("apiKey") String apiKey
     );
 
-    // 한옥 체험
+    // 한옥 체험(완)
     @GET("{apiKey}/xml/LOCALDATA_031106/1/5/")
-    Call<CongestionResponse> getHanokData(
+    Call<HanokExperienceResponse> getHanokData(
             @Path("apiKey") String apiKey
     );
 
-    // 청소년 수련시설
-    @GET("{api}/xml/LampScpgmtb/1/5/")
-    Call<CongestionResponse> getYouthTrainingFacilityData(
-            @Path("api") String api
+    // 청소년 수련시설(완)
+    @GET("{apiKey}/xml/LampScpgmtb/1/5/")
+    Call<YouthTrainingFacilityResponse> getYouthTrainingFacilityData(
+            @Path("apiKey") String apiKey
     );
 
-    // 관광지 정보
+    // 관광지 정보(수정 필요)
     @GET("{apiKey}/xml/TbVwAttractions/1/5/")
     Call<TouristAttractionData> getTouristAttractions(
             @Path("apiKey") String apiKey

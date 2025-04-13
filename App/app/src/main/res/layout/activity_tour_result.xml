@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/coordinator_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- 🗺️ 네이버 지도 MapView -->
+    <com.naver.maps.map.MapView
+        android:id="@+id/mapView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <!-- 🔘 닫기 버튼 -->
+    <Button
+        android:id="@+id/btn_close_result"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="닫기"
+        android:textSize="14sp"
+        android:backgroundTint="@color/black"
+        android:textColor="@android:color/white"
+        android:layout_margin="16dp"
+        app:layout_anchor="@id/mapView"
+        app:layout_anchorGravity="top|end" />
+
+    <!-- 🧩 바텀시트 -->
+    <LinearLayout
+        android:id="@+id/bottom_sheet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/white_round_top_border_20"
+        android:clickable="true"
+        android:focusable="true"
+        android:elevation="8dp"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        app:behavior_peekHeight="0dp">
+
+        <!-- 바텀시트 핸들 -->
+        <View
+            android:layout_width="40dp"
+            android:layout_height="5dp"
+            android:background="@color/light_gray"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp" />
+
+        <!-- 장소 제목 -->
+        <TextView
+            android:id="@+id/info_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="장소 이름"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:padding="16dp" />
+
+        <!-- 장소 설명 -->
+        <TextView
+            android:id="@+id/info_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="장소 설명입니다."
+            android:textSize="16sp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingBottom="16dp" />
+
+    </LinearLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
