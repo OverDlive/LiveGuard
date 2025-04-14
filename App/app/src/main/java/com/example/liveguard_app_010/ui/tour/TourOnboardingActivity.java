@@ -12,12 +12,14 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.example.liveguard_app_010.R;
 import com.example.liveguard_app_010.network.HanokDataApiCaller;
 import com.example.liveguard_app_010.network.MuseumDataApiCaller;
+import com.example.liveguard_app_010.network.ShoppingDataApiCaller;
 import com.example.liveguard_app_010.network.TouristAttractionData;
 import com.example.liveguard_app_010.network.TouristAttractionsApiCaller;
 import com.example.liveguard_app_010.network.YouthTrainingFacilityApiCaller;
 import com.example.liveguard_app_010.network.model.HanokExperienceResponse;
 import com.example.liveguard_app_010.network.model.MuseumData;
 import com.example.liveguard_app_010.network.model.CongestionResponse;
+import com.example.liveguard_app_010.network.model.ShoppingDataResponse;
 import com.example.liveguard_app_010.network.model.YouthTrainingFacilityResponse;
 import com.example.liveguard_app_010.ui.result.TourResultActivity;
 
@@ -168,6 +170,22 @@ public class TourOnboardingActivity extends AppCompatActivity {
             public void onFailure(Exception e) {
                 // API 호출 실패: 에러 처리
                 Log.e("YouthFacilityApiCaller", "Youth Facility API call failed: " + e.getMessage());
+            }
+        });
+
+        // 쇼핑몰(쇼핑 정보) API 호출 추가
+        ShoppingDataApiCaller shoppingApiCaller = new ShoppingDataApiCaller();
+        shoppingApiCaller.fetchShoppingData(new ShoppingDataApiCaller.DataCallback() {
+            @Override
+            public void onSuccess(ShoppingDataResponse response) {
+                // API 호출 성공: Logcat 또는 UI 업데이트 진행
+                Log.d("ShoppingDataApiCaller", "Shopping API call succeeded. Response: " + response.toString());
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                // API 호출 실패: 에러 처리
+                Log.e("ShoppingDataApiCaller", "Shopping API call failed: " + e.getMessage());
             }
         });
 

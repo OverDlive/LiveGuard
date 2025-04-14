@@ -3,6 +3,7 @@ package com.example.liveguard_app_010.network;
 import com.example.liveguard_app_010.network.model.CongestionResponse;
 import com.example.liveguard_app_010.network.model.HanokExperienceResponse;
 import com.example.liveguard_app_010.network.model.MuseumDataResponse;
+import com.example.liveguard_app_010.network.model.ShoppingDataResponse;
 import com.example.liveguard_app_010.network.model.YouthTrainingFacilityResponse;
 
 import retrofit2.Call;
@@ -63,7 +64,7 @@ public interface SeoulOpenApiService {
 
     // 쇼핑 정보
     @GET("{apiKey}/xml/TbVwShopping/1/5/")
-    Call<CongestionResponse> getShoppingData(
+    Call<ShoppingDataResponse> getShoppingData(
             @Path("apiKey") String apiKey
     );
 }
