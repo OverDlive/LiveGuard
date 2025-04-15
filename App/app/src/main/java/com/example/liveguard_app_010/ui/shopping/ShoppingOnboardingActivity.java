@@ -1,4 +1,4 @@
-package com.example.liveguard_app_010.ui.tour;
+package com.example.liveguard_app_010.ui.shopping;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,30 +25,30 @@ import com.example.liveguard_app_010.ui.result.TourResultActivity;
 import java.util.Arrays;
 import java.util.List;
 
-public class TourOnboardingActivity extends AppCompatActivity {
+public class ShoppingOnboardingActivity extends AppCompatActivity {
 
     private ViewPager2 viewPager;
     private Button analyzeButton;
     private boolean[] selectionCompleted = new boolean[]{false, false, false, false}; // 2~5페이지용
-    private List<Integer> tourPages;
+    private List<Integer> shoppingPages;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tour_onboarding);
+        setContentView(R.layout.activity_shopping_onboarding);
 
         viewPager = findViewById(R.id.viewPager);
         analyzeButton = findViewById(R.id.btn_analyze);
 
-        tourPages = Arrays.asList(
-                R.layout.tour_intro_page,
-                R.layout.tour_choice_page_1,
-                R.layout.tour_choice_page_2,
-                R.layout.tour_choice_page_3,
-                R.layout.tour_choice_final_page
+        shoppingPages = Arrays.asList(
+                R.layout.shopping_intro_page,
+                R.layout.shopping_choice_page_1,
+                R.layout.shopping_choice_page_2,
+                R.layout.shopping_choice_page_3,
+                R.layout.shopping_choice_final_page
         );
 
-        TourOnboardingAdapter adapter = new TourOnboardingAdapter(this, tourPages, new TourOnboardingAdapter.ChoiceListener() {
+        ShoppingOnboardingAdapter adapter = new ShoppingOnboardingAdapter(this, shoppingPages, new ShoppingOnboardingAdapter.ChoiceListener() {
             @Override
             public void onChoiceSelected(int pageIndex) {
                 handleChoiceSelected(pageIndex);
@@ -189,7 +189,7 @@ public class TourOnboardingActivity extends AppCompatActivity {
         });
 
         // 결과 화면으로 이동
-        Intent intent = new Intent(TourOnboardingActivity.this, TourResultActivity.class);
+        Intent intent = new Intent(ShoppingOnboardingActivity.this, TourResultActivity.class);
         startActivity(intent);
         finish();
     }

@@ -70,6 +70,16 @@
             android:exported="true"
             android:theme="@style/Theme.LiveGuard_App_010"/>
 
+        <activity
+            android:name=".ui.food.FoodOnboardingActivity"
+            android:exported="true"
+            android:theme="@style/Theme.LiveGuard_App_010"/>
+
+        <activity
+            android:name=".ui.shopping.ShoppingOnboardingActivity"
+            android:exported="true"
+            android:theme="@style/Theme.LiveGuard_App_010"/>
+
         <!-- 메인 화면 -->
         <activity
             android:name=".MainActivity"
