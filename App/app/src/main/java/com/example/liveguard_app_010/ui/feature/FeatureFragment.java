@@ -1,11 +1,10 @@
 package com.example.liveguard_app_010.ui.feature;
 
-import android.content.Intent; // ✅ 추가
+import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +13,8 @@ import android.widget.ImageView;
 
 import com.example.liveguard_app_010.R;
 import com.example.liveguard_app_010.ui.tour.TourOnboardingActivity;
+import com.example.liveguard_app_010.ui.food.FoodOnboardingActivity;
+import com.example.liveguard_app_010.ui.shopping.ShoppingOnboardingActivity;
 
 public class FeatureFragment extends Fragment {
 
@@ -23,18 +24,14 @@ public class FeatureFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_feature, container, false);
 
-        // ❌ X 버튼 클릭 시 프래그먼트 닫기
         ImageView closeFeature = view.findViewById(R.id.close_feature);
-        closeFeature.setOnClickListener(v -> requireActivity()
-                .getSupportFragmentManager()
-                .popBackStack());
+        closeFeature.setOnClickListener(v ->
+                requireActivity().getSupportFragmentManager().popBackStack());
 
-        // 관광지 버튼 클릭 시 온보딩 화면 시작
-        Button tourismBtn = view.findViewById(R.id.btn_1);
-        tourismBtn.setOnClickListener(v -> {
-            Intent intent = new Intent(requireContext(), TourOnboardingActivity.class);
-            startActivity(intent);
-        });
+        // 각 버튼에 온보딩 액티비티 연결
+        view.findViewById(R.id.btn_1).setOnClickListener(v -> startActivity(new Intent(requireContext(), TourOnboardingActivity.class)));
+        view.findViewById(R.id.btn_2).setOnClickListener(v -> startActivity(new Intent(requireContext(), FoodOnboardingActivity.class)));
+        view.findViewById(R.id.btn_3).setOnClickListener(v -> startActivity(new Intent(requireContext(), ShoppingOnboardingActivity.class)));
 
         return view;
     }

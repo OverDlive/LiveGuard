@@ -1,4 +1,4 @@
-package com.example.liveguard_app_010.ui.tour;
+package com.example.liveguard_app_010.ui.shopping;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,14 +12,12 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.example.liveguard_app_010.R;
 import com.example.liveguard_app_010.network.HanokDataApiCaller;
 import com.example.liveguard_app_010.network.MuseumDataApiCaller;
-import com.example.liveguard_app_010.network.PerformanceMovieApiCaller;
 import com.example.liveguard_app_010.network.ShoppingDataApiCaller;
 import com.example.liveguard_app_010.network.TouristAttractionData;
 import com.example.liveguard_app_010.network.TouristAttractionsApiCaller;
 import com.example.liveguard_app_010.network.YouthTrainingFacilityApiCaller;
 import com.example.liveguard_app_010.network.model.HanokExperienceResponse;
 import com.example.liveguard_app_010.network.model.MuseumData;
-import com.example.liveguard_app_010.network.model.PerformanceMovieResponse;
 import com.example.liveguard_app_010.network.model.ShoppingDataResponse;
 import com.example.liveguard_app_010.network.model.YouthTrainingFacilityResponse;
 import com.example.liveguard_app_010.ui.result.TourResultActivity;
@@ -27,30 +25,30 @@ import com.example.liveguard_app_010.ui.result.TourResultActivity;
 import java.util.Arrays;
 import java.util.List;
 
-public class TourOnboardingActivity extends AppCompatActivity {
+public class ShoppingOnboardingActivity extends AppCompatActivity {
 
     private ViewPager2 viewPager;
     private Button analyzeButton;
     private boolean[] selectionCompleted = new boolean[]{false, false, false, false}; // 2~5페이지용
-    private List<Integer> tourPages;
+    private List<Integer> shoppingPages;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tour_onboarding);
+        setContentView(R.layout.activity_shopping_onboarding);
 
         viewPager = findViewById(R.id.viewPager);
         analyzeButton = findViewById(R.id.btn_analyze);
 
-        tourPages = Arrays.asList(
-                R.layout.tour_intro_page,
-                R.layout.tour_choice_page_1,
-                R.layout.tour_choice_page_2,
-                R.layout.tour_choice_page_3,
-                R.layout.tour_choice_final_page
+        shoppingPages = Arrays.asList(
+                R.layout.shopping_intro_page,
+                R.layout.shopping_choice_page_1,
+                R.layout.shopping_choice_page_2,
+                R.layout.shopping_choice_page_3,
+                R.layout.shopping_choice_final_page
         );
 
-        TourOnboardingAdapter adapter = new TourOnboardingAdapter(this, tourPages, new TourOnboardingAdapter.ChoiceListener() {
+        ShoppingOnboardingAdapter adapter = new ShoppingOnboardingAdapter(this, shoppingPages, new ShoppingOnboardingAdapter.ChoiceListener() {
             @Override
             public void onChoiceSelected(int pageIndex) {
                 handleChoiceSelected(pageIndex);
@@ -174,7 +172,7 @@ public class TourOnboardingActivity extends AppCompatActivity {
             }
         });
 
-        // 쇼핑몰(쇼핑 정보) API 호출
+        // 쇼핑몰(쇼핑 정보) API 호출 추가
         ShoppingDataApiCaller shoppingApiCaller = new ShoppingDataApiCaller();
         shoppingApiCaller.fetchShoppingData(new ShoppingDataApiCaller.DataCallback() {
             @Override
@@ -190,25 +188,8 @@ public class TourOnboardingActivity extends AppCompatActivity {
             }
         });
 
-        // 공연/영화 API 호출 - 지역별로 for문을 사용하여 호출
-        String[] regionCodes = {"GN", "GD", "GB", "GS", "GA", "JR", "JG", "YS", "SD", "GJ", "DD", "NR", "SB", "DB", "NW", "EP", "SDM", "MP", "YC", "GR", "GC", "YD", "SC", "SP"};
-        for (String code : regionCodes) {
-            PerformanceMovieApiCaller performanceMovieApiCaller = new PerformanceMovieApiCaller();
-            performanceMovieApiCaller.fetchPerformanceMovieData(code, new PerformanceMovieApiCaller.DataCallback() {
-                @Override
-                public void onSuccess(List<PerformanceMovieResponse> responses) {
-                    Log.d("PerformanceMovieApiCaller", "Performance/Movie API call succeeded for region " + code + ": " + responses.toString());
-                }
-
-                @Override
-                public void onFailure(Exception e) {
-                    Log.e("PerformanceMovieApiCaller", "Performance/Movie API call failed for region " + code + ": " + e.getMessage());
-                }
-            });
-        }
-
         // 결과 화면으로 이동
-        Intent intent = new Intent(TourOnboardingActivity.this, TourResultActivity.class);
+        Intent intent = new Intent(ShoppingOnboardingActivity.this, TourResultActivity.class);
         startActivity(intent);
         finish();
     }
