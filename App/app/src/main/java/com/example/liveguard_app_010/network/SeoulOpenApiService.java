@@ -3,6 +3,7 @@ package com.example.liveguard_app_010.network;
 import com.example.liveguard_app_010.network.model.CongestionResponse;
 import com.example.liveguard_app_010.network.model.HanokExperienceResponse;
 import com.example.liveguard_app_010.network.model.MuseumDataResponse;
+import com.example.liveguard_app_010.network.model.PerformanceMovieResponse;
 import com.example.liveguard_app_010.network.model.ShoppingDataResponse;
 import com.example.liveguard_app_010.network.model.YouthTrainingFacilityResponse;
 
@@ -32,8 +33,8 @@ public interface SeoulOpenApiService {
     );
 
     // 지역별 공연/영화 정보
-    @GET("{apiKey}/xml/LOCALDATA_031302_{areaName}")
-    Call<CongestionResponse> getPerformanceMovieData(
+    @GET("{apiKey}/xml/LOCALDATA_031302_{areaName}/1/5/")
+    Call<PerformanceMovieResponse> getPerformanceMovieData(
             @Path("apiKey") String apiKey,
             @Path("areaName") String areaName
     );

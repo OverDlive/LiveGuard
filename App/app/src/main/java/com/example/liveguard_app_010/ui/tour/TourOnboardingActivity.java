@@ -12,13 +12,14 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.example.liveguard_app_010.R;
 import com.example.liveguard_app_010.network.HanokDataApiCaller;
 import com.example.liveguard_app_010.network.MuseumDataApiCaller;
+import com.example.liveguard_app_010.network.PerformanceMovieApiCaller;
 import com.example.liveguard_app_010.network.ShoppingDataApiCaller;
 import com.example.liveguard_app_010.network.TouristAttractionData;
 import com.example.liveguard_app_010.network.TouristAttractionsApiCaller;
 import com.example.liveguard_app_010.network.YouthTrainingFacilityApiCaller;
 import com.example.liveguard_app_010.network.model.HanokExperienceResponse;
 import com.example.liveguard_app_010.network.model.MuseumData;
-import com.example.liveguard_app_010.network.model.CongestionResponse;
+import com.example.liveguard_app_010.network.model.PerformanceMovieResponse;
 import com.example.liveguard_app_010.network.model.ShoppingDataResponse;
 import com.example.liveguard_app_010.network.model.YouthTrainingFacilityResponse;
 import com.example.liveguard_app_010.ui.result.TourResultActivity;
@@ -173,7 +174,7 @@ public class TourOnboardingActivity extends AppCompatActivity {
             }
         });
 
-        // 쇼핑몰(쇼핑 정보) API 호출 추가
+        // 쇼핑몰(쇼핑 정보) API 호출
         ShoppingDataApiCaller shoppingApiCaller = new ShoppingDataApiCaller();
         shoppingApiCaller.fetchShoppingData(new ShoppingDataApiCaller.DataCallback() {
             @Override
@@ -188,6 +189,23 @@ public class TourOnboardingActivity extends AppCompatActivity {
                 Log.e("ShoppingDataApiCaller", "Shopping API call failed: " + e.getMessage());
             }
         });
+
+        // 공연/영화 API 호출 - 지역별로 for문을 사용하여 호출
+        String[] regionCodes = {"GN", "GD", "GB", "GS", "GA", "JR", "JG", "YS", "SD", "GJ", "DD", "NR", "SB", "DB", "NW", "EP", "SDM", "MP", "YC", "GR", "GC", "YD", "SC", "SP"};
+        for (String code : regionCodes) {
+            PerformanceMovieApiCaller performanceMovieApiCaller = new PerformanceMovieApiCaller();
+            performanceMovieApiCaller.fetchPerformanceMovieData(code, new PerformanceMovieApiCaller.DataCallback() {
+                @Override
+                public void onSuccess(List<PerformanceMovieResponse> responses) {
+                    Log.d("PerformanceMovieApiCaller", "Performance/Movie API call succeeded for region " + code + ": " + responses.toString());
+                }
+
+                @Override
+                public void onFailure(Exception e) {
+                    Log.e("PerformanceMovieApiCaller", "Performance/Movie API call failed for region " + code + ": " + e.getMessage());
+                }
+            });
+        }
 
         // 결과 화면으로 이동
         Intent intent = new Intent(TourOnboardingActivity.this, TourResultActivity.class);
