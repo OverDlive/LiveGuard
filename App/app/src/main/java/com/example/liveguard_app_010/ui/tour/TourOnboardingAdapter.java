@@ -18,14 +18,18 @@ public class TourOnboardingAdapter extends RecyclerView.Adapter<TourOnboardingAd
     private final Context context;
     private final List<Integer> pageLayouts;
     private final ChoiceListener choiceListener;
+    private final List<List<Integer>> buttonIdLists;
+    private final List<List<String>> buttonLabelLists;
 
     public interface ChoiceListener {
-        void onChoiceSelected(int pageIndex);
+        void onChoiceSelected(int pageIndex, String choiceValue);
     }
 
-    public TourOnboardingAdapter(Context context, List<Integer> pageLayouts, ChoiceListener listener) {
+    public TourOnboardingAdapter(Context context, List<Integer> pageLayouts, List<List<Integer>> buttonIdLists, List<List<String>> buttonLabelLists, ChoiceListener listener) {
         this.context = context;
         this.pageLayouts = pageLayouts;
+        this.buttonIdLists = buttonIdLists;
+        this.buttonLabelLists = buttonLabelLists;
         this.choiceListener = listener;
     }
 
@@ -68,12 +72,15 @@ public class TourOnboardingAdapter extends RecyclerView.Adapter<TourOnboardingAd
                 }
             } else {
                 // 선택지 버튼 처리
-                for (int i = 1; i <= 4; i++) {
-                    int buttonId = context.getResources().getIdentifier("btn_choice_" + i, "id", context.getPackageName());
-                    Button choiceButton = itemView.findViewById(buttonId);
+                List<Integer> ids = buttonIdLists.get(position - 1);
+                List<String> labels = buttonLabelLists.get(position - 1);
+                for (int i = 0; i < ids.size(); i++) {
+                    Button choiceButton = itemView.findViewById(ids.get(i));
                     if (choiceButton != null) {
+                        choiceButton.setText(labels.get(i));
+                        String value = labels.get(i);
                         choiceButton.setOnClickListener(v -> {
-                            choiceListener.onChoiceSelected(position);
+                            choiceListener.onChoiceSelected(position, value);
                         });
                     }
                 }

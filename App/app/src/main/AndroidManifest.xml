@@ -64,6 +64,8 @@
             android:exported="true"
             android:theme="@style/Theme.LiveGuard_App_010"/>
 
+
+
         <!-- ✨ 관광지 결과 화면 (TourResultActivity 추가) -->
         <activity
             android:name=".ui.result.TourResultActivity"
@@ -77,6 +79,36 @@
 
         <activity
             android:name=".ui.shopping.ShoppingOnboardingActivity"
+            android:exported="true"
+            android:theme="@style/Theme.LiveGuard_App_010"/>
+
+        <!-- Exhibition 온보딩 화면 -->
+        <activity
+            android:name=".ui.exhibition.ExhibitionOnboardingActivity"
+            android:exported="true"
+            android:theme="@style/Theme.LiveGuard_App_010"/>
+
+        <!-- Experience 온보딩 화면 -->
+        <activity
+            android:name=".ui.experience.ExperienceOnboardingActivity"
+            android:exported="true"
+            android:theme="@style/Theme.LiveGuard_App_010"/>
+
+        <!-- Performance/Movie 온보딩 화면 -->
+        <activity
+            android:name=".ui.performance_movie.PerformanceMovieOnboardingActivity"
+            android:exported="true"
+            android:theme="@style/Theme.LiveGuard_App_010"/>
+
+        <!-- Recommendation 온보딩 화면 -->
+        <activity
+            android:name=".ui.recommendation.RecommendationOnboardingActivity"
+            android:exported="true"
+            android:theme="@style/Theme.LiveGuard_App_010"/>
+
+        <!-- Sport 온보딩 화면 -->
+        <activity
+            android:name=".ui.sport.SportOnboardingActivity"
             android:exported="true"
             android:theme="@style/Theme.LiveGuard_App_010"/>
 

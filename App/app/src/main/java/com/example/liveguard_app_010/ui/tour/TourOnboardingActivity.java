@@ -50,12 +50,35 @@ public class TourOnboardingActivity extends AppCompatActivity {
                 R.layout.tour_choice_final_page
         );
 
-        TourOnboardingAdapter adapter = new TourOnboardingAdapter(this, tourPages, new TourOnboardingAdapter.ChoiceListener() {
-            @Override
-            public void onChoiceSelected(int pageIndex) {
-                handleChoiceSelected(pageIndex);
+        // Define button IDs per page (pages 1–4)
+        List<List<Integer>> buttonIdLists = Arrays.asList(
+            Arrays.asList(R.id.btn_choice_1, R.id.btn_choice_2, R.id.btn_choice_3, R.id.btn_choice_4),
+            Arrays.asList(R.id.btn_choice_1, R.id.btn_choice_2, R.id.btn_choice_3, R.id.btn_choice_4),
+            Arrays.asList(R.id.btn_choice_1, R.id.btn_choice_2, R.id.btn_choice_3, R.id.btn_choice_4),
+            Arrays.asList(R.id.btn_choice_1, R.id.btn_choice_2, R.id.btn_choice_3, R.id.btn_choice_4)
+        );
+        // Define labels per page (replace with actual labels)
+        List<List<String>> buttonLabelLists = Arrays.asList(
+            Arrays.asList("아침","점심","저녁","야간"),
+            Arrays.asList("친구","가족","혼자","커플"),
+            Arrays.asList("편안함","모험","휴식","체험"),
+            Arrays.asList("슬리퍼", "30분", "1시간", "상관없어")
+        );
+
+        TourOnboardingAdapter adapter = new TourOnboardingAdapter(
+            this,
+            tourPages,
+            buttonIdLists,
+            buttonLabelLists,
+            new TourOnboardingAdapter.ChoiceListener() {
+                @Override
+                public void onChoiceSelected(int pageIndex, String choiceValue) {
+                    // Now receives the actual button text as choiceValue
+                    Log.d("TourOnboarding", "Page " + pageIndex + " selected: " + choiceValue);
+                    handleChoiceSelected(pageIndex);
+                }
             }
-        });
+        );
         viewPager.setAdapter(adapter);
 
         viewPager.setUserInputEnabled(false); // 스와이프 막기
