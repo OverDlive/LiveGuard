@@ -39,7 +39,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    // ✅ 로그인 상태라면 `MainActivity`로 이동
+    // ✅ 로그인 상태라면 MainActivity로 이동
     private void moveToMainActivity() {
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         startActivity(intent);

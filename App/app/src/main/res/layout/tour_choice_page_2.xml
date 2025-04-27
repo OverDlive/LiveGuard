@@ -6,43 +6,162 @@
     android:layout_height="match_parent"
     android:padding="24dp">
 
-    <Button
-        android:id="@+id/btn_choice_1"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="혼자"
+    <!-- 닫기(X) 버튼 -->
+    <!--<Button
+        android:id="@+id/btn_close"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:background="@drawable/ic_close"
+        android:textColor="#1C1C1E"
+        android:textAlignment="center"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="19dp"
+        android:layout_marginEnd="19dp"/> -->
+
+    <!-- 질문 텍스트 -->
+    <TextView
+        android:id="@+id/tv_question"
+        android:layout_width="312dp"
+        android:layout_height="80dp"
+        android:text="누구랑 갈꺼야?"
+        android:gravity="center"
+        android:textSize="24sp"
+        android:textColor="#1C1C1E"
+        android:fontFamily="sans-serif-medium"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="146dp"/>
 
+    <!-- 혼자 버튼 -->
+    <Button
+        android:id="@+id/btn_choice_1"
+        android:layout_width="148dp"
+        android:layout_height="148dp"
+        android:text="혼자"
+        android:textSize="28sp"
+        android:textColor="#FFFFFF"
+        android:background="@drawable/search_butt"
+        android:backgroundTint="#6DBDAC"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/tv_question"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="27dp"
+        android:layout_marginStart="24dp"/>
+
+    <!-- 친구 버튼 -->
     <Button
         android:id="@+id/btn_choice_2"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_width="148dp"
+        android:layout_height="148dp"
         android:text="친구"
-        app:layout_constraintTop_toBottomOf="@id/btn_choice_1"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp" />
+        android:textSize="28sp"
+        android:textColor="#FFFFFF"
+        android:background="@drawable/search_butt"
+        android:backgroundTint="#60CBB1"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/tv_question"
+        app:layout_constraintStart_toEndOf="@id/btn_choice_1"
+        android:layout_marginTop="27dp"
+        android:layout_marginStart="16dp"/>
 
+    <!-- 가족 버튼 -->
     <Button
         android:id="@+id/btn_choice_3"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_width="148dp"
+        android:layout_height="148dp"
         android:text="가족"
-        app:layout_constraintTop_toBottomOf="@id/btn_choice_2"
+        android:textSize="28sp"
+        android:textColor="#FFFFFF"
+        android:background="@drawable/search_butt"
+        android:backgroundTint="#5FCBB0"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/btn_choice_1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp" />
+        android:layout_marginTop="23dp"
+        android:layout_marginStart="24dp"/>
 
+    <!-- 연인 버튼 -->
     <Button
         android:id="@+id/btn_choice_4"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_width="148dp"
+        android:layout_height="148dp"
         android:text="연인"
-        app:layout_constraintTop_toBottomOf="@id/btn_choice_3"
+        android:textSize="28sp"
+        android:textColor="#FFFFFF"
+        android:background="@drawable/search_butt"
+        android:backgroundTint="#49B39D"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/btn_choice_2"
+        app:layout_constraintStart_toEndOf="@id/btn_choice_3"
+        android:layout_marginTop="23dp"
+        android:layout_marginStart="16dp"/>
+
+    <!-- 다음 페이지 넘기기 버튼 -->
+    <Button
+        android:id="@+id/btn_choice_next"
+        android:layout_width="312dp"
+        android:layout_height="56dp"
+        android:text="다음 페이지 넘기기"
+        android:textSize="16sp"
+        android:textColor="#FFFFFF"
+        android:background="@drawable/travel_choice_mint_green_confirm_button"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/btn_choice_4"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp" />
+        android:layout_marginTop="108dp"/>
+
+    <!-- 인디케이터 (그대로 유지) -->
+    <LinearLayout
+        android:id="@+id/indicator_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/btn_choice_4"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="144dp"
+        android:layout_marginTop="60dp">
+
+        <ImageView
+            android:id="@+id/indicator1"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:layout_marginEnd="8dp"
+            android:src="@drawable/travel_choice_gray_circle"
+            android:contentDescription="indicator" />
+
+        <ImageView
+            android:id="@+id/indicator2"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:layout_marginEnd="8dp"
+            android:src="@drawable/travel_choice_gray_circle"
+            android:contentDescription="indicator" />
+
+        <ImageView
+            android:id="@+id/indicator3"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:layout_marginEnd="8dp"
+            android:src="@drawable/travel_choice_orange_circle"
+            android:contentDescription="indicator" />
+
+        <ImageView
+            android:id="@+id/indicator4"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:layout_marginEnd="8dp"
+            android:src="@drawable/travel_choice_gray_circle"
+            android:contentDescription="indicator" />
+
+        <ImageView
+            android:id="@+id/indicator5"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:src="@drawable/travel_choice_gray_circle"
+            android:contentDescription="indicator" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
