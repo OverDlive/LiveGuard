@@ -1,0 +1,22 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- 노란색 배경 -->
+    <path
+        android:fillColor="#FFEB00"
+        android:pathData="M0,0h24v24h-24z" />
+
+    <!-- 갈색 타원형 말풍선 + 뾰족한 꼬리 -->
+    <path
+        android:fillColor="#3C1E1E"
+        android:pathData="
+            M6,9
+            a6,4.5 0 1,1 12,0
+            a6,4.5 0 1,1 -12,0
+            l-2,2
+            l1-3
+            Z" />
+</vector>
