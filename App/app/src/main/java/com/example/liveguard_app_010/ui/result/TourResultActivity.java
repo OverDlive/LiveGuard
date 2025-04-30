@@ -138,7 +138,7 @@ public class TourResultActivity extends AppCompatActivity implements OnMapReadyC
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
     }
 
-    private static class PlaceInfo implements Serializable {
+    public static class PlaceInfo implements Serializable {
         String title;
         String description;
         double lat;

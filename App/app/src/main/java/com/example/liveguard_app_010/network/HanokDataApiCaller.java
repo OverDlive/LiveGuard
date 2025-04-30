@@ -1,13 +1,26 @@
 package com.example.liveguard_app_010.network;
 
+import android.content.Context;
+
 import com.example.liveguard_app_010.BuildConfig;
 import com.example.liveguard_app_010.network.model.HanokExperienceResponse;
+import java.util.List;
+import java.util.ArrayList;
+import java.io.IOException;
+import com.example.liveguard_app_010.models.PlaceInfo;
+import com.example.liveguard_app_010.network.model.HanokExperienceData;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class HanokDataApiCaller {
+
+    private final Context context;
+
+    public HanokDataApiCaller(Context context) {
+        this.context = context;
+    }
 
     public interface DataCallback {
         void onSuccess(HanokExperienceResponse response);
@@ -33,5 +46,34 @@ public class HanokDataApiCaller {
                 callback.onFailure(new Exception(t));
             }
         });
+    }
+
+    /**
+     * RecommendationEngine용 동기 장소 리스트 반환 메서드
+     */
+    public List<PlaceInfo> fetchPlaces() {
+        List<PlaceInfo> placeList = new ArrayList<>();
+        try {
+            Response<HanokExperienceResponse> response = ApiClient.getSeoulOpenApiService()
+                    .getHanokData(BuildConfig.SEOUL_APP_KEY)
+                    .execute();
+            if (response.isSuccessful() && response.body() != null) {
+                HanokExperienceResponse hanokResponse = response.body();
+                if (hanokResponse.getRow() != null) {
+                    for (HanokExperienceData item : hanokResponse.getRow()) {
+                        PlaceInfo place = new PlaceInfo(
+                                item.getBplcNm(),
+                                item.getCapt(),
+                                Double.parseDouble(item.getY()),
+                                Double.parseDouble(item.getX())
+                        );
+                        placeList.add(place);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return placeList;
     }
 }
