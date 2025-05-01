@@ -2,6 +2,6 @@
 <network-security-config xmlns:tools="http://schemas.android.com/tools">
     <domain-config cleartextTrafficPermitted="true">
         <domain tools:ignore="NetworkSecurityConfig">34.22.82.134</domain>
-        <domain>openapi.seoul.go.kr</domain>
+        <domain includeSubdomains="true">openapi.seoul.go.kr</domain>
     </domain-config>
 </network-security-config>

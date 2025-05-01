@@ -1,4 +1,5 @@
 package com.example.liveguard_app_010.utils;
+import android.util.Log;
 
 import android.content.Context;
 import android.location.Location;
@@ -46,9 +47,11 @@ public class RecommendationEngine {
 
         // 1. 다양한 API 호출을 통해 전체 장소 리스트 획득
         List<PlaceInfo> allPlaces = fetchAllPlaces();
+        Log.d("RecommendationEngine", "Total places fetched: " + allPlaces.size());
 
         // 2. 이동 시간/거리 기준으로 사전 필터링
         List<PlaceInfo> travelFiltered = filterByTravelOption(allPlaces, travelOption, userLocation);
+        Log.d("RecommendationEngine", "Places after travel filter (" + travelOption + "): " + travelFiltered.size());
 
         // 3. 사용자 선택 기반 점수 매기기
         List<ScoredPlace> scored = new ArrayList<>();
@@ -68,6 +71,12 @@ public class RecommendationEngine {
         List<PlaceInfo> top5 = new ArrayList<>();
         for (int i = 0; i < Math.min(5, scored.size()); i++) {
             top5.add(scored.get(i).place);
+        }
+        Log.d("RecommendationEngine", "Top recommendations:");
+        for (int i = 0; i < top5.size(); i++) {
+            PlaceInfo p = top5.get(i);
+            double s = scored.get(i).score;
+            Log.d("RecommendationEngine", "#" + (i+1) + ": " + p.title + " score=" + s);
         }
         return top5;
     }
