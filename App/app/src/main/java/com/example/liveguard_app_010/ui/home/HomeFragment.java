@@ -29,6 +29,11 @@ import java.util.List;
 import java.util.Map;
 import android.widget.ImageView;
 import com.example.liveguard_app_010.ui.feature.FeatureFragment;
+import android.graphics.Color;
+import android.view.View;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 
 public class HomeFragment extends Fragment {
 
@@ -153,6 +158,32 @@ public class HomeFragment extends Fragment {
                 return false;
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        requireActivity().getWindow().getDecorView().setSystemUiVisibility(
+            View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+        );
+        requireActivity().getWindow().setStatusBarColor(Color.TRANSPARENT);
+        // Ensure status bar icons (battery, alarm) are light for visibility
+        WindowInsetsControllerCompat controller =
+            WindowCompat.getInsetsController(requireActivity().getWindow(), requireActivity().getWindow().getDecorView());
+        controller.setAppearanceLightStatusBars(true);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        requireActivity().getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
+        requireActivity().getWindow().setStatusBarColor(
+            ContextCompat.getColor(requireContext(), R.color.colorPrimaryDark)
+        );
+        // Revert status bar icons to dark for other screens
+        WindowInsetsControllerCompat controller =
+            WindowCompat.getInsetsController(requireActivity().getWindow(), requireActivity().getWindow().getDecorView());
+        controller.setAppearanceLightStatusBars(false);
     }
 
     /**

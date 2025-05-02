@@ -24,6 +24,11 @@ public class NaverLoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         loginManager = new LoginManager(this);
 
+        // ActionBar 숨기기
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
+
         Log.d(TAG, "NaverLoginActivity 실행됨");
 
         try {

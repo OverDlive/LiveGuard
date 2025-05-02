@@ -37,6 +37,11 @@ public class SportOnboardingActivity extends AppCompatActivity {
                 R.layout.sport_choice_final_page
         );
 
+        // ActionBar 숨기기
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
+
         SportOnboardingAdapter adapter = new SportOnboardingAdapter(this, sportPages, new SportOnboardingAdapter.ChoiceListener() {
             @Override
             public void onChoiceSelected(int pageIndex) {

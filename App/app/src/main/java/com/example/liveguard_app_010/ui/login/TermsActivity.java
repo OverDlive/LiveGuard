@@ -27,6 +27,11 @@ public class TermsActivity extends AppCompatActivity {
         btnAgree = findViewById(R.id.btn_agree);
         ImageView btnBack = findViewById(R.id.btn_back);
 
+        // ActionBar 숨기기
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
+
         // 뒤로 가기 버튼
         btnBack.setOnClickListener(v -> finish());
 

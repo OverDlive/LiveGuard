@@ -22,6 +22,11 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         loginManager = new LoginManager(this); // ✅ 로그인 상태 관리 초기화
 
+        // ActionBar 숨기기
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
+
         // ✅ 로그인 상태 확인 → 이미 로그인되었으면 MainActivity로 이동
         if (loginManager.isLoggedIn()) {
             moveToMainActivity();

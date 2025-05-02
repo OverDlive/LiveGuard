@@ -2,10 +2,16 @@ package com.example.liveguard_app_010.ui.result;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.graphics.Color;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Button;
+import android.view.ViewGroup;
+import android.util.TypedValue;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 import com.example.liveguard_app_010.MainActivity;
 import com.example.liveguard_app_010.R;
 import com.example.liveguard_app_010.models.PlaceInfo;
@@ -47,6 +53,34 @@ public class TourResultActivity extends AppCompatActivity implements OnMapReadyC
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         bottomSheetBehavior.setPeekHeight(0);
+
+        // ActionBar 숨기기
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+            // 상태바를 투명하게 설정
+            getWindow().getDecorView().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+            );
+            getWindow().setStatusBarColor(Color.TRANSPARENT);
+            // Use dark status bar icons on transparent background
+            WindowInsetsControllerCompat controller =
+                WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView());
+            controller.setAppearanceLightStatusBars(true);
+
+            // Position close button below the transparent status bar
+            Button btnCloseResult = findViewById(R.id.btn_close_result);
+            int statusBarHeight = 0;
+            int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+            if (resourceId > 0) {
+                statusBarHeight = getResources().getDimensionPixelSize(resourceId);
+            }
+            int defaultMargin = (int) TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP, 16, getResources().getDisplayMetrics());
+            ViewGroup.MarginLayoutParams mlp =
+                (ViewGroup.MarginLayoutParams) btnCloseResult.getLayoutParams();
+            mlp.topMargin = statusBarHeight + defaultMargin;
+            btnCloseResult.setLayoutParams(mlp);
+        }
 
         btnClose.setOnClickListener(v -> {
             Intent intent = new Intent(this, MainActivity.class);
