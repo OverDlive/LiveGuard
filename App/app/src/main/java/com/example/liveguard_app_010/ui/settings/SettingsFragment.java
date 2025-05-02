@@ -15,6 +15,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
+
 import com.example.liveguard_app_010.R;
 import com.example.liveguard_app_010.ui.permission.PermissionActivity;
 import com.example.liveguard_app_010.ui.utils.OnboardingManager;
@@ -101,5 +104,23 @@ public class SettingsFragment extends Fragment {
         startActivity(intent);
 
         Toast.makeText(requireContext(), "앱 설정에서 권한을 다시 설정해주세요.", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        WindowInsetsControllerCompat controller =
+            WindowCompat.getInsetsController(requireActivity().getWindow(), requireActivity().getWindow().getDecorView());
+        // Use dark status bar icons
+        controller.setAppearanceLightStatusBars(true);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        WindowInsetsControllerCompat controller =
+            WindowCompat.getInsetsController(requireActivity().getWindow(), requireActivity().getWindow().getDecorView());
+        // Restore default (light) status bar icons
+        controller.setAppearanceLightStatusBars(false);
     }
 }

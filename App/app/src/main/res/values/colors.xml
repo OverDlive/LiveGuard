@@ -35,4 +35,5 @@
     <color name="background_light">#F9F9F9</color>  <!-- 앱 전체 배경색 -->
     <color name="background_dark">#121212</color>  <!-- 다크 모드 배경색 -->
     <color name="divider">#EEEEEE</color>  <!-- 구분선 색 -->
+    <color name="colorPrimaryDark">#00F44336</color>  <!-- 상태바 복원 색 -->
 </resources>
