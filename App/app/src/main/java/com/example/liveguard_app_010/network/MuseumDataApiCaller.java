@@ -1,5 +1,7 @@
 package com.example.liveguard_app_010.network;
 
+import android.content.Context;
+
 import com.example.liveguard_app_010.BuildConfig;
 import com.example.liveguard_app_010.network.model.MuseumData;
 import com.example.liveguard_app_010.network.model.MuseumDataResponse;
@@ -8,12 +10,23 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import java.util.List;
+import java.util.ArrayList;
+import java.io.IOException;
+import com.example.liveguard_app_010.models.PlaceInfo;
+
 /**
  * 박물관/미술관 데이터 API 호출 클래스
  * ApiClient를 통해 Retrofit 인스턴스를 생성하고,
  * 자동 파싱된 MuseumDataResponse에서 XML 데이터를 추출해 MuseumData 객체로 반환합니다.
  */
 public class MuseumDataApiCaller {
+
+    private final Context context;
+
+    public MuseumDataApiCaller(Context context) {
+        this.context = context;
+    }
 
     /**
      * 결과 전달을 위한 콜백 인터페이스
@@ -54,5 +67,34 @@ public class MuseumDataApiCaller {
                 callback.onFailure(new Exception(t));
             }
         });
+    }
+
+    /**
+     * RecommendationEngine용 동기 장소 리스트 반환 메서드
+     */
+    public List<PlaceInfo> fetchPlaces() {
+        List<PlaceInfo> placeList = new ArrayList<>();
+        try {
+            Response<MuseumDataResponse> response = ApiClient.getSeoulOpenApiService()
+                    .getMuseumData(BuildConfig.SEOUL_APP_KEY)
+                    .execute();
+            if (response.isSuccessful() && response.body() != null) {
+                MuseumDataResponse museumResponse = response.body();
+                if (museumResponse.getRow() != null) {
+                    for (MuseumData data : museumResponse.getRow()) {
+                        PlaceInfo place = new PlaceInfo(
+                                data.getBplcNm(),       // place name from XML <BPLCNM>
+                                data.getCapt(),         // description from XML <CAPT>
+                                Double.parseDouble(data.getY()), // latitude from XML <Y>
+                                Double.parseDouble(data.getX())  // longitude from XML <X>
+                        );
+                        placeList.add(place);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return placeList;
     }
 }

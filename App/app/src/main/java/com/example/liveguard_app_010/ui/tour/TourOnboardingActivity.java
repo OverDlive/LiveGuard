@@ -1,5 +1,6 @@
 package com.example.liveguard_app_010.ui.tour;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,9 +24,23 @@ import com.example.liveguard_app_010.network.model.PerformanceMovieResponse;
 import com.example.liveguard_app_010.network.model.ShoppingDataResponse;
 import com.example.liveguard_app_010.network.model.YouthTrainingFacilityResponse;
 import com.example.liveguard_app_010.ui.result.TourResultActivity;
+import com.example.liveguard_app_010.models.PlaceInfo;
 
 import java.util.Arrays;
 import java.util.List;
+
+import com.example.liveguard_app_010.utils.RecommendationEngine;
+import android.location.Location;
+import com.example.liveguard_app_010.ui.result.TourResultActivity;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Executors;
+
+import android.content.Context;
+import android.location.LocationManager;
+import android.Manifest;
+import android.content.pm.PackageManager;
+import androidx.core.app.ActivityCompat;
 
 public class TourOnboardingActivity extends AppCompatActivity {
 
@@ -33,6 +48,12 @@ public class TourOnboardingActivity extends AppCompatActivity {
     private Button analyzeButton;
     private boolean[] selectionCompleted = new boolean[]{false, false, false, false}; // 2~5페이지용
     private List<Integer> tourPages;
+
+    // 선택된 값을 저장할 필드
+    private RecommendationEngine.TimeOfDay selectedTimeOfDay;
+    private RecommendationEngine.CompanionType selectedCompanionType;
+    private RecommendationEngine.Mood selectedMood;
+    private RecommendationEngine.TravelOption selectedTravelOption;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -75,7 +96,7 @@ public class TourOnboardingActivity extends AppCompatActivity {
                 public void onChoiceSelected(int pageIndex, String choiceValue) {
                     // Now receives the actual button text as choiceValue
                     Log.d("TourOnboarding", "Page " + pageIndex + " selected: " + choiceValue);
-                    handleChoiceSelected(pageIndex);
+                    handleChoiceSelected(pageIndex, choiceValue);
                 }
             }
         );
@@ -99,9 +120,37 @@ public class TourOnboardingActivity extends AppCompatActivity {
         });
     }
 
-    private void handleChoiceSelected(int pageIndex) {
+    private void handleChoiceSelected(int pageIndex, String choiceValue) {
         if (pageIndex >= 1 && pageIndex <= 4) {
             selectionCompleted[pageIndex - 1] = true;
+
+            // 페이지별 선택값 매핑
+            switch (pageIndex) {
+                case 1:
+                    if ("아침".equals(choiceValue)) selectedTimeOfDay = RecommendationEngine.TimeOfDay.MORNING;
+                    else if ("점심".equals(choiceValue)) selectedTimeOfDay = RecommendationEngine.TimeOfDay.LUNCH;
+                    else if ("저녁".equals(choiceValue)) selectedTimeOfDay = RecommendationEngine.TimeOfDay.AFTERNOON;
+                    else if ("야간".equals(choiceValue)) selectedTimeOfDay = RecommendationEngine.TimeOfDay.NIGHT;
+                    break;
+                case 2:
+                    if ("친구".equals(choiceValue)) selectedCompanionType = RecommendationEngine.CompanionType.FRIENDS;
+                    else if ("가족".equals(choiceValue)) selectedCompanionType = RecommendationEngine.CompanionType.FAMILY;
+                    else if ("혼자".equals(choiceValue)) selectedCompanionType = RecommendationEngine.CompanionType.ALONE;
+                    else if ("커플".equals(choiceValue)) selectedCompanionType = RecommendationEngine.CompanionType.COUPLE;
+                    break;
+                case 3:
+                    if ("편안함".equals(choiceValue)) selectedMood = RecommendationEngine.Mood.HEALING;
+                    else if ("모험".equals(choiceValue)) selectedMood = RecommendationEngine.Mood.POWERFUL;
+                    else if ("휴식".equals(choiceValue)) selectedMood = RecommendationEngine.Mood.EMOTIONAL;
+                    else if ("체험".equals(choiceValue)) selectedMood = RecommendationEngine.Mood.HOTPLACE;
+                    break;
+                case 4:
+                    if ("슬리퍼".equals(choiceValue)) selectedTravelOption = RecommendationEngine.TravelOption.SLIPPER;
+                    else if ("30분".equals(choiceValue)) selectedTravelOption = RecommendationEngine.TravelOption.MIN_30;
+                    else if ("1시간".equals(choiceValue)) selectedTravelOption = RecommendationEngine.TravelOption.MIN_60;
+                    else if ("상관없어".equals(choiceValue)) selectedTravelOption = RecommendationEngine.TravelOption.NO_PREF;
+                    break;
+            }
 
             viewPager.setCurrentItem(pageIndex + 1); // 다음 페이지로 이동
 
@@ -133,106 +182,56 @@ public class TourOnboardingActivity extends AppCompatActivity {
     }
 
     private void moveToResult() {
-        // 박물관/미술관 데이터 API 호출
-        MuseumDataApiCaller museumApiCaller = new MuseumDataApiCaller();
-        museumApiCaller.fetchMuseumData(new MuseumDataApiCaller.DataCallback() {
-            @Override
-            public void onSuccess(MuseumData museumData) {
-                // API 호출 성공: Logcat 또는 UI 업데이트 진행
-                Log.d("MuseumDataApiCaller", "API call succeeded. Response: " + museumData.toString());
-            }
+        // 1) 사용자 선택 값과 위치를 준비
+        RecommendationEngine.TimeOfDay time = getSelectedTimeOfDay();
+        RecommendationEngine.CompanionType companion = getSelectedCompanionType();
+        RecommendationEngine.Mood mood = getSelectedMood();
+        RecommendationEngine.TravelOption travelOption = getSelectedTravelOption();
+        Location userLocation = getUserLocation();
 
-            @Override
-            public void onFailure(Exception e) {
-                // API 호출 실패: 에러 처리
-                Log.e("MuseumDataApiCaller", "API call failed: " + e.getMessage());
-            }
-        });
+        // 2) 백그라운드 스레드에서 추천 알고리즘 실행
+        Executors.newSingleThreadExecutor().execute(() -> {
+            RecommendationEngine engine = new RecommendationEngine(this);
+            List<PlaceInfo> recommendedPlaces =
+                engine.recommend(time, companion, mood, travelOption, userLocation);
 
-        // 관광지 API 호출
-        TouristAttractionsApiCaller touristAttractionsApiCaller = new TouristAttractionsApiCaller();
-        touristAttractionsApiCaller.fetchTouristAttractions(new TouristAttractionsApiCaller.DataCallback() {
-            @Override
-            public void onSuccess(TouristAttractionData data) {
-                // Log success message with data details
-                Log.d("TourChoiceFinalFragment", "Tourist API call succeeded. Data: " + data.toString());
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                // Log error message
-                Log.e("TourChoiceFinalFragment", "Tourist API call failed: " + e.getMessage());
-            }
-        });
-
-        // 한옥 체험 API 호출
-        HanokDataApiCaller hanokDataApiCaller = new HanokDataApiCaller();
-        hanokDataApiCaller.fetchHanokData(new HanokDataApiCaller.DataCallback() {
-            @Override
-            public void onSuccess(HanokExperienceResponse response) {
-                // API 호출 성공: Logcat 또는 UI 업데이트 진행
-                Log.d("HanokDataApiCaller", "Hanok API call succeeded. Response: " + response.toString());
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                // API 호출 실패: 에러 처리
-                Log.e("HanokDataApiCaller", "Hanok API call failed: " + e.getMessage());
-            }
-        });
-
-        // 청소년 수련시설 API 호출
-        YouthTrainingFacilityApiCaller youthApiCaller = new YouthTrainingFacilityApiCaller();
-        youthApiCaller.fetchYouthTrainingFacilityData(new YouthTrainingFacilityApiCaller.DataCallback() {
-            @Override
-            public void onSuccess(YouthTrainingFacilityResponse response) {
-                // API 호출 성공: Logcat 또는 UI 업데이트 진행
-                Log.d("YouthFacilityApiCaller", "Youth Facility API call succeeded. Response: " + response.toString());
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                // API 호출 실패: 에러 처리
-                Log.e("YouthFacilityApiCaller", "Youth Facility API call failed: " + e.getMessage());
-            }
-        });
-
-        // 쇼핑몰(쇼핑 정보) API 호출
-        ShoppingDataApiCaller shoppingApiCaller = new ShoppingDataApiCaller();
-        shoppingApiCaller.fetchShoppingData(new ShoppingDataApiCaller.DataCallback() {
-            @Override
-            public void onSuccess(ShoppingDataResponse response) {
-                // API 호출 성공: Logcat 또는 UI 업데이트 진행
-                Log.d("ShoppingDataApiCaller", "Shopping API call succeeded. Response: " + response.toString());
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                // API 호출 실패: 에러 처리
-                Log.e("ShoppingDataApiCaller", "Shopping API call failed: " + e.getMessage());
-            }
-        });
-
-        // 공연/영화 API 호출 - 지역별로 for문을 사용하여 호출
-        String[] regionCodes = {"GN", "GD", "GB", "GS", "GA", "JR", "JG", "YS", "SD", "GJ", "DD", "NR", "SB", "DB", "NW", "EP", "SDM", "MP", "YC", "GR", "GC", "YD", "SC", "SP"};
-        for (String code : regionCodes) {
-            PerformanceMovieApiCaller performanceMovieApiCaller = new PerformanceMovieApiCaller();
-            performanceMovieApiCaller.fetchPerformanceMovieData(code, new PerformanceMovieApiCaller.DataCallback() {
-                @Override
-                public void onSuccess(List<PerformanceMovieResponse> responses) {
-                    Log.d("PerformanceMovieApiCaller", "Performance/Movie API call succeeded for region " + code + ": " + responses.toString());
-                }
-
-                @Override
-                public void onFailure(Exception e) {
-                    Log.e("PerformanceMovieApiCaller", "Performance/Movie API call failed for region " + code + ": " + e.getMessage());
-                }
+            // 3) UI 스레드에서 결과 화면으로 이동하며 추천 결과 전달
+            runOnUiThread(() -> {
+                Intent intent = new Intent(TourOnboardingActivity.this, TourResultActivity.class);
+                intent.putExtra("place_list", new ArrayList<>(recommendedPlaces));
+                startActivity(intent);
+                finish();
             });
-        }
+        });
+    }
 
-        // 결과 화면으로 이동
-        Intent intent = new Intent(TourOnboardingActivity.this, TourResultActivity.class);
-        startActivity(intent);
-        finish();
+    private RecommendationEngine.TimeOfDay getSelectedTimeOfDay() {
+        return selectedTimeOfDay;
+    }
+
+    private RecommendationEngine.CompanionType getSelectedCompanionType() {
+        return selectedCompanionType;
+    }
+
+    private RecommendationEngine.Mood getSelectedMood() {
+        return selectedMood;
+    }
+
+    private RecommendationEngine.TravelOption getSelectedTravelOption() {
+        return selectedTravelOption;
+    }
+
+    private Location getUserLocation() {
+        // 권한 체크 및 위치 매니저로 최근 위치 반환
+        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: 요청 로직
+            return new Location("default");
+        }
+        Location loc = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        if (loc == null) {
+            loc = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+        }
+        return loc != null ? loc : new Location("default");
     }
 }

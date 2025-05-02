@@ -8,13 +8,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.liveguard_app_010.MainActivity;
 import com.example.liveguard_app_010.R;
+import com.example.liveguard_app_010.models.PlaceInfo;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.map.MapView;
 import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.OnMapReadyCallback;
 import com.naver.maps.map.overlay.Marker;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -136,20 +136,6 @@ public class TourResultActivity extends AppCompatActivity implements OnMapReadyC
         titleText.setText(placeInfo.title);
         descriptionText.setText(placeInfo.description);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-    }
-
-    private static class PlaceInfo implements Serializable {
-        String title;
-        String description;
-        double lat;
-        double lng;
-
-        PlaceInfo(String title, String description, double lat, double lng) {
-            this.title = title;
-            this.description = description;
-            this.lat = lat;
-            this.lng = lng;
-        }
     }
 
     // MapView 생명주기
