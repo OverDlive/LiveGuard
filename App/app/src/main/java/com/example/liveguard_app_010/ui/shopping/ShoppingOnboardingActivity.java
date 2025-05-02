@@ -48,6 +48,11 @@ public class ShoppingOnboardingActivity extends AppCompatActivity {
                 R.layout.shopping_choice_final_page
         );
 
+        // ActionBar 숨기기
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
+
         ShoppingOnboardingAdapter adapter = new ShoppingOnboardingAdapter(this, shoppingPages, new ShoppingOnboardingAdapter.ChoiceListener() {
             @Override
             public void onChoiceSelected(int pageIndex) {

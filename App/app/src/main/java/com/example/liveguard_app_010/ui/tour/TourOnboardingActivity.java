@@ -71,6 +71,11 @@ public class TourOnboardingActivity extends AppCompatActivity {
                 R.layout.tour_choice_final_page
         );
 
+        // ActionBar 숨기기
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
+
         // Define button IDs per page (pages 1–4)
         List<List<Integer>> buttonIdLists = Arrays.asList(
             Arrays.asList(R.id.btn_choice_1, R.id.btn_choice_2, R.id.btn_choice_3, R.id.btn_choice_4),
