@@ -8,7 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -36,12 +36,12 @@ public class SettingsFragment extends Fragment {
         loginManager = new LoginManager(requireContext());
 
         // 로그아웃 버튼
-        Button logoutButton = view.findViewById(R.id.naverLogoutButton);
-        logoutButton.setOnClickListener(v -> naverLogout());
+        ImageView ivArrowLogout = view.findViewById(R.id.ivArrowLogout);
+        ivArrowLogout.setOnClickListener(v -> naverLogout());
 
         // 개발자용 초기화 버튼 (권한도 리셋)
-        Button resetButton = view.findViewById(R.id.devResetButton);
-        resetButton.setOnClickListener(v -> resetApp());
+        View llAppReset = view.findViewById(R.id.llAppReset);
+        llAppReset.setOnClickListener(v -> resetApp());
 
         return view;
     }

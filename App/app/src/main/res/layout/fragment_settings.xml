@@ -1,23 +1,211 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:padding="20dp">
+    android:background="#FFFFFF">
 
-    <Button
-        android:id="@+id/naverLogoutButton"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="로그아웃"
-        android:layout_marginBottom="20dp"/>
+        android:orientation="vertical"
+        android:paddingTop="24dp">  <!-- 전체 설정을 좀 더 아래로 이동 -->
 
-    <Button
-        android:id="@+id/devResetButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="앱 초기화 (테스트용)"
-        android:backgroundTint="@android:color/holo_red_light"
-        android:textColor="@android:color/white"/>
-</LinearLayout>
+        <!-- Title -->
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="개발자 설정"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginTop="16dp" />
+
+        <!-- Section: 계정 -->
+        <TextView
+            android:id="@+id/tvSectionAccount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="계정"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="16dp" />
+
+        <!-- Row: 로그아웃 -->
+        <LinearLayout
+            android:id="@+id/llLogout"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp">
+
+            <TextView
+                android:id="@+id/tvLogout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="로그아웃"
+                android:textSize="16sp"
+                android:textColor="#000000" />
+
+            <ImageView
+                android:id="@+id/ivArrowLogout"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_close"
+                android:contentDescription="로그아웃 화살표"
+                android:rotation="180" />
+        </LinearLayout>
+
+        <!-- Gray spacer between sections -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="16dp"
+            android:background="#EEEEEE" />
+
+        <!-- Section: 정보 -->
+        <TextView
+            android:id="@+id/tvSectionInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="정보"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="16dp" />
+
+        <!-- Row: 앱 버전 -->
+        <LinearLayout
+            android:id="@+id/llAppVersion"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp">
+
+            <TextView
+                android:id="@+id/tvAppVersionLabel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="앱 버전"
+                android:textSize="16sp"
+                android:textColor="#000000" />
+
+            <TextView
+                android:id="@+id/tvAppVersion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1.0.0"
+                android:textSize="16sp"
+                android:textColor="#000000" />
+        </LinearLayout>
+
+        <!-- Row: Privacy Policy -->
+        <LinearLayout
+            android:id="@+id/llPrivacyPolicy"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp">
+
+            <TextView
+                android:id="@+id/tvPrivacyPolicy"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Privacy Policy"
+                android:textSize="16sp"
+                android:textColor="#000000" />
+
+            <ImageView
+                android:id="@+id/ivArrowPrivacy"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_close"
+                android:contentDescription="Privacy Policy 화살표"
+                android:rotation="180"/>
+        </LinearLayout>
+
+        <!-- Row: License Information -->
+        <LinearLayout
+            android:id="@+id/llLicenseInfo"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp">
+
+            <TextView
+                android:id="@+id/tvLicenseInfo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="License Information"
+                android:textSize="16sp"
+                android:textColor="#000000" />
+
+            <ImageView
+                android:id="@+id/ivArrowLicense"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_close"
+                android:contentDescription="License Information 화살표"
+                android:rotation="180" />
+        </LinearLayout>
+
+        <!-- Gray spacer between sections -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="16dp"
+            android:background="#EEEEEE" />
+
+        <!-- Section: 개발자 -->
+        <TextView
+            android:id="@+id/tvSectionDeveloper"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="개발자"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="16dp" />
+
+        <!-- Row: 앱 초기화 -->
+        <LinearLayout
+            android:id="@+id/llAppReset"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp">
+
+            <TextView
+                android:id="@+id/tvAppReset"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="앱 초기화"
+                android:textSize="16sp"
+                android:textColor="#000000" />
+
+            <ImageView
+                android:id="@+id/ivArrowReset"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_close"
+                android:contentDescription="앱 초기화 화살표"
+                android:rotation="180"/>
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>
