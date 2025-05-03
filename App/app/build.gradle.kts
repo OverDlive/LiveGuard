@@ -100,4 +100,5 @@ dependencies {
 
     //네이버 로그인 테스트
     implementation ("com.navercorp.nid:oauth:5.4.0")
+    implementation("androidx.annotation:annotation:1.7.0")
 }

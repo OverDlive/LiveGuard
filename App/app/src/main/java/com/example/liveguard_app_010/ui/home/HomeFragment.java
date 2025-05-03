@@ -14,6 +14,8 @@ import com.example.liveguard_app_010.R;
 import com.example.liveguard_app_010.region.RegionManager;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.naver.maps.map.CameraUpdate;
+import com.naver.maps.map.util.FusedLocationSource;
+import com.naver.maps.map.LocationTrackingMode;
 import com.naver.maps.map.MapFragment;
 import com.naver.maps.map.NaverMap;
 import com.naver.maps.geometry.LatLng;
@@ -29,8 +31,9 @@ import java.util.List;
 import java.util.Map;
 import android.widget.ImageView;
 import com.example.liveguard_app_010.ui.feature.FeatureFragment;
+import com.naver.maps.map.widget.LocationButtonView;
+
 import android.graphics.Color;
-import android.view.View;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
@@ -41,6 +44,9 @@ public class HomeFragment extends Fragment {
     private NaverMap naverMap;
     private MapManager mapManager;
     private BottomSheetManager bottomSheetManager;
+
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1000;
+    private FusedLocationSource locationSource;
 
     // 지역별 위치 데이터 관리
     private final Map<RegionManager.RegionType, List<LocationData>> regionLocationMap = new HashMap<>();
@@ -87,6 +93,9 @@ public class HomeFragment extends Fragment {
             getChildFragmentManager().beginTransaction().add(R.id.map_fragment, mapFragment).commit();
         }
 
+        // 위치 권한 및 현재 위치 표시용 LocationSource 초기화
+        locationSource = new FusedLocationSource(getActivity(), LOCATION_PERMISSION_REQUEST_CODE);
+
         // 지역별 위치 데이터 초기화
         initRegionLocations();
         // CongestionManager에 지역 데이터 전달
@@ -94,6 +103,14 @@ public class HomeFragment extends Fragment {
 
         mapFragment.getMapAsync(map -> {
             naverMap = map;
+            // 현재 위치 버튼 표시 및 위치 트래킹 모드 설정
+            naverMap.setLocationSource(locationSource);
+            naverMap.setLocationTrackingMode(LocationTrackingMode.Follow);
+            naverMap.getUiSettings().setLocationButtonEnabled(false);
+
+            LocationButtonView locationButton = view.findViewById(R.id.custom_location_button);
+            locationButton.setMap(naverMap);
+
             MarkerManager.init(naverMap, requireContext());
             mapManager = new MapManager(naverMap);
 
@@ -271,5 +288,13 @@ public class HomeFragment extends Fragment {
             this.lat = lat;
             this.lng = lng;
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (locationSource.onRequestPermissionsResult(requestCode, permissions, grantResults)) {
+            return;
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 }
