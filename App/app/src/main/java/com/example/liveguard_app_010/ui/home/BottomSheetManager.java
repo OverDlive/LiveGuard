@@ -31,6 +31,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import android.os.Handler;
+import android.os.Looper;
+
 /**
  * 바텀시트의 상태와 데이터를 관리하는 클래스
  * 지역별 상세 정보 업데이트와 서울 전체 평균 정보 표시를 담당합니다.
@@ -58,6 +61,10 @@ public class BottomSheetManager {
     private final View progress30s;
     private final View progress40s;
     private final View progress50plus;
+
+    // Handler and runnable for live clock updates
+    private final Handler timeHandler;
+    private final Runnable timeRunnable;
 
     // 초기 화면/상세 화면 컨테이너
     private final LinearLayout defaultView;
@@ -116,6 +123,20 @@ public class BottomSheetManager {
 
             // 권역별 탭 설정
             setupRegionTabs();
+
+            // 시작 시 바로 시간 업데이트를 시작
+            timeHandler = new Handler(Looper.getMainLooper());
+            timeRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    updateSeoulTime();
+                    timeHandler.postDelayed(this, 1000);
+                }
+            };
+            timeHandler.post(timeRunnable);
+        } else {
+            timeHandler = null;
+            timeRunnable = null;
         }
     }
 
@@ -161,13 +182,17 @@ public class BottomSheetManager {
         TextView tvSeoulTime = bottomSheetView.findViewById(R.id.tv_seoul_time);
         TextView tvSeoulWeather = bottomSheetView.findViewById(R.id.tv_seoul_weather);
 
-        // 현재 시간 업데이트
-        SimpleDateFormat sdf = new SimpleDateFormat("서울 • 현재 HH:mm", Locale.getDefault());
-        tvSeoulTime.setText(sdf.format(new Date()));
-
         // 날씨 정보 (실제로는 API에서 가져와야 함)
-        // 이 예제에서는 임의 값을 사용
         tvSeoulWeather.setText("22°C");
+    }
+
+    /**
+     * 매초 호출되어 시계를 갱신합니다.
+     */
+    private void updateSeoulTime() {
+        TextView tvSeoulTime = bottomSheetView.findViewById(R.id.tv_seoul_time);
+        SimpleDateFormat sdf = new SimpleDateFormat("서울 • 현재 HH:mm:ss", Locale.getDefault());
+        tvSeoulTime.setText(sdf.format(new Date()));
     }
 
     /**

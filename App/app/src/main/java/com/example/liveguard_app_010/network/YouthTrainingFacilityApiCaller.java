@@ -50,21 +50,30 @@ public class YouthTrainingFacilityApiCaller {
     /**
      * RecommendationEngine용 동기 장소 리스트 반환 메서드
      */
+    /**
+     * RecommendationEngine용 동기 장소 리스트 반환 메서드
+     */
     public List<PlaceInfo> fetchPlaces() {
         List<PlaceInfo> placeList = new ArrayList<>();
         try {
-            Response<YouthTrainingFacilityResponse> response = ApiClient.getSeoulOpenApiService()
+            Response<YouthTrainingFacilityResponse> response = ApiClient
+                    .getSeoulOpenApiService()
                     .getYouthTrainingFacilityData(BuildConfig.SEOUL_APP_KEY)
                     .execute();
+
             if (response.isSuccessful() && response.body() != null) {
                 YouthTrainingFacilityResponse data = response.body();
                 if (data.getRow() != null) {
                     for (YouthTrainingFacilityData item : data.getRow()) {
                         PlaceInfo place = new PlaceInfo(
-                            item.getUpNm(),                // 시설명 from XML <UP_NM>
-                            item.getAreaCd(),   // 주소 from XML <SITEWHLADDR>
-                                0.0,
-                            0.0
+                                item.getUpNm(),                                                // 시설명 from XML <UP_NM>
+                                item.getSiteWhlAddr(),                                         // 주소 from XML <SITEWHLADDR>
+                                // 위도: 값이 있으면 파싱, 없으면 0.0
+                                item.getY() != null && !item.getY().isEmpty()
+                                        ? Double.parseDouble(item.getY()) : 0.0,
+                                // 경도: 값이 있으면 파싱, 없으면 0.0
+                                item.getX() != null && !item.getX().isEmpty()
+                                        ? Double.parseDouble(item.getX()) : 0.0
                         );
                         placeList.add(place);
                     }
