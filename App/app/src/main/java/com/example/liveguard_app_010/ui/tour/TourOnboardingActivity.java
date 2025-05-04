@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
+import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -55,16 +56,29 @@ public class TourOnboardingActivity extends AppCompatActivity {
     private RecommendationEngine.Mood selectedMood;
     private RecommendationEngine.TravelOption selectedTravelOption;
 
+    private View introContainer;
+    private Button startButton;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tour_onboarding);
 
+        introContainer = findViewById(R.id.intro_container);
+        startButton = introContainer.findViewById(R.id.btn_start);
         viewPager = findViewById(R.id.viewPager);
         analyzeButton = findViewById(R.id.btn_analyze);
 
+        viewPager.setVisibility(View.GONE);
+        analyzeButton.setVisibility(View.GONE);
+
+        startButton.setOnClickListener(v -> {
+            introContainer.setVisibility(View.GONE);
+            viewPager.setVisibility(View.VISIBLE);
+            analyzeButton.setVisibility(View.VISIBLE);
+        });
+
         tourPages = Arrays.asList(
-                R.layout.tour_intro_page,
                 R.layout.tour_choice_page_1,
                 R.layout.tour_choice_page_2,
                 R.layout.tour_choice_page_3,
@@ -92,7 +106,6 @@ public class TourOnboardingActivity extends AppCompatActivity {
         );
 
         TourOnboardingAdapter adapter = new TourOnboardingAdapter(
-            this,
             tourPages,
             buttonIdLists,
             buttonLabelLists,
@@ -126,30 +139,30 @@ public class TourOnboardingActivity extends AppCompatActivity {
     }
 
     private void handleChoiceSelected(int pageIndex, String choiceValue) {
-        if (pageIndex >= 1 && pageIndex <= 4) {
-            selectionCompleted[pageIndex - 1] = true;
+        if (pageIndex >= 0 && pageIndex < selectionCompleted.length) {
+            selectionCompleted[pageIndex] = true;
 
             // 페이지별 선택값 매핑
             switch (pageIndex) {
-                case 1:
+                case 0:
                     if ("아침".equals(choiceValue)) selectedTimeOfDay = RecommendationEngine.TimeOfDay.MORNING;
                     else if ("점심".equals(choiceValue)) selectedTimeOfDay = RecommendationEngine.TimeOfDay.LUNCH;
                     else if ("저녁".equals(choiceValue)) selectedTimeOfDay = RecommendationEngine.TimeOfDay.AFTERNOON;
                     else if ("야간".equals(choiceValue)) selectedTimeOfDay = RecommendationEngine.TimeOfDay.NIGHT;
                     break;
-                case 2:
+                case 1:
                     if ("친구".equals(choiceValue)) selectedCompanionType = RecommendationEngine.CompanionType.FRIENDS;
                     else if ("가족".equals(choiceValue)) selectedCompanionType = RecommendationEngine.CompanionType.FAMILY;
                     else if ("혼자".equals(choiceValue)) selectedCompanionType = RecommendationEngine.CompanionType.ALONE;
                     else if ("커플".equals(choiceValue)) selectedCompanionType = RecommendationEngine.CompanionType.COUPLE;
                     break;
-                case 3:
+                case 2:
                     if ("편안함".equals(choiceValue)) selectedMood = RecommendationEngine.Mood.HEALING;
                     else if ("모험".equals(choiceValue)) selectedMood = RecommendationEngine.Mood.POWERFUL;
                     else if ("휴식".equals(choiceValue)) selectedMood = RecommendationEngine.Mood.EMOTIONAL;
                     else if ("체험".equals(choiceValue)) selectedMood = RecommendationEngine.Mood.HOTPLACE;
                     break;
-                case 4:
+                case 3:
                     if ("슬리퍼".equals(choiceValue)) selectedTravelOption = RecommendationEngine.TravelOption.SLIPPER;
                     else if ("30분".equals(choiceValue)) selectedTravelOption = RecommendationEngine.TravelOption.MIN_30;
                     else if ("1시간".equals(choiceValue)) selectedTravelOption = RecommendationEngine.TravelOption.MIN_60;
@@ -157,16 +170,19 @@ public class TourOnboardingActivity extends AppCompatActivity {
                     break;
             }
 
-            viewPager.setCurrentItem(pageIndex + 1); // 다음 페이지로 이동
+            if (pageIndex < tourPages.size() - 1) {
+                viewPager.setCurrentItem(pageIndex + 1);
+            }
 
-            if (pageIndex == 4) {
-                updateAnalyzeButton();
+            if (allSelectionsCompleted()) {
+                analyzeButton.setEnabled(true);
+                analyzeButton.setAlpha(1f);
             }
         }
     }
 
     public void moveToNextPage() {
-        viewPager.setCurrentItem(1); // Intro 다음 2페이지로 이동
+        viewPager.setCurrentItem(0); // Intro 다음 2페이지로 이동
     }
 
     private boolean allSelectionsCompleted() {

@@ -15,7 +15,6 @@ import java.util.List;
 
 public class TourOnboardingAdapter extends RecyclerView.Adapter<TourOnboardingAdapter.TourViewHolder> {
 
-    private final Context context;
     private final List<Integer> pageLayouts;
     private final ChoiceListener choiceListener;
     private final List<List<Integer>> buttonIdLists;
@@ -25,8 +24,7 @@ public class TourOnboardingAdapter extends RecyclerView.Adapter<TourOnboardingAd
         void onChoiceSelected(int pageIndex, String choiceValue);
     }
 
-    public TourOnboardingAdapter(Context context, List<Integer> pageLayouts, List<List<Integer>> buttonIdLists, List<List<String>> buttonLabelLists, ChoiceListener listener) {
-        this.context = context;
+    public TourOnboardingAdapter(List<Integer> pageLayouts, List<List<Integer>> buttonIdLists, List<List<String>> buttonLabelLists, ChoiceListener listener) {
         this.pageLayouts = pageLayouts;
         this.buttonIdLists = buttonIdLists;
         this.buttonLabelLists = buttonLabelLists;
@@ -36,7 +34,7 @@ public class TourOnboardingAdapter extends RecyclerView.Adapter<TourOnboardingAd
     @NonNull
     @Override
     public TourViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(pageLayouts.get(viewType), parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(pageLayouts.get(viewType), parent, false);
         return new TourViewHolder(view);
     }
 
@@ -62,27 +60,20 @@ public class TourOnboardingAdapter extends RecyclerView.Adapter<TourOnboardingAd
         }
 
         void bind(int position) {
-            if (position == 0) {
-                // 시작하기 버튼 처리
-                Button startButton = itemView.findViewById(R.id.btn_start);
-                if (startButton != null) {
-                    startButton.setOnClickListener(v -> {
-                        ((TourOnboardingActivity) context).moveToNextPage(); // ✅ 그냥 다음 페이지로 넘기기만!
+            // Bind choice buttons for each page
+            List<Integer> ids = buttonIdLists.get(position);
+            List<String> labels = buttonLabelLists.get(position);
+            for (int i = 0; i < ids.size(); i++) {
+                Button choiceButton = itemView.findViewById(ids.get(i));
+                if (choiceButton != null) {
+                    choiceButton.setText(labels.get(i));
+                    String value = labels.get(i);
+                    choiceButton.setOnClickListener(v -> {
+                        int adapterPos = getAbsoluteAdapterPosition();
+                        if (adapterPos != RecyclerView.NO_POSITION) {
+                            choiceListener.onChoiceSelected(adapterPos, value);
+                        }
                     });
-                }
-            } else {
-                // 선택지 버튼 처리
-                List<Integer> ids = buttonIdLists.get(position - 1);
-                List<String> labels = buttonLabelLists.get(position - 1);
-                for (int i = 0; i < ids.size(); i++) {
-                    Button choiceButton = itemView.findViewById(ids.get(i));
-                    if (choiceButton != null) {
-                        choiceButton.setText(labels.get(i));
-                        String value = labels.get(i);
-                        choiceButton.setOnClickListener(v -> {
-                            choiceListener.onChoiceSelected(position, value);
-                        });
-                    }
                 }
             }
         }
