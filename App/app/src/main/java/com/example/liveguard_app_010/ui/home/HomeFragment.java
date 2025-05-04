@@ -51,7 +51,6 @@ public class HomeFragment extends Fragment {
     // 지역별 위치 데이터 관리
     private final Map<RegionManager.RegionType, List<LocationData>> regionLocationMap = new HashMap<>();
 
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

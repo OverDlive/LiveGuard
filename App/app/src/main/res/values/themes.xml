@@ -53,7 +53,6 @@
     <!-- ────────────────────────────────────────── -->
     <style name="FeatureButton" parent="Widget.MaterialComponents.Button">
         <!-- ☆ 여기서 배경색을 tint로 지정 -->
-        <item name="backgroundTint">#60CBB1</item>
         <!-- 기본 tint 제거(겹침 방지) -->
         <item name="android:backgroundTint">@null</item>
 

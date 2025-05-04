@@ -78,6 +78,7 @@ dependencies {
     // RecyclerView 및 CardView
     implementation("androidx.recyclerview:recyclerview:1.3.2")
     implementation("androidx.cardview:cardview:1.0.0")
+    implementation("androidx.gridlayout:gridlayout:1.0.0")
 
     // XML 처리
     implementation("com.squareup.retrofit2:converter-simplexml:2.9.0")
