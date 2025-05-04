@@ -11,7 +11,7 @@
         android:id="@+id/tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="LIVE GUARD는 서비스 이용에\n꼭 필요한 권한만 받아요."
+        android:text="SeoulMate는 서비스 이용에\n꼭 필요한 권한만 받아요."
         android:textSize="20sp"
         android:textStyle="bold"
         android:textColor="#1C1C1E"

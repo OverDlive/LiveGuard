@@ -37,6 +37,11 @@ public class FoodOnboardingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_food_onboarding);
 
+        // ActionBar 숨기기
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
+
         viewPager = findViewById(R.id.viewPager);
         analyzeButton = findViewById(R.id.btn_analyze);
 

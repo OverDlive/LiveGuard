@@ -34,6 +34,11 @@ public class OnboardingActivity extends AppCompatActivity {
             return;
         }
 
+        // ActionBar 숨기기
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
+
         viewPager = findViewById(R.id.viewPager);
         homeButton = findViewById(R.id.btn_home);
 

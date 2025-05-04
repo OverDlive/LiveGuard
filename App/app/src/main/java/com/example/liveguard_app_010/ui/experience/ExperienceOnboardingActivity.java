@@ -26,6 +26,11 @@ public class ExperienceOnboardingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_experience_onboarding);
 
+        // ActionBar 숨기기
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
+
         viewPager = findViewById(R.id.viewPager);
         analyzeButton = findViewById(R.id.btn_analyze);
 
