@@ -119,6 +119,13 @@
             android:label="@string/app_name"
             android:theme="@style/Theme.LiveGuard_App_010" />
 
+        <activity
+            android:name="com.google.android.gms.oss.licenses.OssLicensesMenuActivity"
+            android:theme="@style/Theme.LiveGuard_App_010" />
+        <activity
+            android:name="com.google.android.gms.oss.licenses.OssLicensesActivity"
+            android:theme="@style/Theme.LiveGuard_App_010" />
+
         <!-- 네이버 지도 API Client ID -->
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"

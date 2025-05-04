@@ -93,7 +93,7 @@
         android:background="@drawable/btn_confirm_mint_vector"
         android:backgroundTint="@null"
         app:backgroundTint="@null"
-        android:text="휴대폰 번호로 계속하기"
+        android:text="네이버 아이디로 계속하기"
         android:textColor="@color/white"
         android:textSize="16sp"
         android:layout_marginTop="48dp"/>

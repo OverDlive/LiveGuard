@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- 제목 -->
+        <TextView
+            android:id="@+id/tvPrivacyTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="개인정보 보호 정책"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="12dp"/>
+
+        <!-- 조항 1: 수집 항목 -->
+        <TextView
+            android:id="@+id/tvPrivacySection1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="1. 수집하는 개인정보의 항목\n- 위치 정보\n- 기기 식별자\n- 로그인 정보"
+            android:textSize="14sp"
+            android:layout_marginBottom="12dp"/>
+
+        <!-- 조항 2: 이용 목적 -->
+        <TextView
+            android:id="@+id/tvPrivacySection2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="2. 개인정보의 수집 및 이용 목적\n앱 서비스 제공 및 개선을 위해 사용됩니다."
+            android:textSize="14sp"
+            android:layout_marginBottom="12dp"/>
+
+        <!-- 조항 3: 제3자 제공 -->
+        <TextView
+            android:id="@+id/tvPrivacySection3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="3. 개인정보의 제3자 제공\n서울시 공공 Open API, Naver Map API, Naver Login API 사업자에게 제공합니다."
+            android:textSize="14sp"
+            android:layout_marginBottom="12dp"/>
+
+        <!-- 조항 4: 사용자 권리 -->
+        <TextView
+            android:id="@+id/tvPrivacySection4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="4. 사용자의 권리 및 행사 방법\n열람·정정·삭제·처리정지 요청을 할 수 있습니다."
+            android:textSize="14sp"
+            android:layout_marginBottom="12dp"/>
+
+        <!-- 조항 5: 정책 변경 고지 -->
+        <TextView
+            android:id="@+id/tvPrivacySection5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="5. 정책 변경 시 고지 방법\n앱 업데이트 시 푸시 알림 또는 웹사이트 공지를 통해 안내합니다."
+            android:textSize="14sp"/>
+
+    </LinearLayout>
+</ScrollView>

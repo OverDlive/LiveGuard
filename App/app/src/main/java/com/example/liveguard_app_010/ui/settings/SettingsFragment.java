@@ -23,6 +23,8 @@ import com.example.liveguard_app_010.ui.permission.PermissionActivity;
 import com.example.liveguard_app_010.ui.utils.OnboardingManager;
 import com.example.liveguard_app_010.ui.utils.LoginManager;
 import com.navercorp.nid.NaverIdLoginSDK;
+import android.view.View;
+import androidx.navigation.Navigation;
 
 public class SettingsFragment extends Fragment {
 
@@ -42,6 +44,20 @@ public class SettingsFragment extends Fragment {
         // 개발자용 초기화 버튼 (권한도 리셋)
         View llAppReset = view.findViewById(R.id.llAppReset);
         llAppReset.setOnClickListener(v -> resetApp());
+
+        // 개인정보 보호 정책 버튼
+        View btnPrivacyPolicy = view.findViewById(R.id.btnPrivacyPolicy);
+        btnPrivacyPolicy.setOnClickListener(v -> {
+            Navigation.findNavController(view)
+                .navigate(R.id.action_settingsFragment_to_privacyPlicyFragment);
+        });
+
+        // 라이선스 정보 버튼
+        View btnLicenseInfo = view.findViewById(R.id.btnLicenseInfo);
+        btnLicenseInfo.setOnClickListener(v -> {
+            Navigation.findNavController(view)
+                .navigate(R.id.action_settingsFragment_to_licenseInfoFragment);
+        });
 
         return view;
     }

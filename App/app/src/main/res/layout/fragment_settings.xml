@@ -116,14 +116,17 @@
             android:paddingStart="24dp"
             android:paddingEnd="24dp">
 
-            <TextView
-                android:id="@+id/tvPrivacyPolicy"
+            <Button
+                android:id="@+id/btnPrivacyPolicy"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Privacy Policy"
+                android:padding="0dp"
+                android:text="개인정보 보호 정책"
                 android:textSize="16sp"
-                android:textColor="#000000" />
+                android:textColor="#000000"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:gravity="center_vertical|start" />
 
             <ImageView
                 android:id="@+id/ivArrowPrivacy"
@@ -144,14 +147,17 @@
             android:paddingStart="24dp"
             android:paddingEnd="24dp">
 
-            <TextView
-                android:id="@+id/tvLicenseInfo"
+            <Button
+                android:id="@+id/btnLicenseInfo"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="License Information"
+                android:padding="0dp"
+                android:text="라이선스 정보"
                 android:textSize="16sp"
-                android:textColor="#000000" />
+                android:textColor="#000000"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:gravity="center_vertical|start" />
 
             <ImageView
                 android:id="@+id/ivArrowLicense"

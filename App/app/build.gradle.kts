@@ -92,7 +92,8 @@ dependencies {
 
     // Google Play Services 추가 (필요할 경우)
     implementation("com.google.android.gms:play-services-auth:20.7.0") // Google 로그인 API
-    implementation("com.google.android.gms:play-services-maps:18.1.0") // Google 지도 API
+    implementation("com.google.android.gms:play-services-maps:18.1.0")
+    implementation(libs.play.services.oss.licenses) // Google 지도 API
 
     // 테스트 라이브러리
     testImplementation("junit:junit:4.13.2")
