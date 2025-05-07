@@ -41,19 +41,71 @@
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="8dp" />
 
+    <!-- Email input -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layout_login_email"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="이메일"
+        app:boxBackgroundMode="outline"
+        app:layout_constraintTop_toBottomOf="@id/tv_subtitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="24dp">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_login_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Password input -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layout_login_password"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="비밀번호"
+        app:boxBackgroundMode="outline"
+        app:passwordToggleEnabled="true"
+        app:layout_constraintTop_toBottomOf="@id/layout_login_email"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_login_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- 로그인 버튼 -->
+    <Button
+        android:id="@+id/btn_login"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:text="로그인"
+        android:textAllCaps="false"
+        android:textSize="16sp"
+        android:background="@drawable/btn_confirm_mint_vector"
+        android:textColor="@android:color/white"
+        app:layout_constraintTop_toBottomOf="@id/layout_login_password"
+        android:layout_marginTop="24dp"/>
+
     <!-- 휴대폰 번호로 계속하기 버튼 (민트색) -->
     <Button
         android:id="@+id/btn_phone_login"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:text="휴대폰 번호로 계속하기"
+        android:text="이메일로 계속하기"
         android:textColor="@color/white"
         android:background="@drawable/btn_confirm_mint_vector"
         android:backgroundTint="@null"
         app:backgroundTint="@null"
         android:textSize="16sp"
-        app:layout_constraintTop_toBottomOf="@id/tv_subtitle"
-        android:layout_marginTop="64dp"/>
+        app:layout_constraintTop_toBottomOf="@id/btn_login"
+        android:layout_marginTop="16dp"/>
 
     <!-- 구분선과 또는 텍스트 -->
     <View
