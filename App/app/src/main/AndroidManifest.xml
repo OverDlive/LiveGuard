@@ -144,6 +144,25 @@
         <activity android:name=".ui.signup.SignupActivity"
             android:exported="true" />
 
+        <activity
+            android:name=".ui.TermsDetail.TermsDetailActivity"
+            android:parentActivityName=".ui.login.TermsActivity"
+            android:exported="true"
+            android:theme="@style/Theme.LiveGuard_App_010" />
+
+        <activity
+            android:name=".ui.TermsDetail.PrivacyPolicyActivity"
+            android:parentActivityName=".ui.login.TermsActivity"
+            android:exported="true"
+            android:theme="@style/Theme.LiveGuard_App_010" />
+
+        <!-- 위치정보 이용동의서 화면 -->
+        <activity
+            android:name=".ui.TermsDetail.LocationTermsActivity"
+            android:parentActivityName=".ui.login.TermsActivity"
+            android:exported="true"
+            android:theme="@style/Theme.LiveGuard_App_010" />
+
     </application>
 
 </manifest>
