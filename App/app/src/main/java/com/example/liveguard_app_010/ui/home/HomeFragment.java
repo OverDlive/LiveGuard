@@ -167,9 +167,10 @@ public class HomeFragment extends Fragment {
                 Log.e("HomeFragment", "GeoJSON 파싱 오류: " + e.getMessage());
             }
 
-            // 서울시 전체가 보이도록 카메라 위치 조정
-            CameraUpdate seoulUpdate = CameraUpdate.fitBounds(seoulBounds, 0);
-            naverMap.moveCamera(seoulUpdate);
+            // 초기 지도 위치를 서울시청 근방으로 설정
+            CameraUpdate initialUpdate = CameraUpdate.scrollAndZoomTo(
+                new LatLng(37.5666102, 126.9783881), 10);
+            naverMap.moveCamera(initialUpdate);
             Log.d("HomeFragment", "초기 지도 위치 설정");
 
             // 서울 전체 정보 로드
