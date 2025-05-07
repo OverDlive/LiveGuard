@@ -19,6 +19,7 @@ import com.naver.maps.map.LocationTrackingMode;
 import com.naver.maps.map.MapFragment;
 import com.naver.maps.map.NaverMap;
 import com.naver.maps.geometry.LatLng;
+import com.naver.maps.geometry.LatLngBounds;
 import com.naver.maps.map.overlay.Marker;
 import com.naver.maps.map.overlay.Overlay;
 
@@ -37,6 +38,7 @@ import android.graphics.Color;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
+import android.widget.Toast;
 
 public class HomeFragment extends Fragment {
 
@@ -50,6 +52,9 @@ public class HomeFragment extends Fragment {
 
     // 지역별 위치 데이터 관리
     private final Map<RegionManager.RegionType, List<LocationData>> regionLocationMap = new HashMap<>();
+
+    // 서울시 밖 토스트 1회만 표시
+    private boolean hasShownOutOfSeoulToast = false;
 
     @Nullable
     @Override
@@ -102,6 +107,19 @@ public class HomeFragment extends Fragment {
 
         mapFragment.getMapAsync(map -> {
             naverMap = map;
+            // 서울시 영역으로 지도 이동 제약 설정
+            LatLng southWest = new LatLng(37.413294, 126.734086);
+            LatLng northEast = new LatLng(37.715251, 127.269311);
+            LatLngBounds seoulBounds = new LatLngBounds(southWest, northEast);
+            // 지도 영역 제한: 서울시 범위로 설정
+            naverMap.setExtent(seoulBounds);
+
+            // 줌 레벨 최소/최대 제한 설정 (서울시 전역에 맞춰 조정)
+            final float MIN_ZOOM = 8f;
+            final float MAX_ZOOM = 13f;
+            naverMap.setMinZoom(MIN_ZOOM);
+            naverMap.setMaxZoom(MAX_ZOOM);
+
             // 현재 위치 버튼 표시 및 위치 트래킹 모드 설정
             naverMap.setLocationSource(locationSource);
             naverMap.setLocationTrackingMode(LocationTrackingMode.Follow);
@@ -109,6 +127,17 @@ public class HomeFragment extends Fragment {
 
             LocationButtonView locationButton = view.findViewById(R.id.custom_location_button);
             locationButton.setMap(naverMap);
+
+            // 현재 위치가 변경될 때마다 서울시 내 여부를 확인하여 서비스 제한 안내
+            naverMap.addOnLocationChangeListener(location -> {
+                LatLng currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                if (!seoulBounds.contains(currentLocation)) {
+                    if (!hasShownOutOfSeoulToast) {
+                        Toast.makeText(requireContext(), "서비스는 서울시 내에서만 이용 가능합니다.", Toast.LENGTH_LONG).show();
+                        hasShownOutOfSeoulToast = true;
+                    }
+                }
+            });
 
             MarkerManager.init(naverMap, requireContext());
             mapManager = new MapManager(naverMap);
@@ -138,9 +167,9 @@ public class HomeFragment extends Fragment {
                 Log.e("HomeFragment", "GeoJSON 파싱 오류: " + e.getMessage());
             }
 
-            // 초기 지도 위치 설정 (서울시청 근방)
-            CameraUpdate initialUpdate = CameraUpdate.scrollAndZoomTo(new LatLng(37.5666102, 126.9783881), 10);
-            naverMap.moveCamera(initialUpdate);
+            // 서울시 전체가 보이도록 카메라 위치 조정
+            CameraUpdate seoulUpdate = CameraUpdate.fitBounds(seoulBounds, 0);
+            naverMap.moveCamera(seoulUpdate);
             Log.d("HomeFragment", "초기 지도 위치 설정");
 
             // 서울 전체 정보 로드
