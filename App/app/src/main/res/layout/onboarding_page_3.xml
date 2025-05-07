@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF"
@@ -54,7 +55,8 @@
     <View
         android:id="@+id/image_placeholder"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="500dp"
+        android:background="@drawable/group"
         app:layout_constraintTop_toBottomOf="@id/tv_onboarding_subtitle"
         app:layout_constraintBottom_toTopOf="@id/indicator_container"
         android:layout_marginTop="16dp"/>
@@ -65,7 +67,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@id/btn_home"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginBottom="24dp">
@@ -93,18 +95,5 @@
             android:src="@drawable/orange_circle_vector"
             android:contentDescription="현재 페이지" />
     </LinearLayout>
-
-    <!-- 홈으로 가기 버튼 -->
-    <Button
-        android:id="@+id/btn_home"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:text="시작하기"
-        android:textSize="16sp"
-        android:textColor="#FFFFFF"
-        android:background="@drawable/btn_confirm_mint_vector"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

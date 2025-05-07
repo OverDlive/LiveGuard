@@ -2,6 +2,7 @@ package com.example.liveguard_app_010.ui.login;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -23,7 +24,12 @@ public class TermsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_terms);
+        // 액션바 무조건 숨기기
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
 
         checkBoxAll = findViewById(R.id.checkBoxAll);
         checkBox1 = findViewById(R.id.checkBox1);
@@ -52,14 +58,6 @@ public class TermsActivity extends AppCompatActivity {
             startActivity(locIntent);
         });
 
-        // ActionBar 숨기기
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().hide();
-        }
-
-        // 뒤로 가기 버튼
-        btnBack.setOnClickListener(v -> finish());
-
         // "모두 동의하기" 클릭 시 개별 체크박스 자동 체크
         checkBoxAll.setOnCheckedChangeListener((buttonView, isChecked) -> {
             checkBox1.setChecked(isChecked);
@@ -70,6 +68,7 @@ public class TermsActivity extends AppCompatActivity {
         // 이용약관 동의 후 네이버 로그인 화면으로 이동
         btnAgree.setOnClickListener(v -> {
             if (checkBox1.isChecked() && checkBox2.isChecked()) {
+                btnAgree.setEnabled(false);
                 Intent intent = new Intent(TermsActivity.this, NaverLoginActivity.class);
                 startActivity(intent);
                 finish();
