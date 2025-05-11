@@ -18,8 +18,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
 
 public class MapManager {
+    // 화면에 추가된 모든 마커를 보관합니다.
+    private final List<Marker> markers = new ArrayList<>();
     private NaverMap naverMap;
 
     public MapManager(NaverMap naverMap) {
@@ -35,6 +39,9 @@ public class MapManager {
             marker.setPosition(new LatLng(info.lat, info.lng));
             marker.setCaptionText(info.regionName);
             marker.setMap(naverMap);
+
+            // 리스트에 마커를 추가
+            markers.add(marker);
 
             // 마커 클릭 시 카메라 이동 및 혼잡도 마커 로드
             marker.setOnClickListener(overlay -> {
@@ -121,5 +128,12 @@ public class MapManager {
                 regionOverlays.get(region).add(overlay);
             }
         }
+    }
+
+    /**
+     * 현재 화면에 표시된 모든 마커를 반환합니다.
+     */
+    public List<Marker> getMarkers() {
+        return markers;
     }
 }

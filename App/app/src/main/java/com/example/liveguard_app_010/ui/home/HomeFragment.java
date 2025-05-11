@@ -5,6 +5,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.animation.ValueAnimator;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -55,6 +58,7 @@ public class HomeFragment extends Fragment {
 
     // 서울시 밖 토스트 1회만 표시
     private boolean hasShownOutOfSeoulToast = false;
+
 
     @Nullable
     @Override
@@ -147,6 +151,15 @@ public class HomeFragment extends Fragment {
                 if (bottomSheetBehavior.getState() != BottomSheetBehavior.STATE_COLLAPSED) {
                     bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                 }
+                // 혼잡도 마커만 페이드 아웃하며 제거
+                if (mapManager != null) {
+                    for (Marker m : mapManager.getMarkers()) {
+                        String caption = m.getCaptionText();
+                        if (caption != null && caption.contains("\n")) {
+                            fadeOutAndRemoveMarker(m);
+                        }
+                    }
+                }
                 // 서울 전체 정보로 초기화
                 bottomSheetManager.loadSeoulAverage();
             });
@@ -175,6 +188,15 @@ public class HomeFragment extends Fragment {
 
             // 서울 전체 정보 로드
             bottomSheetManager.loadSeoulAverage();
+
+            // 줌 레벨 변경 후 Idle 상태일 때 혼잡도 마커 제거
+            final float ZOOM_THRESHOLD = 12f; // 필요에 따라 조정
+            naverMap.addOnCameraIdleListener(() -> {
+                float currentZoom = (float) naverMap.getCameraPosition().zoom;
+                if (currentZoom < ZOOM_THRESHOLD) {
+                    MarkerManager.clearAllMarkers();
+                }
+            });
         });
     }
 
@@ -204,6 +226,25 @@ public class HomeFragment extends Fragment {
                 return false;
             }
         });
+    }
+
+    /**
+     * 페이드 아웃 애니메이션 후 마커 제거
+     */
+    private void fadeOutAndRemoveMarker(Marker marker) {
+        ValueAnimator animator = ValueAnimator.ofFloat(1f, 0f);
+        animator.setDuration(500);
+        animator.addUpdateListener(animation -> {
+            float alpha = (float) animation.getAnimatedValue();
+            marker.setAlpha(alpha);
+        });
+        animator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                marker.setMap(null);
+            }
+        });
+        animator.start();
     }
 
     @Override

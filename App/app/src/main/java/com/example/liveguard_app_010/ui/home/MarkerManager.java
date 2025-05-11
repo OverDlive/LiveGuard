@@ -3,6 +3,9 @@ package com.example.liveguard_app_010.ui.home;
 import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
+import android.animation.ValueAnimator;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 
 import com.example.liveguard_app_010.R;
 import com.naver.maps.geometry.LatLng;
@@ -19,6 +22,25 @@ public class MarkerManager {
     private static Context context; // Context 추가
     private static Overlay.OnClickListener markerClickListener;
     private static Map<String, Marker> markerMap = new HashMap<>(); // 마커 캐싱
+
+    /**
+     * 페이드 아웃 애니메이션 후 마커 제거
+     */
+    private static void fadeOutAndRemoveMarker(Marker marker) {
+        ValueAnimator animator = ValueAnimator.ofFloat(1f, 0f);
+        animator.setDuration(500);
+        animator.addUpdateListener(animation -> {
+            float alpha = (float) animation.getAnimatedValue();
+            marker.setAlpha(alpha);
+        });
+        animator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                marker.setMap(null);
+            }
+        });
+        animator.start();
+    }
 
     public static void init(NaverMap map, Context ctx) {
         naverMap = map;
@@ -99,7 +121,7 @@ public class MarkerManager {
      */
     public static void clearAllMarkers() {
         for (Marker marker : markerMap.values()) {
-            marker.setMap(null);
+            fadeOutAndRemoveMarker(marker);
         }
         markerMap.clear();
     }
