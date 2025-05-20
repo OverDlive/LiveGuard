@@ -26,13 +26,19 @@ import com.naver.maps.geometry.LatLngBounds;
 import com.naver.maps.map.overlay.Marker;
 import com.naver.maps.map.overlay.Overlay;
 
+import com.naver.maps.map.overlay.PolygonOverlay;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.io.InputStream;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import android.widget.ImageView;
 import com.example.liveguard_app_010.ui.feature.FeatureFragment;
 import com.naver.maps.map.widget.LocationButtonView;
@@ -42,6 +48,8 @@ import androidx.core.content.ContextCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
 import android.widget.Toast;
+
+import com.naver.maps.map.UiSettings;
 
 public class HomeFragment extends Fragment {
 
@@ -111,23 +119,29 @@ public class HomeFragment extends Fragment {
 
         mapFragment.getMapAsync(map -> {
             naverMap = map;
+            // 초기 지도 위치를 서울시청 근방으로 설정
+            CameraUpdate initialUpdate = CameraUpdate.scrollAndZoomTo(
+                new LatLng(37.5666102, 126.9783881), 10);
+            naverMap.moveCamera(initialUpdate);
+            Log.d("HomeFragment", "초기 지도 위치 설정");
             // 서울시 영역으로 지도 이동 제약 설정
             LatLng southWest = new LatLng(37.413294, 126.734086);
             LatLng northEast = new LatLng(37.715251, 127.269311);
             LatLngBounds seoulBounds = new LatLngBounds(southWest, northEast);
-            // 지도 영역 제한: 서울시 범위로 설정
-            naverMap.setExtent(seoulBounds);
 
-            // 줌 레벨 최소/최대 제한 설정 (서울시 전역에 맞춰 조정)
-            final float MIN_ZOOM = 8f;
+            // 줌 레벨 최소/최대 제한 설정 (초기 로드 배율 유지)
+            final float INITIAL_ZOOM = 10f;
             final float MAX_ZOOM = 13f;
-            naverMap.setMinZoom(MIN_ZOOM);
+            naverMap.setMinZoom(INITIAL_ZOOM);
             naverMap.setMaxZoom(MAX_ZOOM);
 
             // 현재 위치 버튼 표시 및 위치 트래킹 모드 설정
             naverMap.setLocationSource(locationSource);
             naverMap.setLocationTrackingMode(LocationTrackingMode.Follow);
             naverMap.getUiSettings().setLocationButtonEnabled(false);
+            // Disable inertial fling by enabling stop gestures
+            UiSettings uiSettings = naverMap.getUiSettings();
+            uiSettings.setStopGesturesEnabled(true);
 
             LocationButtonView locationButton = view.findViewById(R.id.custom_location_button);
             locationButton.setMap(naverMap);
@@ -171,30 +185,88 @@ public class HomeFragment extends Fragment {
             List<RegionManager.RegionInfo> regionInfos = RegionManager.getSeoulRegions();
             mapManager.addRegionMarkers(regionInfos, bottomSheetBehavior);
 
-            // GeoJSON 데이터를 통한 서울시 경계 표시
-            try {
-                JSONObject seoulGeoJson = RegionManager.getSeoulGeoJsonData(getContext());
-                mapManager.displaySeoulRegions(seoulGeoJson);
-            } catch (JSONException e) {
-                e.printStackTrace();
-                Log.e("HomeFragment", "GeoJSON 파싱 오류: " + e.getMessage());
+            // 1) GeoJSON 파일 로드 및 각 구역을 hole로 파싱
+            List<List<LatLng>> holes = new ArrayList<>();
+            try (InputStream is = getContext().getAssets().open("seoul_districts.geojson")) {
+                byte[] bytes = is.readAllBytes();
+                String geoJsonStr = new String(bytes, StandardCharsets.UTF_8);
+                JSONObject geoJson = new JSONObject(geoJsonStr);
+                JSONArray features = geoJson.getJSONArray("features");
+                for (int f = 0; f < features.length(); f++) {
+                    JSONObject geometry = features.getJSONObject(f).getJSONObject("geometry");
+                    String type = geometry.getString("type");
+                    JSONArray coords = type.equals("MultiPolygon")
+                        ? geometry.getJSONArray("coordinates").getJSONArray(0).getJSONArray(0)
+                        : geometry.getJSONArray("coordinates").getJSONArray(0);
+                    List<LatLng> boundary = new ArrayList<>();
+                    for (int i = 0; i < coords.length(); i++) {
+                        JSONArray c = coords.getJSONArray(i);
+                        boundary.add(new LatLng(c.getDouble(1), c.getDouble(0)));
+                    }
+                    // Ensure CCW ordering for hole
+                    // (GeoJSON may be in CW, so reverse)
+                    Collections.reverse(boundary);
+                    holes.add(boundary);
+                }
+            } catch (IOException | JSONException e) {
+                Log.e("HomeFragment", "GeoJSON parse failed: " + e.getMessage());
             }
 
-            // 초기 지도 위치를 서울시청 근방으로 설정
-            CameraUpdate initialUpdate = CameraUpdate.scrollAndZoomTo(
-                new LatLng(37.5666102, 126.9783881), 10);
-            naverMap.moveCamera(initialUpdate);
-            Log.d("HomeFragment", "초기 지도 위치 설정");
+            // 2) 외곽 폴리곤 정의 (서울시 바깥을 완전히 차단)
+            // 서울시 Bounds에 margin 추가
+            LatLngBounds b = seoulBounds;
+            double margin = 0.1;  // degrees
+            LatLng sw = new LatLng(
+                b.getSouthWest().latitude - margin,
+                b.getSouthWest().longitude - margin
+            );
+            LatLng ne = new LatLng(
+                b.getNorthEast().latitude + margin,
+                b.getNorthEast().longitude + margin
+            );
+            List<LatLng> outer = Arrays.asList(
+                new LatLng(ne.latitude, sw.longitude),
+                new LatLng(sw.latitude, sw.longitude),
+                new LatLng(sw.latitude, ne.longitude),
+                new LatLng(ne.latitude, ne.longitude)
+            );
+
+            // 3) 다크 오버레이 생성 (서울만 밝게)
+            PolygonOverlay dimOverlay = new PolygonOverlay();
+            dimOverlay.setCoords(outer);
+            dimOverlay.setHoles(holes);
+            dimOverlay.setColor(Color.argb(120, 0, 0, 0));  // 밝기를 높여 반투명 처리
+            dimOverlay.setOutlineWidth(0);                  // 테두리 없음
+            dimOverlay.setZIndex(1);                        // 맵 타일 위에 렌더링
+            dimOverlay.setMap(naverMap);
+
+            // 지도 이동 제한: dim overlay용 외곽 사각형 범위로 설정
+            LatLng outerSW = new LatLng(b.getSouthWest().latitude - margin, b.getSouthWest().longitude - margin);
+            LatLng outerNE = new LatLng(b.getNorthEast().latitude + margin, b.getNorthEast().longitude + margin);
+            final LatLngBounds outerBounds = new LatLngBounds(outerSW, outerNE); // ensure final for listener
+            naverMap.setExtent(outerBounds);
 
             // 서울 전체 정보 로드
             bottomSheetManager.loadSeoulAverage();
 
-            // 줌 레벨 변경 후 Idle 상태일 때 혼잡도 마커 제거
+            // 줌 레벨 변경 후 Idle 상태일 때 혼잡도 마커 제거 및 카메라 클램핑
             final float ZOOM_THRESHOLD = 12f; // 필요에 따라 조정
+            // 카메라 Idle 상태에서 클램핑 및 마커 제거
             naverMap.addOnCameraIdleListener(() -> {
+                // Clear markers if zoom too low
                 float currentZoom = (float) naverMap.getCameraPosition().zoom;
                 if (currentZoom < ZOOM_THRESHOLD) {
                     MarkerManager.clearAllMarkers();
+                }
+                // Clamp camera target within bounds
+                LatLng target = naverMap.getCameraPosition().target;
+                double clampedLat = Math.max(outerBounds.getSouthWest().latitude,
+                    Math.min(target.latitude, outerBounds.getNorthEast().latitude));
+                double clampedLng = Math.max(outerBounds.getSouthWest().longitude,
+                    Math.min(target.longitude, outerBounds.getNorthEast().longitude));
+                if (clampedLat != target.latitude || clampedLng != target.longitude) {
+                    CameraUpdate fix = CameraUpdate.scrollTo(new LatLng(clampedLat, clampedLng));
+                    naverMap.moveCamera(fix);
                 }
             });
         });

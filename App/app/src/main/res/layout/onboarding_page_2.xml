@@ -57,7 +57,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:src="@drawable/onboarding2_yeoksam"
+        android:src="@drawable/yeoksam"
         android:adjustViewBounds="true"
         android:scaleType="centerCrop"
         app:layout_constraintTop_toBottomOf="@id/tv_onboarding_subtitle"
@@ -66,32 +66,6 @@
         app:layout_constraintBottom_toTopOf="@id/indicator_container"/>
 
     <!-- 인디케이터 (회색 원 + 오렌지 원 + 회색 원) -->
-
-    <ImageView
-        android:id="@+id/image_yeoksam"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="136dp"
-        android:src="@drawable/yeoksam"
-        android:adjustViewBounds="true"
-        android:scaleType="centerCrop"
-        app:layout_constraintBottom_toTopOf="@id/indicator_container"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
-
-    <ImageView
-        android:id="@+id/image_pin"
-        android:layout_width="292dp"
-        android:layout_height="242dp"
-        android:layout_marginStart="257dp"
-        android:layout_marginBottom="320dp"
-        android:adjustViewBounds="true"
-        android:scaleType="centerCrop"
-        android:src="@drawable/rectangle"
-        app:layout_constraintBottom_toTopOf="@id/indicator_container"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.516"
-        app:layout_constraintStart_toStartOf="parent" />
 
     <LinearLayout
         android:id="@+id/indicator_container"

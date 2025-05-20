@@ -56,7 +56,7 @@
         android:id="@+id/image_placeholder"
         android:layout_width="match_parent"
         android:layout_height="500dp"
-        android:background="@drawable/group"
+        android:background="@drawable/gwanghwa"
         app:layout_constraintTop_toBottomOf="@id/tv_onboarding_subtitle"
         app:layout_constraintBottom_toTopOf="@id/indicator_container"
         android:layout_marginTop="16dp"/>
