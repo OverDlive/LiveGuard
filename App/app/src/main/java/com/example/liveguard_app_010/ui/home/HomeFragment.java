@@ -27,6 +27,7 @@ import com.naver.maps.map.overlay.Marker;
 import com.naver.maps.map.overlay.Overlay;
 
 import com.naver.maps.map.overlay.PolygonOverlay;
+import com.naver.maps.map.NaverMap.OnCameraChangeListener;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -66,6 +67,9 @@ public class HomeFragment extends Fragment {
 
     // 서울시 밖 토스트 1회만 표시
     private boolean hasShownOutOfSeoulToast = false;
+
+    // Prevent recursive camera clamping
+    private boolean isClamping = false;
 
 
     @Nullable
@@ -246,29 +250,28 @@ public class HomeFragment extends Fragment {
             final LatLngBounds outerBounds = new LatLngBounds(outerSW, outerNE); // ensure final for listener
             naverMap.setExtent(outerBounds);
 
-            // 서울 전체 정보 로드
-            bottomSheetManager.loadSeoulAverage();
-
-            // 줌 레벨 변경 후 Idle 상태일 때 혼잡도 마커 제거 및 카메라 클램핑
-            final float ZOOM_THRESHOLD = 12f; // 필요에 따라 조정
-            // 카메라 Idle 상태에서 클램핑 및 마커 제거
-            naverMap.addOnCameraIdleListener(() -> {
-                // Clear markers if zoom too low
-                float currentZoom = (float) naverMap.getCameraPosition().zoom;
-                if (currentZoom < ZOOM_THRESHOLD) {
-                    MarkerManager.clearAllMarkers();
-                }
-                // Clamp camera target within bounds
+            // 4) 카메라 위치 변경 시 클램핑 처리 (OnCameraChangeListener 사용)
+            naverMap.addOnCameraChangeListener((reason, animated) -> {
+                if (isClamping) return;
                 LatLng target = naverMap.getCameraPosition().target;
+                // Clamp latitude and longitude within outerBounds
                 double clampedLat = Math.max(outerBounds.getSouthWest().latitude,
                     Math.min(target.latitude, outerBounds.getNorthEast().latitude));
                 double clampedLng = Math.max(outerBounds.getSouthWest().longitude,
                     Math.min(target.longitude, outerBounds.getNorthEast().longitude));
+                // Only move camera if clamped position differs
                 if (clampedLat != target.latitude || clampedLng != target.longitude) {
-                    CameraUpdate fix = CameraUpdate.scrollTo(new LatLng(clampedLat, clampedLng));
-                    naverMap.moveCamera(fix);
+                    isClamping = true;
+                    naverMap.moveCamera(CameraUpdate.scrollTo(new LatLng(clampedLat, clampedLng)));
                 }
             });
+            // Reset the clamping guard after camera movement is done
+            naverMap.addOnCameraIdleListener(() -> {
+                isClamping = false;
+            });
+
+            // 서울 전체 정보 로드
+            bottomSheetManager.loadSeoulAverage();
         });
     }
 
