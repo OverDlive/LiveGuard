@@ -1,0 +1,8 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <!-- 네이버 공식 그린 컬러 -->
+    <solid android:color="#03C75A"/>
+    <!-- 높이 56dp에 맞춘 반지름 (높이의 절반) -->
+    <corners android:radius="28dp"/>
+    <!-- 선택 상태나 눌림 상태를 더 구현하려면 selector로 확장 가능 -->
+</shape>

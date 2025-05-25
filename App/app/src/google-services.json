@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "97373391861",
+    "project_id": "seoul-mate-2099f",
+    "storage_bucket": "seoul-mate-2099f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:97373391861:android:81fd3b7f635bf405756ebc",
+        "android_client_info": {
+          "package_name": "com.example.liveguard_app_010"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA3be6EI8A_49AkjaKHCTwDdoVIjubqfhw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

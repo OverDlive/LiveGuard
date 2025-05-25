@@ -2,6 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@android:color/white">
 
     <!-- ❌ 닫기 버튼 -->
@@ -16,22 +17,133 @@
         android:padding="8dp"/>
 
     <!-- 8개의 버튼 (2x4 정렬) -->
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="64dp"
+        android:layout_marginEnd="24dp"
+        android:layout_gravity="top"
+        android:text="어디로 가세요?"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
     <GridLayout
         android:id="@+id/feature_grid"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_marginBottom="32dp"
         android:columnCount="2"
         android:rowCount="4"
-        android:layout_gravity="center"
         android:padding="16dp">
 
-        <Button android:id="@+id/btn_1" android:text="관광지" />
-        <Button android:id="@+id/btn_2" android:text="맛집" />
-        <Button android:id="@+id/btn_3" android:text="쇼핑" />
-        <Button android:id="@+id/btn_4" android:text="운동" />
-        <Button android:id="@+id/btn_5" android:text="공연/영화" />
-        <Button android:id="@+id/btn_6" android:text="전시" />
-        <Button android:id="@+id/btn_7" android:text="체험활동" />
-        <Button android:id="@+id/btn_8" android:text="추천" />
+        <Button
+            android:id="@+id/btn_1"
+            android:layout_margin="8dp"
+            app:layout_columnWeight="1"
+            app:layout_rowWeight="1"
+            android:background="@drawable/btn_onboarding1"
+            android:backgroundTint="@null"
+            app:backgroundTint="@null"
+            android:fontFamily="sans-serif"
+            android:gravity="center"
+            android:text="관광지"
+            android:textColor="#FFFFFF"
+            android:textSize="24sp" />
+
+        <Button
+            android:id="@+id/btn_2"
+            android:layout_margin="8dp"
+            app:layout_columnWeight="1"
+            app:layout_rowWeight="1"
+            android:text="맛집"
+            android:background="@drawable/btn_onboarding2"
+            android:backgroundTint="@null"
+            app:backgroundTint="@null"
+            android:gravity="center"
+            android:textSize="24sp"
+            android:textColor="#FFFFFF"
+            android:fontFamily="sans-serif" />
+
+        <Button
+            android:id="@+id/btn_3"
+            android:layout_margin="8dp"
+            app:layout_columnWeight="1"
+            app:layout_rowWeight="1"
+            android:text="쇼핑"
+            android:background="@drawable/btn_onboarding3"
+            android:backgroundTint="@null"
+            app:backgroundTint="@null"
+            android:textColor="#FFFFFF"
+            android:fontFamily="sans-serif"
+            android:textSize="24sp"/>
+
+        <Button
+            android:id="@+id/btn_4"
+            android:layout_margin="8dp"
+            app:layout_columnWeight="1"
+            app:layout_rowWeight="1"
+            android:text="운동"
+            android:background="@drawable/btn_onboarding4"
+            android:backgroundTint="@null"
+            app:backgroundTint="@null"
+            android:textColor="#FFFFFF"
+            android:fontFamily="sans-serif"
+            android:textSize="24sp"/>
+
+        <Button
+            android:id="@+id/btn_5"
+            android:layout_margin="8dp"
+            app:layout_columnWeight="1"
+            app:layout_rowWeight="1"
+            android:text="공연/영화"
+            android:background="@drawable/btn_onboarding5"
+            android:backgroundTint="@null"
+            app:backgroundTint="@null"
+            android:textColor="#FFFFFF"
+            android:fontFamily="sans-serif"
+            android:textSize="24sp"/>
+
+        <Button
+            android:id="@+id/btn_6"
+            android:layout_margin="8dp"
+            app:layout_columnWeight="1"
+            app:layout_rowWeight="1"
+            android:text="전시"
+            android:background="@drawable/btn_onboarding6"
+            android:backgroundTint="@null"
+            app:backgroundTint="@null"
+            android:textColor="#FFFFFF"
+            android:fontFamily="sans-serif"
+            android:textSize="24sp"/>
+
+        <Button
+            android:id="@+id/btn_7"
+            android:layout_margin="8dp"
+            app:layout_columnWeight="1"
+            app:layout_rowWeight="1"
+            android:text="체험활동"
+            android:background="@drawable/btn_onboarding7"
+            android:backgroundTint="@null"
+            app:backgroundTint="@null"
+            android:textColor="#FFFFFF"
+            android:fontFamily="sans-serif"
+            android:textSize="24sp"/>
+
+        <Button
+            android:id="@+id/btn_8"
+            android:layout_margin="8dp"
+            app:layout_columnWeight="1"
+            app:layout_rowWeight="1"
+            android:text="추천"
+            android:background="@drawable/btn_onboarding8"
+            android:backgroundTint="@null"
+            app:backgroundTint="@null"
+            android:textColor="#FFFFFF"
+            android:fontFamily="sans-serif"
+            android:textSize="24sp"/>
     </GridLayout>
 </FrameLayout>

@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:padding="24dp"
     android:background="@color/white">
@@ -19,7 +20,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="LIVE GUARD"
+        android:text="Seoul Mate"
         android:textSize="20sp"
         android:textStyle="bold"
         android:textColor="#00B2A9"/>
@@ -54,44 +55,107 @@
     </LinearLayout>
 
     <!-- 개별 동의 항목 -->
-    <CheckBox
-        android:id="@+id/checkBox1"
+    <LinearLayout
+        android:id="@+id/layout_terms_1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="서비스 이용약관 (필수)"
-        android:textSize="16sp"
-        android:textColor="@color/text_primary"
-        android:button="@drawable/checkbox_toggle_selector"
-        android:layout_marginTop="24dp"/>
+        android:orientation="horizontal"
+        android:layout_marginTop="24dp">
 
-    <CheckBox
-        android:id="@+id/checkBox2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="개인정보처리방침 (필수)"
-        android:textSize="16sp"
-        android:textColor="@color/text_primary"
-        android:button="@drawable/checkbox_toggle_selector"
-        android:layout_marginTop="16dp"/>
+        <CheckBox
+            android:id="@+id/checkBox1"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="서비스 이용약관 (필수)"
+            android:textSize="16sp"
+            android:textColor="@color/text_primary"
+            android:button="@drawable/checkbox_toggle_selector"/>
 
-    <CheckBox
-        android:id="@+id/checkBox3"
+        <TextView
+            android:id="@+id/tv_terms_detail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="자세히 보기"
+            android:textSize="14sp"
+            android:textColor="@color/colorAccent"
+            android:padding="8dp"
+            android:clickable="true"
+            android:focusable="true"/>
+    </LinearLayout>
+
+    <!-- 개인정보처리방침 동의 항목 -->
+    <LinearLayout
+        android:id="@+id/layout_terms_2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="위치정보 이용동의 및 위치기반서비스 이용약관 (필수)"
-        android:textSize="16sp"
-        android:textColor="@color/text_primary"
-        android:button="@drawable/checkbox_toggle_selector"
-        android:layout_marginTop="16dp"/>
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp">
+
+        <CheckBox
+            android:id="@+id/checkBox2"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="개인정보처리방침 (필수)"
+            android:textSize="16sp"
+            android:textColor="@color/text_primary"
+            android:button="@drawable/checkbox_toggle_selector"/>
+
+        <TextView
+            android:id="@+id/tv_privacy_detail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="자세히 보기"
+            android:textSize="14sp"
+            android:textColor="@color/colorAccent"
+            android:padding="8dp"
+            android:clickable="true"
+            android:focusable="true"/>
+    </LinearLayout>
+
+    <!-- 위치정보 이용동의 및 위치기반서비스 이용약관 동의 항목 -->
+    <LinearLayout
+        android:id="@+id/layout_terms_3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp">
+
+        <CheckBox
+            android:id="@+id/checkBox3"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="위치정보 이용동의 및 위치기반서비스 이용약관 (필수)"
+            android:textSize="16sp"
+            android:textColor="@color/text_primary"
+            android:button="@drawable/checkbox_toggle_selector"/>
+
+        <TextView
+            android:id="@+id/tv_location_detail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="자세히 보기"
+            android:textSize="14sp"
+            android:textColor="@color/colorAccent"
+            android:padding="8dp"
+            android:clickable="true"
+            android:focusable="true"/>
+    </LinearLayout>
 
     <!-- 네이버 로그인 버튼 -->
     <Button
         android:id="@+id/btn_agree"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="wrap_content"
         android:background="@drawable/btn_confirm_mint_vector"
-        android:text="휴대폰 번호로 계속하기"
+        android:backgroundTint="@null"
+        app:backgroundTint="@null"
+        android:text="네이버 아이디로 계속하기"
         android:textColor="@color/white"
         android:textSize="16sp"
-        android:layout_marginTop="48dp"/>
+        android:layout_marginTop="48dp"
+        android:paddingVertical="16dp"
+        android:layout_marginBottom="24dp"/>
 </LinearLayout>

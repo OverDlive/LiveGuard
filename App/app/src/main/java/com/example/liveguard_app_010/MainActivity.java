@@ -8,6 +8,7 @@ import com.example.liveguard_app_010.worker.CongestionWorker;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
@@ -34,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         loginManager = new LoginManager(this);
+        // Application 클래스 또는 MainActivity onCreate() 최상단에 추가
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
         // ✅ 로그인 상태 확인
         if (!loginManager.isLoggedIn()) {

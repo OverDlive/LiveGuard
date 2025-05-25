@@ -1,0 +1,18 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- 좌측 세로 막대 -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M3,2 L7,2 L7,22 L3,22 Z"/>
+    <!-- 대각선 연결막대 -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M7,2 L17,22 L13,22 L3,2 Z"/>
+    <!-- 우측 세로 막대 -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M17,2 L21,2 L21,22 L17,22 Z"/>
+</vector>

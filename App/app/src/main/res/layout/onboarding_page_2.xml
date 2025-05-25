@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF"
@@ -51,21 +52,27 @@
         android:layout_marginTop="8dp"/>
 
     <!-- 여기에 이미지 들어갈 공간 (빈칸으로 유지) -->
-    <View
+    <ImageView
         android:id="@+id/image_placeholder"
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/yeoksam"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
         app:layout_constraintTop_toBottomOf="@id/tv_onboarding_subtitle"
-        app:layout_constraintBottom_toTopOf="@id/indicator_container"
-        android:layout_marginTop="16dp"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/indicator_container"/>
 
     <!-- 인디케이터 (회색 원 + 오렌지 원 + 회색 원) -->
+
     <LinearLayout
         android:id="@+id/indicator_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@id/btn_next_page"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginBottom="24dp">
@@ -94,17 +101,5 @@
             android:contentDescription="다음 페이지" />
     </LinearLayout>
 
-    <!-- 다음 페이지 버튼 -->
-    <Button
-        android:id="@+id/btn_next_page"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:text="다음 페이지 넘기기"
-        android:textSize="16sp"
-        android:textColor="#FFFFFF"
-        android:background="@drawable/btn_confirm_mint_vector"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -44,7 +44,16 @@
         android:layout_height="match_parent"
         app:layout_constraintTop_toBottomOf="@id/search_container" />
 
-    <!-- 바텀시트 -->
+    <!-- 커스텀 현재 위치 버튼 -->
+    <com.naver.maps.map.widget.LocationButtonView
+        android:id="@+id/custom_location_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="120dp"
+        android:elevation="4dp"/>         <!-- 여백 조정 -->
+
     <LinearLayout
         android:id="@+id/bottom_sheet"
         android:layout_width="match_parent"
@@ -61,7 +70,7 @@
         <View
             android:layout_width="40dp"
             android:layout_height="5dp"
-            android:background="@color/light_gray"
+            android:background="@drawable/bottom_sheet_handle"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp" />

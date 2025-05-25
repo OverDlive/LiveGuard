@@ -5,6 +5,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.animation.ValueAnimator;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,26 +17,40 @@ import com.example.liveguard_app_010.R;
 import com.example.liveguard_app_010.region.RegionManager;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.naver.maps.map.CameraUpdate;
+import com.naver.maps.map.util.FusedLocationSource;
+import com.naver.maps.map.LocationTrackingMode;
 import com.naver.maps.map.MapFragment;
 import com.naver.maps.map.NaverMap;
 import com.naver.maps.geometry.LatLng;
+import com.naver.maps.geometry.LatLngBounds;
 import com.naver.maps.map.overlay.Marker;
 import com.naver.maps.map.overlay.Overlay;
 
+import com.naver.maps.map.overlay.PolygonOverlay;
+import com.naver.maps.map.NaverMap.OnCameraChangeListener;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.io.InputStream;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import android.widget.ImageView;
 import com.example.liveguard_app_010.ui.feature.FeatureFragment;
+import com.naver.maps.map.widget.LocationButtonView;
+
 import android.graphics.Color;
-import android.view.View;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
+import android.widget.Toast;
+
+import com.naver.maps.map.UiSettings;
 
 public class HomeFragment extends Fragment {
 
@@ -42,8 +59,17 @@ public class HomeFragment extends Fragment {
     private MapManager mapManager;
     private BottomSheetManager bottomSheetManager;
 
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1000;
+    private FusedLocationSource locationSource;
+
     // 지역별 위치 데이터 관리
     private final Map<RegionManager.RegionType, List<LocationData>> regionLocationMap = new HashMap<>();
+
+    // 서울시 밖 토스트 1회만 표시
+    private boolean hasShownOutOfSeoulToast = false;
+
+    // Prevent recursive camera clamping
+    private boolean isClamping = false;
 
 
     @Nullable
@@ -87,6 +113,9 @@ public class HomeFragment extends Fragment {
             getChildFragmentManager().beginTransaction().add(R.id.map_fragment, mapFragment).commit();
         }
 
+        // 위치 권한 및 현재 위치 표시용 LocationSource 초기화
+        locationSource = new FusedLocationSource(getActivity(), LOCATION_PERMISSION_REQUEST_CODE);
+
         // 지역별 위치 데이터 초기화
         initRegionLocations();
         // CongestionManager에 지역 데이터 전달
@@ -94,6 +123,44 @@ public class HomeFragment extends Fragment {
 
         mapFragment.getMapAsync(map -> {
             naverMap = map;
+            // 초기 지도 위치를 서울시청 근방으로 설정
+            CameraUpdate initialUpdate = CameraUpdate.scrollAndZoomTo(
+                new LatLng(37.5666102, 126.9783881), 10);
+            naverMap.moveCamera(initialUpdate);
+            Log.d("HomeFragment", "초기 지도 위치 설정");
+            // 서울시 영역으로 지도 이동 제약 설정
+            LatLng southWest = new LatLng(37.413294, 126.734086);
+            LatLng northEast = new LatLng(37.715251, 127.269311);
+            LatLngBounds seoulBounds = new LatLngBounds(southWest, northEast);
+
+            // 줌 레벨 최소/최대 제한 설정 (초기 로드 배율 유지)
+            final float INITIAL_ZOOM = 10f;
+            final float MAX_ZOOM = 13f;
+            naverMap.setMinZoom(INITIAL_ZOOM);
+            naverMap.setMaxZoom(MAX_ZOOM);
+
+            // 현재 위치 버튼 표시 및 위치 트래킹 모드 설정
+            naverMap.setLocationSource(locationSource);
+            naverMap.setLocationTrackingMode(LocationTrackingMode.Follow);
+            naverMap.getUiSettings().setLocationButtonEnabled(false);
+            // Disable inertial fling by enabling stop gestures
+            UiSettings uiSettings = naverMap.getUiSettings();
+            uiSettings.setStopGesturesEnabled(true);
+
+            LocationButtonView locationButton = view.findViewById(R.id.custom_location_button);
+            locationButton.setMap(naverMap);
+
+            // 현재 위치가 변경될 때마다 서울시 내 여부를 확인하여 서비스 제한 안내
+            naverMap.addOnLocationChangeListener(location -> {
+                LatLng currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                if (!seoulBounds.contains(currentLocation)) {
+                    if (!hasShownOutOfSeoulToast) {
+                        Toast.makeText(requireContext(), "서비스는 서울시 내에서만 이용 가능합니다.", Toast.LENGTH_LONG).show();
+                        hasShownOutOfSeoulToast = true;
+                    }
+                }
+            });
+
             MarkerManager.init(naverMap, requireContext());
             mapManager = new MapManager(naverMap);
 
@@ -101,6 +168,15 @@ public class HomeFragment extends Fragment {
             naverMap.setOnMapClickListener((pointF, latLng) -> {
                 if (bottomSheetBehavior.getState() != BottomSheetBehavior.STATE_COLLAPSED) {
                     bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                }
+                // 혼잡도 마커만 페이드 아웃하며 제거
+                if (mapManager != null) {
+                    for (Marker m : mapManager.getMarkers()) {
+                        String caption = m.getCaptionText();
+                        if (caption != null && caption.contains("\n")) {
+                            fadeOutAndRemoveMarker(m);
+                        }
+                    }
                 }
                 // 서울 전체 정보로 초기화
                 bottomSheetManager.loadSeoulAverage();
@@ -113,19 +189,86 @@ public class HomeFragment extends Fragment {
             List<RegionManager.RegionInfo> regionInfos = RegionManager.getSeoulRegions();
             mapManager.addRegionMarkers(regionInfos, bottomSheetBehavior);
 
-            // GeoJSON 데이터를 통한 서울시 경계 표시
-            try {
-                JSONObject seoulGeoJson = RegionManager.getSeoulGeoJsonData(getContext());
-                mapManager.displaySeoulRegions(seoulGeoJson);
-            } catch (JSONException e) {
-                e.printStackTrace();
-                Log.e("HomeFragment", "GeoJSON 파싱 오류: " + e.getMessage());
+            // 1) GeoJSON 파일 로드 및 각 구역을 hole로 파싱
+            List<List<LatLng>> holes = new ArrayList<>();
+            try (InputStream is = getContext().getAssets().open("seoul_districts.geojson")) {
+                byte[] bytes = is.readAllBytes();
+                String geoJsonStr = new String(bytes, StandardCharsets.UTF_8);
+                JSONObject geoJson = new JSONObject(geoJsonStr);
+                JSONArray features = geoJson.getJSONArray("features");
+                for (int f = 0; f < features.length(); f++) {
+                    JSONObject geometry = features.getJSONObject(f).getJSONObject("geometry");
+                    String type = geometry.getString("type");
+                    JSONArray coords = type.equals("MultiPolygon")
+                        ? geometry.getJSONArray("coordinates").getJSONArray(0).getJSONArray(0)
+                        : geometry.getJSONArray("coordinates").getJSONArray(0);
+                    List<LatLng> boundary = new ArrayList<>();
+                    for (int i = 0; i < coords.length(); i++) {
+                        JSONArray c = coords.getJSONArray(i);
+                        boundary.add(new LatLng(c.getDouble(1), c.getDouble(0)));
+                    }
+                    // Ensure CCW ordering for hole
+                    // (GeoJSON may be in CW, so reverse)
+                    Collections.reverse(boundary);
+                    holes.add(boundary);
+                }
+            } catch (IOException | JSONException e) {
+                Log.e("HomeFragment", "GeoJSON parse failed: " + e.getMessage());
             }
 
-            // 초기 지도 위치 설정 (서울시청 근방)
-            CameraUpdate initialUpdate = CameraUpdate.scrollAndZoomTo(new LatLng(37.5666102, 126.9783881), 10);
-            naverMap.moveCamera(initialUpdate);
-            Log.d("HomeFragment", "초기 지도 위치 설정");
+            // 2) 외곽 폴리곤 정의 (서울시 바깥을 완전히 차단)
+            // 서울시 Bounds에 margin 추가
+            LatLngBounds b = seoulBounds;
+            double margin = 0.1;  // degrees
+            LatLng sw = new LatLng(
+                b.getSouthWest().latitude - margin,
+                b.getSouthWest().longitude - margin
+            );
+            LatLng ne = new LatLng(
+                b.getNorthEast().latitude + margin,
+                b.getNorthEast().longitude + margin
+            );
+            List<LatLng> outer = Arrays.asList(
+                new LatLng(ne.latitude, sw.longitude),
+                new LatLng(sw.latitude, sw.longitude),
+                new LatLng(sw.latitude, ne.longitude),
+                new LatLng(ne.latitude, ne.longitude)
+            );
+
+            // 3) 다크 오버레이 생성 (서울만 밝게)
+            PolygonOverlay dimOverlay = new PolygonOverlay();
+            dimOverlay.setCoords(outer);
+            dimOverlay.setHoles(holes);
+            dimOverlay.setColor(Color.argb(120, 0, 0, 0));  // 밝기를 높여 반투명 처리
+            dimOverlay.setOutlineWidth(0);                  // 테두리 없음
+            dimOverlay.setZIndex(1);                        // 맵 타일 위에 렌더링
+            dimOverlay.setMap(naverMap);
+
+            // 지도 이동 제한: dim overlay용 외곽 사각형 범위로 설정
+            LatLng outerSW = new LatLng(b.getSouthWest().latitude - margin, b.getSouthWest().longitude - margin);
+            LatLng outerNE = new LatLng(b.getNorthEast().latitude + margin, b.getNorthEast().longitude + margin);
+            final LatLngBounds outerBounds = new LatLngBounds(outerSW, outerNE); // ensure final for listener
+            naverMap.setExtent(outerBounds);
+
+            // 4) 카메라 위치 변경 시 클램핑 처리 (OnCameraChangeListener 사용)
+            naverMap.addOnCameraChangeListener((reason, animated) -> {
+                if (isClamping) return;
+                LatLng target = naverMap.getCameraPosition().target;
+                // Clamp latitude and longitude within outerBounds
+                double clampedLat = Math.max(outerBounds.getSouthWest().latitude,
+                    Math.min(target.latitude, outerBounds.getNorthEast().latitude));
+                double clampedLng = Math.max(outerBounds.getSouthWest().longitude,
+                    Math.min(target.longitude, outerBounds.getNorthEast().longitude));
+                // Only move camera if clamped position differs
+                if (clampedLat != target.latitude || clampedLng != target.longitude) {
+                    isClamping = true;
+                    naverMap.moveCamera(CameraUpdate.scrollTo(new LatLng(clampedLat, clampedLng)));
+                }
+            });
+            // Reset the clamping guard after camera movement is done
+            naverMap.addOnCameraIdleListener(() -> {
+                isClamping = false;
+            });
 
             // 서울 전체 정보 로드
             bottomSheetManager.loadSeoulAverage();
@@ -158,6 +301,25 @@ public class HomeFragment extends Fragment {
                 return false;
             }
         });
+    }
+
+    /**
+     * 페이드 아웃 애니메이션 후 마커 제거
+     */
+    private void fadeOutAndRemoveMarker(Marker marker) {
+        ValueAnimator animator = ValueAnimator.ofFloat(1f, 0f);
+        animator.setDuration(500);
+        animator.addUpdateListener(animation -> {
+            float alpha = (float) animation.getAnimatedValue();
+            marker.setAlpha(alpha);
+        });
+        animator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                marker.setMap(null);
+            }
+        });
+        animator.start();
     }
 
     @Override
@@ -271,5 +433,13 @@ public class HomeFragment extends Fragment {
             this.lat = lat;
             this.lng = lng;
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (locationSource.onRequestPermissionsResult(requestCode, permissions, grantResults)) {
+            return;
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 }

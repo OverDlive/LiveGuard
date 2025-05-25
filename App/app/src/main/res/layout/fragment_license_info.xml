@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:fitsSystemWindows="true">
+
+    <!-- Scrollable list of license entries -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Naver Map API License -->
+            <TextView
+                android:id="@+id/tvLicenseNaverMapTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Naver Map API"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:layout_marginTop="8dp"/>
+            <TextView
+                android:id="@+id/tvLicenseNaverMap"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Naver Map API는 Naver Developers의 이용약관에 따라 사용할 수 있습니다. 자세한 내용은 https://developers.naver.com/docs/maps/overview/ 를 참고하세요."
+                android:textSize="14sp"
+                android:layout_marginBottom="12dp"/>
+
+            <!-- Naver Login API License -->
+            <TextView
+                android:id="@+id/tvLicenseNaverLoginTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Naver Login API"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:layout_marginTop="8dp"/>
+            <TextView
+                android:id="@+id/tvLicenseNaverLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Naver Login API는 Apache License 2.0을 따릅니다. 전체 라이선스 전문은 https://developers.naver.com/docs/login/android/ 를 참고하세요."
+                android:textSize="14sp"
+                android:layout_marginBottom="12dp"/>
+
+            <!-- Seoul Open API License -->
+            <TextView
+                android:id="@+id/tvLicenseSeoulOpenApiTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="서울시 공공 Open API"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:layout_marginTop="8dp"/>
+            <TextView
+                android:id="@+id/tvLicenseSeoulOpenApi"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="서울시 공공데이터는 공공데이터 포털의 이용허락조건(OpenAPI 정책)을 준수합니다. 자세한 내용은 https://www.data.go.kr/ 를 참고하세요."
+                android:textSize="14sp"
+                android:layout_marginBottom="12dp"/>
+
+            <!-- Third-Party OSS Libraries -->
+            <TextView
+                android:id="@+id/tvLicenseOssTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="오픈소스 라이브러리"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:layout_marginTop="8dp"/>
+            <TextView
+                android:id="@+id/tvLicenseAppCompat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="AndroidX AppCompat (Apache License 2.0)"
+                android:textSize="14sp"
+                android:layout_marginBottom="8dp"/>
+            <TextView
+                android:id="@+id/tvLicenseMaterial"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Material Components for Android (Apache License 2.0)"
+                android:textSize="14sp"
+                android:layout_marginBottom="8dp"/>
+            <TextView
+                android:id="@+id/tvLicenseOssLicenses"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="OSS Licenses for Play Services (Apache License 2.0)"
+                android:textSize="14sp"
+                android:layout_marginBottom="8dp"/>
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

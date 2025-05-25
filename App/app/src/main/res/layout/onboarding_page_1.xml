@@ -41,7 +41,7 @@
         android:id="@+id/tv_onboarding_subtitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="서울데이트로 설명 보기"
+        android:text="서울메이트로 설명 보기"
         android:textSize="14sp"
         android:textColor="#8B8B94"
         android:gravity="center"
@@ -54,7 +54,8 @@
     <View
         android:id="@+id/image_placeholder"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="420dp"
+        android:background="@drawable/man_phone"
         app:layout_constraintTop_toBottomOf="@id/tv_onboarding_subtitle"
         app:layout_constraintBottom_toTopOf="@id/indicator_container"
         android:layout_marginTop="16dp"/>
@@ -65,7 +66,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@id/btn_next_page"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginBottom="24dp">
@@ -75,16 +76,16 @@
             android:layout_width="8dp"
             android:layout_height="8dp"
             android:layout_marginEnd="8dp"
-            android:src="@drawable/orange_circle_vector"
-            android:contentDescription="현재 페이지" />
+            android:src="@drawable/gray_circle_vector"
+            android:contentDescription="이전 페이지" />
 
         <ImageView
             android:id="@+id/indicator2"
             android:layout_width="8dp"
             android:layout_height="8dp"
             android:layout_marginEnd="8dp"
-            android:src="@drawable/gray_circle_vector"
-            android:contentDescription="다음 페이지" />
+            android:src="@drawable/orange_circle_vector"
+            android:contentDescription="현재 페이지" />
 
         <ImageView
             android:id="@+id/indicator3"
@@ -93,18 +94,5 @@
             android:src="@drawable/gray_circle_vector"
             android:contentDescription="다음 페이지" />
     </LinearLayout>
-
-    <!-- 다음 페이지 버튼 -->
-    <Button
-        android:id="@+id/btn_next_page"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:text="다음 페이지 넘기기"
-        android:textSize="16sp"
-        android:textColor="#FFFFFF"
-        android:background="@drawable/btn_confirm_mint_vector"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

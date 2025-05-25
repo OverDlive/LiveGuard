@@ -32,8 +32,25 @@
         android:id="@+id/navigation_settings"
         android:name="com.example.liveguard_app_010.ui.settings.SettingsFragment"
         android:label="설정"
-        tools:layout="@layout/fragment_settings" />
+        tools:layout="@layout/fragment_settings">
+        <action
+            android:id="@+id/action_settingsFragment_to_privacyPlicyFragment"
+            app:destination="@id/privacyPlicyFragment" />
+        <action
+            android:id="@+id/action_settingsFragment_to_licenseInfoFragment"
+            app:destination="@id/licenseInfoFragment" />
+    </fragment>
 
+    <fragment
+        android:id="@+id/privacyPlicyFragment"
+        android:name="com.example.liveguard_app_010.ui.PrivacyPolicy.PrivacyPlicyFragment"
+        android:label="개인정보 보호 정책"
+        tools:layout="@layout/fragment_privacy_policy" />
 
+    <fragment
+        android:id="@+id/licenseInfoFragment"
+        android:name="com.example.liveguard_app_010.ui.LicenseInfo.LicenseInfoFragment"
+        android:label="라이선스 정보"
+        tools:layout="@layout/fragment_license_info" />
 
 </navigation>
