@@ -1,6 +1,5 @@
 plugins {
-    id("com.android.application")
-    id("com.google.gms.google-services")
+    alias(libs.plugins.android.application)
 }
 
 // 모든 구성(configuration)에 대해 Kotlin stdlib 버전을 강제 적용
@@ -79,7 +78,6 @@ dependencies {
     // RecyclerView 및 CardView
     implementation("androidx.recyclerview:recyclerview:1.3.2")
     implementation("androidx.cardview:cardview:1.0.0")
-    implementation("androidx.gridlayout:gridlayout:1.0.0")
 
     // XML 처리
     implementation("com.squareup.retrofit2:converter-simplexml:2.9.0")
@@ -87,23 +85,19 @@ dependencies {
     // 보안 및 인증 관련 라이브러리
     implementation("androidx.security:security-identity-credential:1.0.0-alpha03")
 
+    // Google Play Core 라이브러리
+    implementation("com.google.android.play:core:1.10.3")
+    implementation("com.google.android.play:core-ktx:1.8.1") // Kotlin 확장 기능 포함
+
     // Google Play Services 추가 (필요할 경우)
     implementation("com.google.android.gms:play-services-auth:20.7.0") // Google 로그인 API
-    implementation("com.google.android.gms:play-services-maps:18.1.0")
-    implementation(libs.play.services.oss.licenses)
-    implementation(libs.firebase.auth)
-    implementation(libs.firebase.firestore) // Google 지도 API
+    implementation("com.google.android.gms:play-services-maps:18.1.0") // Google 지도 API
 
     // 테스트 라이브러리
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 
-    // 네이버 로그인 테스트
-    implementation("com.navercorp.nid:oauth:5.4.0")
-    implementation("androidx.annotation:annotation:1.7.0")
-
-    // Firebase BoM & Analytics
-    implementation(platform("com.google.firebase:firebase-bom:33.13.0"))
-    implementation("com.google.firebase:firebase-analytics")
+    //네이버 로그인 테스트
+    implementation ("com.navercorp.nid:oauth:5.4.0")
 }
