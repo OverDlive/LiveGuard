@@ -265,9 +265,14 @@ public class HomeFragment extends Fragment {
                     naverMap.moveCamera(CameraUpdate.scrollTo(new LatLng(clampedLat, clampedLng)));
                 }
             });
-            // Reset the clamping guard after camera movement is done
+            final float ZOOM_THRESHOLD = 12f; // same threshold as before
+            // Reset the clamping guard after camera movement is done and remove markers if zoomed out
             naverMap.addOnCameraIdleListener(() -> {
                 isClamping = false;
+                float currentZoom = (float) naverMap.getCameraPosition().zoom;
+                if (currentZoom < ZOOM_THRESHOLD) {
+                    MarkerManager.clearAllMarkers();
+                }
             });
 
             // 서울 전체 정보 로드

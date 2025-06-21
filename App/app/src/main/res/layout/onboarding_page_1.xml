@@ -72,20 +72,20 @@
         android:layout_marginBottom="24dp">
 
         <ImageView
-            android:id="@+id/indicator1"
-            android:layout_width="8dp"
-            android:layout_height="8dp"
-            android:layout_marginEnd="8dp"
-            android:src="@drawable/gray_circle_vector"
-            android:contentDescription="이전 페이지" />
-
-        <ImageView
             android:id="@+id/indicator2"
             android:layout_width="8dp"
             android:layout_height="8dp"
             android:layout_marginEnd="8dp"
             android:src="@drawable/orange_circle_vector"
             android:contentDescription="현재 페이지" />
+
+        <ImageView
+            android:id="@+id/indicator1"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:layout_marginEnd="8dp"
+            android:src="@drawable/gray_circle_vector"
+            android:contentDescription="이전 페이지" />
 
         <ImageView
             android:id="@+id/indicator3"
