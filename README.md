@@ -1,28 +1,19 @@
-<img src="https://capsule-render.vercel.app/api?type=waving&color=BDBDC8&height=150&section=header&text=LiveGuard&fontSize=50" />
 
-GPS 기반 군중 제어 및 재난 대응 서비스
+<img src="https://capsule-render.vercel.app/api?type=waving&color=BDBDC8&height=150&section=header&text=SeoulMate&fontSize=50" />
+
+실시간 인구 밀집도 시각화 & 맞춤 장소 추천 앱  
 
 ## 소개
 
-LiveGuard는 GPS와 TensorFlow를 활용하여 **군중 밀집도를 실시간으로 파악**하고 **재난 상황에서 안전한 대피 경로를 제공**하는 서비스입니다. 이 프로젝트는 대규모 행사나 재난 발생 시 군중의 안전을 보장하고 신속한 대응을 지원하기 위해 개발되었습니다.
+“SeoulMate는 Java 기반 Android 앱과 Django 백엔드가 유기적으로 연동되어, 서울시 열린데이터플라자를 포함한 서울시 공공 데이터를 활용해 동 단위 실시간 인구 밀집도를 분석·시각화하고, 사용자 취향에 맞춘 최적의 장소를 추천하는 스마트 위치 추천 서비스입니다.
 
 ## 주요 기능
 
-- **실시간 위치 추적 및 군중 밀집도 분석**
-  - GPS 데이터를 수집하여 군중의 위치와 이동 패턴을 실시간으로 분석합니다.
-  - TensorFlow 기반 머신러닝 모델을 통해 군중 밀집도를 예측하고 시각화합니다.
 
-- **재난 발생 시 경고 및 대피 경로 제공**
-  - 재난 상황 발생 시 사용자에게 즉각적인 경고 알림을 전송합니다.
-  - 사용자의 현재 위치를 기반으로 가장 안전한 대피 경로를 제공합니다.
-
-- **사용자 인터페이스(UI/UX)**
-  - 직관적이고 간결한 모바일 및 웹 인터페이스를 제공합니다.
-  - 실시간 군중 밀집도 지도, 위험 지역 표시, 대피 경로 안내 등을 지원합니다.
-
-- **실시간 데이터 처리 및 서버 아키텍처**
-  - 확장 가능한 클라우드 기반 서버 인프라를 구축하였습니다.
-  - WebSocket 및 MQTT 프로토콜을 활용하여 안정적인 실시간 통신을 제공합니다.
+| 기능              | 설명                                                         |
+|-------------------|--------------------------------------------------------------|
+| **Crowd Heatmap** | Naver Map 위에 동 단위 실시간 인구 밀집도 Heatmap 시각화     | 
+| **추천 탭**       | 혼잡도·취향 기반 장소 추천 (맛집·카페·공원 등)               | 
 
 ## 프로젝트 구조
 
@@ -32,19 +23,6 @@ LiveGuard는 GPS와 TensorFlow를 활용하여 **군중 밀집도를 실시간�
 - **백엔드**
   - **서버 프레임워크**: Django 사용
   - **통신 방식**: RESTful API 및 WebSocket
-
-- **머신러닝**
-  - **모델 개발**: TensorFlow 활용
-  - **기능**: 군중 밀집도 예측 및 실시간 데이터 분석
-
-- **데이터베이스**
-  - **주 데이터베이스**: PostgreSQL
-  - **캐시 및 세션 관리**: Redis
-
-- **DevOps**
-  - **컨테이너화**: Docker 사용
-  - **CI/CD**: Jenkins 및 GitLab CI/CD
-  - **클라우드 인프라**: AWS 활용
 
 ## 파일 구조
 ```
@@ -197,32 +175,6 @@ LiveGuard는 GPS와 TensorFlow를 활용하여 **군중 밀집도를 실시간�
    docker-compose up --build
    ```
 
-## 사용 방법
-
-1. **앱 접속**
-
-   - 모바일 앱 또는 웹 애플리케이션에 접속합니다.
-
-2. **초기 설정**
-
-   - 위치 정보 제공 및 알림 수신에 동의합니다.
-
-3. **홈 화면**
-
-   - 현재 위치와 주변의 군중 밀집도를 확인합니다.
-
-4. **경로 안내**
-
-   - 목적지를 설정하면 안전한 경로 안내를 받습니다.
-
-5. **재난 알림 수신**
-
-   - 재난 상황 발생 시 실시간 경고 알림을 수신하고 대피 경로를 제공합니다.
-
-6. **제보 및 공유**
-
-   - 위험 요소나 재난 상황을 제보하여 다른 사용자들과 정보를 공유합니다.
-
 ## 기여 방법
 
 1. **저장소 포크**
@@ -244,6 +196,19 @@ LiveGuard는 GPS와 TensorFlow를 활용하여 **군중 밀집도를 실시간�
 5. **리뷰 및 병합**
 
    - 리뷰 후 프로젝트에 병합됩니다.
+
+---
+## 기술스택
+<p align="center">
+  <!-- Android (Java) 앱 배지 -->  
+  <img src="https://img.shields.io/badge/Android-3DDC84?logo=android&logoColor=white&style=for-the-badge" alt="Android" /> 
+  <!-- Java 언어 배지 -->  
+  <img src="https://img.shields.io/badge/Java-ED8B00?logo=openjdk&logoColor=white&style=for-the-badge" alt="Java" /> 
+  <!-- Django 백엔드 배지 -->  
+  <img src="https://img.shields.io/badge/Django-092E20?logo=django&logoColor=white&style=for-the-badge" alt="Django" /> 
+  <img src="https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge" alt="MIT License" />
+  <img src="https://img.shields.io/badge/CI%2FCD-GitHub_Actions-blueviolet.svg?style=for-the-badge" alt="GitHub Actions" />
+</p>
 
 ## 라이선스
 
